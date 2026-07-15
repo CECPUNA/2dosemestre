@@ -1,20 +1,28 @@
 /* Service Worker – Campus Informativo 2do Semestre */
-const CACHE_NAME = 'campus-2do-v1';
-const ASSETS = [
+const CACHE_NAME = 'campus-2do-v2';
+
+// Archivos estáticos que se cachean (cache-first)
+const ASSETS_ESTATICOS = [
   '/',
   '/index.html',
   '/css/main.css',
   '/js/app.js',
-  '/data/2do.json',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
 ];
 
+// Archivos de datos: siempre network-first (nunca del caché viejo)
+const DATOS_DINAMICOS = [
+  '/data/2do.json'
+];
+
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then(c => c.addAll(ASSETS_ESTATICOS))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -27,6 +35,21 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+
+  // Network-first para datos dinámicos (JSON del campus)
+  const esDato = DATOS_DINAMICOS.some(p => url.pathname.includes(p)) ||
+                 url.searchParams.has('_v'); // cache-busting param
+
+  if (esDato) {
+    e.respondWith(
+      fetch(e.request)
+        .catch(() => caches.match('/data/2do.json')) // fallback offline
+    );
+    return;
+  }
+
+  // Cache-first para estáticos
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;

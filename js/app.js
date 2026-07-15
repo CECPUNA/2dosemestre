@@ -2,7 +2,9 @@
    Campus Informativo · 2do Semestre · app.js
    =================================================== */
 
-const DATA_URL = 'data/2do.json';
+// Cache-busting: agrega ?_v=timestamp para que el navegador
+// y el Service Worker nunca sirvan el JSON desactualizado
+const DATA_URL = `data/2do.json?_v=${Date.now()}`;
 let DATA = null;
 
 const COLORES_MATERIAS = {
@@ -24,7 +26,7 @@ function colorMateria(nombre) {
 // ===== FETCH DATA =====
 async function cargarDatos() {
   try {
-    const resp = await fetch(DATA_URL);
+    const resp = await fetch(DATA_URL, { cache: 'no-store' });
     DATA = await resp.json();
   } catch (e) {
     DATA = datosDemo();
@@ -33,7 +35,7 @@ async function cargarDatos() {
 }
 
 function renderAll() {
-  verificarClaseActiva(); // primero, para que el banner aparezca antes de la tabla
+  verificarClaseActiva();
   renderHorario();
   renderNoticias();
   renderExamenes();
@@ -100,9 +102,7 @@ function renderHorario() {
   const { grid, horas } = buildHorarioGrid();
   const claseActual = getClaseActual();
 
-  // --- Desktop tabla ---
   if (tabla && horas.length) {
-    // Preservar el colgroup ya definido en el HTML
     let html = '<thead><tr><th>Hora</th>';
     DIAS.forEach(d => html += `<th>${d}</th>`);
     html += '</tr></thead><tbody>';
@@ -126,7 +126,6 @@ function renderHorario() {
       html += '</tr>';
     });
     html += '</tbody>';
-    // Insertar thead+tbody SIN tocar el colgroup
     const thead = tabla.querySelector('thead');
     const tbody = tabla.querySelector('tbody');
     if (thead) thead.remove();
@@ -134,7 +133,6 @@ function renderHorario() {
     tabla.insertAdjacentHTML('beforeend', html);
   }
 
-  // --- Mobile tarjetas ---
   if (cards) {
     let html = '';
     DIAS.forEach(dia => {
@@ -158,11 +156,11 @@ function renderHorario() {
 
 // ===== CLASE ACTIVA BANNER =====
 function verificarClaseActiva() {
-  const clase = getClaseActual();
-  const banner  = document.getElementById('claseActivaBanner');
-  const elMat   = document.getElementById('claseActivaMateria');
-  const elHora  = document.getElementById('claseActivaHora');
-  const elProf  = document.getElementById('claseActivaProf');
+  const clase  = getClaseActual();
+  const banner = document.getElementById('claseActivaBanner');
+  const elMat  = document.getElementById('claseActivaMateria');
+  const elHora = document.getElementById('claseActivaHora');
+  const elProf = document.getElementById('claseActivaProf');
   if (!banner) return;
   if (clase) {
     elMat.textContent  = clase.materia;
@@ -300,7 +298,7 @@ function renderDrive() {
 
 // ===== MODO OSCURO =====
 function initTema() {
-  const btn     = document.getElementById('themeToggle');
+  const btn      = document.getElementById('themeToggle');
   const guardado = localStorage.getItem('tema') || 'light';
   document.documentElement.setAttribute('data-theme', guardado);
   if (btn) {
