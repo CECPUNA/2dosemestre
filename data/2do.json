@@ -17,20 +17,7 @@
       "urgente": false
     }
   ],
-  "horario": [
-    {
-      "dia": "Lunes",
-      "hora": "18:10",
-      "materia": "Economía Política",
-      "profesor": "Prof Urquiza"
-    },
-    {
-      "dia": "Lunes",
-      "hora": "18:40",
-      "materia": "Economía Política",
-      "profesor": "Prof Urquiza"
-    }
-  ],
+  "horario": [],
   "examenes": [],
   "calendario": [],
   "programas": [
