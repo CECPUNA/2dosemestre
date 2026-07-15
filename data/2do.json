@@ -195,26 +195,6 @@
   ],
   "programas": [
     {
-      "materia": "EconomÃ­a PolÃ­tica",
-      "descripcion": "Programa oficial Â· 2026",
-      "pdf": ""
-    },
-    {
-      "materia": "IntroducciÃ³n a las Ciencias PolÃ­ticas",
-      "descripcion": "Programa oficial Â· 2026",
-      "pdf": ""
-    },
-    {
-      "materia": "Historia PolÃ­tica Paraguaya",
-      "descripcion": "Programa oficial Â· 2026",
-      "pdf": ""
-    },
-    {
-      "materia": "Idioma GuaranÃ­ II",
-      "descripcion": "Programa oficial Â· 2026",
-      "pdf": ""
-    },
-    {
       "materia": "Seminario II: Movimientos Sociales y PolÃ­ticos en AmÃ©rica Latina (Siglos XX y XXI)",
       "descripcion": "Programa oficial Â· 2026",
       "pdf": ""
@@ -238,11 +218,6 @@
       "materia": "Idioma Guaraní II",
       "descripcion": "Programa Oficial 2026",
       "pdf": ""
-    },
-    {
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "descripcion": "Programa Oficial 2026",
-      "pdf": ""
     }
   ],
   "libros": [
@@ -256,31 +231,31 @@
   ],
   "drive": [
     {
-      "materia": "EconomÃ­a PolÃ­tica",
+      "materia": "Introducción a las Ciencias Políticas",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "IntroducciÃ³n a las Ciencias PolÃ­ticas",
+      "materia": "Economía Política",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "Historia PolÃ­tica Paraguaya",
+      "materia": "Historia Política Paraguaya",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "Idioma GuaranÃ­ II",
+      "materia": "Idioma Guaraní II",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "Seminario II: Movimientos Sociales y PolÃ­ticos en AmÃ©rica Latina (Siglos XX y XXI)",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
