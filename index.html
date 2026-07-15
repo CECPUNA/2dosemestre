@@ -44,24 +44,34 @@
 <section id="horario" class="seccion" style="padding-top:36px">
   <div class="container">
 
-    <!-- CLASE ACTIVA -->
-    <div id="claseActivaBanner" class="clase-activa-banner d-none mb-4">
+    <!-- CLASE ACTIVA BANNER -->
+    <div id="claseActivaBanner" class="clase-activa-banner d-none">
       <div class="clase-activa-inner">
-        <div class="d-flex align-items-center gap-2 mb-1">
+        <div class="clase-activa-encabezado">
           <span class="punto-verde"></span>
           <span class="clase-activa-label">Clase activa</span>
         </div>
         <div class="clase-activa-materia" id="claseActivaMateria"></div>
-        <div class="clase-activa-info" id="claseActivaInfo"></div>
+        <div class="clase-activa-info">
+          <i class="bi bi-clock"></i><span id="claseActivaHora"></span>
+          <span class="mx-1">&middot;</span>
+          <i class="bi bi-person"></i><span id="claseActivaProf"></span>
+        </div>
       </div>
     </div>
 
     <div class="seccion-header">
       <h2><i class="bi bi-clock-fill me-2 text-una"></i>Horario de Clases</h2>
     </div>
-    <!-- Desktop: tabla -->
+
+    <!-- Desktop: tabla con colgroup para anchos fijos -->
     <div class="table-responsive d-none d-md-block">
-      <table class="table table-horario" id="tablaHorario"></table>
+      <table class="table table-horario" id="tablaHorario">
+        <colgroup>
+          <col style="width:70px" />
+          <col /><col /><col /><col /><col />
+        </colgroup>
+      </table>
     </div>
     <!-- Mobile: tarjetas -->
     <div class="d-block d-md-none" id="horarioCards"></div>

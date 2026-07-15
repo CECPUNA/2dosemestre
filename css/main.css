@@ -45,35 +45,47 @@ body {
   border-radius: var(--radio);
   box-shadow: 0 6px 24px rgba(26,35,126,0.30);
   overflow: hidden;
+  margin-bottom: 24px;
 }
 .clase-activa-inner {
-  padding: 20px 24px;
-  border-left: 5px solid #4caf50;
+  padding: 18px 24px;
+  border-left: 6px solid #4caf50;
+}
+.clase-activa-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 .clase-activa-label {
   color: #a5d6a7;
-  font-size: .78rem;
-  font-weight: 700;
+  font-size: .75rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
 }
 .clase-activa-materia {
   color: #ffffff;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
   line-height: 1.3;
   margin-bottom: 4px;
 }
 .clase-activa-info {
-  color: rgba(255,255,255,0.75);
-  font-size: .9rem;
+  color: rgba(255,255,255,0.72);
+  font-size: .88rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+.clase-activa-info i { font-size: .85rem; }
+
+/* Punto verde pulsante */
 .punto-verde {
   width: 10px; height: 10px;
   background: #4caf50;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 0 0 rgba(76,175,80,0.5);
   animation: pulso 1.5s infinite;
 }
 @keyframes pulso {
@@ -108,44 +120,75 @@ body {
 .badge-tipo { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
 /* ===== TABLA HORARIO DESKTOP ===== */
-.table-horario { border-collapse: separate; border-spacing: 4px; }
+/* table-layout:fixed + width:100% garantiza columnas iguales sin importar el contenido */
+.table-responsive { overflow-x: auto; }
+.table-horario {
+  border-collapse: separate;
+  border-spacing: 4px;
+  table-layout: fixed;
+  width: 100%;
+  min-width: 640px; /* scroll horizontal en pantallas chicas antes de mobile */
+}
+
+/* Columna hora: ancho fijo chico */
+.table-horario colgroup .col-hora { width: 70px; }
+/* Columnas días: se reparten el resto equitativamente (via table-layout:fixed) */
+
 .table-horario thead th {
   background: var(--una-azul);
   color: white;
   font-weight: 700;
-  font-size: .85rem;
+  font-size: .82rem;
   text-align: center;
-  padding: 12px 8px;
+  padding: 11px 4px;
   border-radius: 8px;
-  letter-spacing: .3px;
+  letter-spacing: .2px;
+  overflow: hidden;
 }
 .table-horario tbody td {
   background: var(--bg-card);
   border-radius: 10px;
-  padding: 12px 10px;
+  padding: 10px 6px;
   text-align: center;
-  font-size: .82rem;
+  font-size: .78rem;
   vertical-align: middle;
-  min-width: 110px;
+  /* SIN min-width ni width — table-layout:fixed lo controla todo */
   box-shadow: 0 1px 6px rgba(26,35,126,0.07);
   font-weight: 500;
+  height: 72px; /* altura uniforme para todas las celdas */
 }
 .td-hora {
   background: var(--una-azul-medio) !important;
   color: white !important;
   font-weight: 700 !important;
-  min-width: 60px !important;
-  font-size: .9rem !important;
+  font-size: .88rem !important;
+  border-radius: 8px !important;
 }
-.td-libre { color: #b0bec5 !important; font-style: italic; }
+.td-libre { color: #b0bec5 !important; font-style: italic; font-size: .75rem; }
 .td-activa { outline: 3px solid #4caf50 !important; outline-offset: -2px; }
+
+/* Pill: texto truncado en 2 líneas para que no estire la celda */
 .pill-materia {
-  display: block;
-  border-radius: 8px;
-  padding: 6px 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  border-radius: 7px;
+  padding: 5px 6px;
   font-weight: 600;
-  font-size: .78rem;
-  line-height: 1.3;
+  font-size: .73rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+.pill-materia small {
+  display: block;
+  font-weight: 400;
+  opacity: .75;
+  font-size: .68rem;
+  margin-top: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* ===== HORARIO MOBILE (tarjetas) ===== */
@@ -239,10 +282,10 @@ body {
 }
 .periodo-item:hover { transform: translateY(-3px); }
 .periodo-item.parcial { border-top-color: var(--una-rojo); }
-.periodo-item.final { border-top-color: var(--una-dorado); }
-.periodo-mes { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--texto-secundario); }
+.periodo-item.final   { border-top-color: var(--una-dorado); }
+.periodo-mes    { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--texto-secundario); }
 .periodo-nombre { font-size: .95rem; font-weight: 700; margin: 6px 0 4px; color: var(--texto-principal); }
-.periodo-fecha { font-size: .8rem; color: var(--texto-secundario); }
+.periodo-fecha  { font-size: .8rem; color: var(--texto-secundario); }
 
 /* ===== PROGRAMAS ===== */
 .programa-card {
@@ -280,8 +323,7 @@ body {
   background: linear-gradient(135deg, var(--una-azul) 0%, var(--una-azul-claro) 100%);
   display: flex; align-items: center; justify-content: center;
   font-size: 3rem; color: white;
-  position: relative;
-  overflow: hidden;
+  position: relative; overflow: hidden;
 }
 .libro-cover img { width: 100%; height: 100%; object-fit: cover; }
 .libro-cover .libro-overlay {
@@ -293,8 +335,8 @@ body {
 .libro-card:hover .libro-overlay { opacity: 1; }
 .libro-body { padding: 16px; }
 .libro-materia { font-size: .72rem; text-transform: uppercase; font-weight: 700; letter-spacing: .5px; margin-bottom: 4px; }
-.libro-titulo { font-size: .95rem; font-weight: 700; color: var(--texto-principal); margin-bottom: 3px; }
-.libro-autor { font-size: .82rem; color: var(--texto-secundario); }
+.libro-titulo  { font-size: .95rem; font-weight: 700; color: var(--texto-principal); margin-bottom: 3px; }
+.libro-autor   { font-size: .82rem; color: var(--texto-secundario); }
 
 /* ===== DRIVE / CLASSROOM ===== */
 .drive-card {
@@ -310,35 +352,27 @@ body {
   height: 100%;
 }
 .drive-card:hover { transform: translateY(-3px); box-shadow: var(--sombra-hover); }
-.drive-icon-wrap {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-}
+.drive-icon-wrap { display: flex; gap: 8px; flex-shrink: 0; }
 .drive-icon { font-size: 1.8rem; }
-.drive-icon.drive { color: #1565c0; }
+.drive-icon.drive     { color: #1565c0; }
 .drive-icon.classroom { color: #2e7d32; }
 
 /* ===== FOOTER ===== */
-.footer-una {
-  background: var(--una-azul);
-  color: white;
-  margin-top: 40px;
-}
+.footer-una { background: var(--una-azul); color: white; margin-top: 40px; }
 .footer-una .text-muted { color: rgba(255,255,255,0.6) !important; }
 .footer-una a { color: rgba(255,255,255,0.5); text-decoration: none; transition: var(--transicion); }
 .footer-una a:hover { color: white; }
 
 /* ===== COLORES MATERIAS ===== */
-.color-econopolitica   { background-color: rgba(26,35,126,0.12); color: #1a237e; }
-.color-introccp        { background-color: rgba(56,142,60,0.13); color: #2e7d32; }
-.color-historiapolit   { background-color: rgba(183,28,28,0.12); color: #b71c1c; }
-.color-guarani         { background-color: rgba(230,81,0,0.12); color: #e65100; }
-.color-seminario       { background-color: rgba(106,27,154,0.12); color: #6a1b9a; }
+.color-econopolitica { background-color: rgba(26,35,126,0.12); color: #1a237e; }
+.color-introccp      { background-color: rgba(56,142,60,0.13);  color: #2e7d32; }
+.color-historiapolit { background-color: rgba(183,28,28,0.12);  color: #b71c1c; }
+.color-guarani       { background-color: rgba(230,81,0,0.12);   color: #e65100; }
+.color-seminario     { background-color: rgba(106,27,154,0.12); color: #6a1b9a; }
 [data-theme="dark"] .color-econopolitica { background-color: rgba(26,35,126,0.3); color: #9fa8da; }
-[data-theme="dark"] .color-introccp      { background-color: rgba(56,142,60,0.3); color: #a5d6a7; }
-[data-theme="dark"] .color-historiapolit { background-color: rgba(183,28,28,0.3); color: #ef9a9a; }
-[data-theme="dark"] .color-guarani       { background-color: rgba(230,81,0,0.3); color: #ffcc80; }
+[data-theme="dark"] .color-introccp      { background-color: rgba(56,142,60,0.3);  color: #a5d6a7; }
+[data-theme="dark"] .color-historiapolit { background-color: rgba(183,28,28,0.3);  color: #ef9a9a; }
+[data-theme="dark"] .color-guarani       { background-color: rgba(230,81,0,0.3);   color: #ffcc80; }
 [data-theme="dark"] .color-seminario     { background-color: rgba(106,27,154,0.3); color: #ce93d8; }
 
 /* ===== SCROLLBAR ===== */
@@ -350,5 +384,6 @@ body {
 @media (max-width: 768px) {
   .seccion { padding: 36px 0; }
   .periodo-item { min-width: 130px; padding: 16px 12px; }
-  .clase-activa-materia { font-size: 1.05rem; }
+  .clase-activa-materia { font-size: 1rem; }
+  .clase-activa-inner { padding: 14px 16px; }
 }

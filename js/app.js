@@ -33,8 +33,8 @@ async function cargarDatos() {
 }
 
 function renderAll() {
+  verificarClaseActiva(); // primero, para que el banner aparezca antes de la tabla
   renderHorario();
-  verificarClaseActiva();
   renderNoticias();
   renderExamenes();
   renderParciales();
@@ -100,8 +100,9 @@ function renderHorario() {
   const { grid, horas } = buildHorarioGrid();
   const claseActual = getClaseActual();
 
-  // Desktop tabla
+  // --- Desktop tabla ---
   if (tabla && horas.length) {
+    // Preservar el colgroup ya definido en el HTML
     let html = '<thead><tr><th>Hora</th>';
     DIAS.forEach(d => html += `<th>${d}</th>`);
     html += '</tr></thead><tbody>';
@@ -109,21 +110,31 @@ function renderHorario() {
       html += `<tr><td class="td-hora">${h}</td>`;
       DIAS.forEach(d => {
         const cls = grid[h][d];
-        const esActiva = claseActual && cls && cls.materia === claseActual.materia && cls.hora === claseActual.hora && cls.dia === claseActual.dia;
+        const esActiva = claseActual &&
+          cls?.materia === claseActual.materia &&
+          cls?.hora    === claseActual.hora &&
+          cls?.dia     === claseActual.dia;
         if (cls) {
           const cc = colorMateria(cls.materia);
-          html += `<td class="${esActiva ? 'td-activa' : ''}"><span class="pill-materia ${cc}">${cls.materia}<br><small class="fw-normal opacity-75">${cls.profesor || ''}</small></span></td>`;
+          html += `<td class="${esActiva ? 'td-activa' : ''}">
+            <span class="pill-materia ${cc}">${cls.materia}<small>${cls.profesor || ''}</small></span>
+          </td>`;
         } else {
-          html += `<td class="td-libre">—</td>`;
+          html += `<td class="td-libre">&mdash;</td>`;
         }
       });
       html += '</tr>';
     });
     html += '</tbody>';
-    tabla.innerHTML = html;
+    // Insertar thead+tbody SIN tocar el colgroup
+    const thead = tabla.querySelector('thead');
+    const tbody = tabla.querySelector('tbody');
+    if (thead) thead.remove();
+    if (tbody) tbody.remove();
+    tabla.insertAdjacentHTML('beforeend', html);
   }
 
-  // Mobile tarjetas
+  // --- Mobile tarjetas ---
   if (cards) {
     let html = '';
     DIAS.forEach(dia => {
@@ -135,8 +146,8 @@ function renderHorario() {
         const esActiva = claseActual && c.materia === claseActual.materia && c.hora === claseActual.hora && c.dia === claseActual.dia;
         html += `<div class="horario-dia-item ${esActiva ? 'activa-mobile' : ''}">
           <span class="hora-badge">${c.hora}</span>
-          <span class="pill-materia ${cc} flex-grow-1">${c.materia}${c.profesor ? `<br><small class="fw-normal opacity-75">${c.profesor}</small>` : ''}</span>
-          ${esActiva ? '<span class="badge bg-success ms-1" style="font-size:.65rem">Ahora</span>' : ''}
+          <span class="pill-materia ${cc} flex-grow-1" style="display:block">${c.materia}<small>${c.profesor || ''}</small></span>
+          ${esActiva ? '<span class="badge bg-success ms-1" style="font-size:.65rem;flex-shrink:0">Ahora</span>' : ''}
         </div>`;
       });
       html += '</div>';
@@ -148,14 +159,18 @@ function renderHorario() {
 // ===== CLASE ACTIVA BANNER =====
 function verificarClaseActiva() {
   const clase = getClaseActual();
-  const banner = document.getElementById('claseActivaBanner');
-  const materia = document.getElementById('claseActivaMateria');
-  const info = document.getElementById('claseActivaInfo');
+  const banner  = document.getElementById('claseActivaBanner');
+  const elMat   = document.getElementById('claseActivaMateria');
+  const elHora  = document.getElementById('claseActivaHora');
+  const elProf  = document.getElementById('claseActivaProf');
   if (!banner) return;
   if (clase) {
-    materia.textContent = clase.materia;
-    info.textContent = `${clase.dia} · ${clase.hora} hs${clase.profesor ? ' · ' + clase.profesor : ''}`;
+    elMat.textContent  = clase.materia;
+    elHora.textContent = `${clase.dia} · ${clase.hora} hs`;
+    elProf.textContent = clase.profesor || 'Docente';
     banner.classList.remove('d-none');
+  } else {
+    banner.classList.add('d-none');
   }
 }
 
@@ -255,16 +270,16 @@ function renderLibros() {
 function renderDrive() {
   const c = document.getElementById('driveContainer');
   if (!c) return;
-  if (!DATA.drive?.length) { c.innerHTML = '<p class="text-muted">Sin carpetas de Drive configuradas.</p>'; return; }
+  if (!DATA.drive?.length) { c.innerHTML = '<p class="text-muted">Sin carpetas configuradas.</p>'; return; }
   c.innerHTML = DATA.drive.map(d => {
+    const tieneDrive     = d.url;
     const tieneClassroom = d.urlClassroom;
-    const tieneDrive = d.url;
     return `
     <div class="col-12 col-md-6 col-lg-4">
       <div class="drive-card">
         <div class="d-flex align-items-center gap-3 flex-grow-1">
           <div class="drive-icon-wrap">
-            ${tieneDrive ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
+            ${tieneDrive     ? '<i class="bi bi-folder-fill drive-icon drive"></i>'        : ''}
             ${tieneClassroom ? '<i class="bi bi-mortarboard-fill drive-icon classroom"></i>' : ''}
             ${!tieneDrive && !tieneClassroom ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
           </div>
@@ -274,7 +289,7 @@ function renderDrive() {
           </div>
         </div>
         <div class="d-flex flex-column gap-2">
-          ${tieneDrive ? `<a href="${d.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : ''}
+          ${tieneDrive     ? `<a href="${d.url}"          target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>`      : ''}
           ${tieneClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : ''}
           ${!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Próximamente</span>' : ''}
         </div>
@@ -285,14 +300,14 @@ function renderDrive() {
 
 // ===== MODO OSCURO =====
 function initTema() {
-  const btn = document.getElementById('themeToggle');
+  const btn     = document.getElementById('themeToggle');
   const guardado = localStorage.getItem('tema') || 'light';
   document.documentElement.setAttribute('data-theme', guardado);
   if (btn) {
     btn.innerHTML = guardado === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
     btn.addEventListener('click', () => {
       const actual = document.documentElement.getAttribute('data-theme');
-      const nuevo = actual === 'dark' ? 'light' : 'dark';
+      const nuevo  = actual === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', nuevo);
       localStorage.setItem('tema', nuevo);
       btn.innerHTML = nuevo === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
@@ -302,16 +317,13 @@ function initTema() {
 
 // ===== INSTALAR PWA =====
 let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
 
 // ===== DATOS DEMO =====
 function datosDemo() {
   return {
     noticias: [
-      { titulo: 'Inicio de clases', descripcion: 'Las clases del segundo semestre comienzan el 4 de agosto.', tipo: 'Aviso', fecha: '1 Ago', urgente: false }
+      { titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }
     ],
     horario: [
       { dia:'Lunes',     hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
@@ -339,11 +351,11 @@ function datosDemo() {
       { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', tipo:'Primer Parcial', fecha:'24 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. López' }
     ],
     calendario: [
-      { mes:'Agosto',     nombre:'Inicio de Clases',  tipo:'normal' },
-      { mes:'Septiembre', nombre:'1er Parcial',       tipo:'parcial', fecha:'15–24 Sep' },
-      { mes:'Octubre',    nombre:'Cursada',           tipo:'normal' },
-      { mes:'Noviembre',  nombre:'2do Parcial',       tipo:'parcial', fecha:'10–21 Nov' },
-      { mes:'Diciembre',  nombre:'Finales',           tipo:'final',   fecha:'1–15 Dic' }
+      { mes:'Agosto',     nombre:'Inicio de Clases', tipo:'normal' },
+      { mes:'Septiembre', nombre:'1er Parcial',      tipo:'parcial', fecha:'15–24 Sep' },
+      { mes:'Octubre',    nombre:'Cursada',          tipo:'normal' },
+      { mes:'Noviembre',  nombre:'2do Parcial',      tipo:'parcial', fecha:'10–21 Nov' },
+      { mes:'Diciembre',  nombre:'Finales',          tipo:'final',   fecha:'1–15 Dic' }
     ],
     programas: [
       { materia:'Economía Política', descripcion:'Programa oficial · 2026', pdf:'' },
