@@ -42,6 +42,12 @@
       "profesor": "Prof. LÃÂ³pez"
     },
     {
+      "dia": "Miércoles",
+      "hora": "18:00",
+      "materia": "Economía Política",
+      "profesor": "Prof Urquiza"
+    },
+    {
       "dia": "Lunes",
       "hora": "19:00",
       "materia": "EconomÃÂ­a PolÃÂ­tica",
@@ -72,6 +78,12 @@
       "profesor": "Prof. LÃÂ³pez"
     },
     {
+      "dia": "Miércoles",
+      "hora": "19:00",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Prof Urquiza"
+    },
+    {
       "dia": "Lunes",
       "hora": "20:00",
       "materia": "IntroducciÃÂ³n a las Ciencias PolÃÂ­ticas",
@@ -94,6 +106,12 @@
       "hora": "20:00",
       "materia": "Seminario II: Movimientos Sociales y PolÃÂ­ticos en AmÃÂ©rica Latina (Siglos XX y XXI)",
       "profesor": "Prof. LÃÂ³pez"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "20:00",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Prof Urquiza"
     },
     {
       "dia": "Martes",
