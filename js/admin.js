@@ -9,10 +9,8 @@ const GH_PATH   = 'data/2do.json';
 const GH_BRANCH = 'main';
 const LS_TOKEN  = 'gh_token_cms';
 
-// URL pública sin autenticación ni rate limit
 const RAW_URL = `https://raw.githubusercontent.com/${GH_REPO}/${GH_BRANCH}/${GH_PATH}`;
 
-// Materias centralizadas — única fuente de verdad
 const MATERIAS = [
   'Economía Política',
   'Introducción a las Ciencias Políticas',
@@ -457,6 +455,13 @@ const A = {
     toast('Programa guardado');
   },
 
+  // *** NUEVO ***
+  eliminarPrograma(i) {
+    if (!confirm('¿Eliminar el programa de esta materia?')) return;
+    D.programas.splice(i, 1);
+    guardarLocalYMarcar(); renderProgramas(); renderDashboard(); toast('Programa eliminado');
+  },
+
   agregarLibro() {
     const mat=v('lbMat'), tit=v('lbTit'), aut=v('lbAut');
     if (!mat||!tit) { toast('Materia y título son obligatorios','error'); return; }
@@ -486,6 +491,13 @@ const A = {
     guardarLocalYMarcar(); renderDrive(); renderDashboard(); clear('drUrl','drClassroom','drDesc');
     document.getElementById('drMat').value = mat;
     toast('Links guardados');
+  },
+
+  // *** NUEVO ***
+  eliminarDrive(i) {
+    if (!confirm('¿Eliminar los links de Drive/Classroom de esta materia?')) return;
+    D.drive.splice(i, 1);
+    guardarLocalYMarcar(); renderDrive(); renderDashboard(); toast('Entrada de Drive eliminada');
   },
 
   mostrarJSON() {
@@ -568,6 +580,7 @@ function renderCalendario() {
   </tr>`).join('') : '<tr><td colspan="5" class="text-muted text-center small">Sin períodos</td></tr>';
 }
 
+// renderProgramas: 5 columnas — Materia | Descripción | PDF | Editar | Borrar
 function renderProgramas() {
   const tb=document.querySelector('#tablaProgramasAdmin tbody'); if(!tb) return;
   tb.innerHTML = D.programas?.map((p,i)=>`<tr>
@@ -575,7 +588,8 @@ function renderProgramas() {
     <td class="text-muted small">${p.descripcion||''}</td>
     <td>${p.pdf ? `<a href="${p.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye me-1"></i>Ver</a>` : '<span class="text-muted small">Sin URL</span>'}</td>
     <td><button class="btn-edit" onclick="editarPrograma(${i})"><i class="bi bi-pencil"></i> Editar</button></td>
-  </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin programas</td></tr>';
+    <td><button class="btn-peligro" onclick="A.eliminarPrograma(${i})"><i class="bi bi-trash"></i></button></td>
+  </tr>`).join('') || '<tr><td colspan="5" class="text-muted text-center small">Sin programas</td></tr>';
 }
 
 function editarPrograma(i) {
@@ -598,6 +612,7 @@ function renderLibros() {
   </tr>`).join('') : '<tr><td colspan="5" class="text-muted text-center small">Sin libros</td></tr>';
 }
 
+// renderDrive: 5 columnas — Materia | Drive | Classroom | Editar | Borrar
 function renderDrive() {
   const tb=document.querySelector('#tablaDriveAdmin tbody'); if(!tb) return;
   tb.innerHTML = D.drive?.map((d,i)=>`<tr>
@@ -605,7 +620,8 @@ function renderDrive() {
     <td>${d.url ? `<a href="${d.url}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : '<span class="text-muted small">Sin link</span>'}</td>
     <td>${d.urlClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="btn btn-sm btn-outline-success py-0"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : '<span class="text-muted small">Sin link</span>'}</td>
     <td><button class="btn-edit" onclick="editarDrive(${i})"><i class="bi bi-pencil"></i> Editar</button></td>
-  </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin datos</td></tr>';
+    <td><button class="btn-peligro" onclick="A.eliminarDrive(${i})"><i class="bi bi-trash"></i></button></td>
+  </tr>`).join('') || '<tr><td colspan="5" class="text-muted text-center small">Sin datos</td></tr>';
 }
 
 function editarDrive(i) {
