@@ -19,7 +19,38 @@
   ],
   "horario": [],
   "examenes": [],
-  "calendario": [],
+  "calendario": [
+    {
+      "mes": "Agosto",
+      "nombre": "Inicio de Clases",
+      "fecha": "4 al 30",
+      "tipo": "normal"
+    },
+    {
+      "mes": "Septiembre",
+      "nombre": "1era Parcial",
+      "fecha": "14 Sept - 25 sept",
+      "tipo": "parcial"
+    },
+    {
+      "mes": "Octubre",
+      "nombre": "Clases",
+      "fecha": "1 al 30 octubre",
+      "tipo": "normal"
+    },
+    {
+      "mes": "Noviembre",
+      "nombre": "2da Parcial",
+      "fecha": "20 - 30 Noviembre",
+      "tipo": "parcial"
+    },
+    {
+      "mes": "Diciembre",
+      "nombre": "Finales",
+      "fecha": "1 al 15 Dic",
+      "tipo": "final"
+    }
+  ],
   "programas": [
     {
       "materia": "EconomÃ­a PolÃ­tica",
@@ -47,7 +78,15 @@
       "pdf": ""
     }
   ],
-  "libros": [],
+  "libros": [
+    {
+      "materia": "Economia",
+      "titulo": "Ciencias economicas",
+      "autor": "Lucas Alfonso",
+      "pdf": "https://www.amazon.com/dp/9509109681?lv=shuf&language=es&channelId=500&plpRedirect=mhFallback",
+      "imagen": "https://m.media-amazon.com/images/I/61lNDBRVTRL._SY385_.jpg"
+    }
+  ],
   "drive": [
     {
       "materia": "EconomÃ­a PolÃ­tica",
