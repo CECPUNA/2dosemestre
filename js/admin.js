@@ -5,13 +5,13 @@
 
 const DATA_URL  = '../data/2do.json';
 const LS_KEY    = 'cms_2do_2026';
-const GH_REPO   = 'sentiege/horariocentro';   // owner/repo
-const GH_PATH   = 'data/2do.json';            // ruta del archivo en el repo
+const GH_REPO   = 'sentiege/horariocentro';
+const GH_PATH   = 'data/2do.json';
 const GH_BRANCH = 'main';
-const LS_TOKEN  = 'gh_token_cms';             // clave localStorage para el token
+const LS_TOKEN  = 'gh_token_cms';
 
-let D    = null;  // datos en memoria
-let ghSHA = null; // SHA actual del archivo (necesario para el PUT)
+let D     = null;
+let ghSHA = null;
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
@@ -31,29 +31,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 // CARGA DE DATOS
 // =====================
 async function cargarDatos() {
-  // 1. Intentar cargar desde localStorage (cambios no publicados)
-  const guardado = localStorage.getItem(LS_KEY);
-  if (guardado) {
-    try { D = JSON.parse(guardado); } catch(e) { D = null; }
-  }
-
-  // 2. Siempre obtener el SHA actual del archivo en GitHub (para poder hacer PUT)
+  // 1. SIEMPRE cargar desde GitHub primero (fuente de verdad)
   try {
     const token = localStorage.getItem(LS_TOKEN);
     const headers = token ? { Authorization: `token ${token}` } : {};
-    const r = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}`, { headers });
+    const r = await fetch(
+      `https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}?_v=${Date.now()}`,
+      { headers, cache: 'no-store' }
+    );
     if (r.ok) {
       const meta = await r.json();
       ghSHA = meta.sha;
-      // Si no hay datos locales, usar los del repo (decodificar base64)
-      if (!D) {
-        const raw = atob(meta.content.replace(/\n/g,''));
-        D = JSON.parse(raw);
-      }
+      const raw = atob(meta.content.replace(/\n/g, ''));
+      D = JSON.parse(raw);
     }
   } catch(e) {}
 
+  // 2. Si no se pudo cargar del repo, usar datos vacíos
   if (!D) D = datosVacios();
+
+  // 3. Aplicar borrador local ENCIMA (si existe)
+  //    Solo se usa si el usuario tenía cambios sin publicar
+  const guardado = localStorage.getItem(LS_KEY);
+  if (guardado) {
+    try {
+      const borrador = JSON.parse(guardado);
+      // Mostramos aviso de que hay un borrador pendiente
+      D = borrador;
+      renderEstadoPublicacion('pendiente');
+    } catch(e) {
+      localStorage.removeItem(LS_KEY); // borrador corrupto, descartarlo
+    }
+  }
 }
 
 function guardarLocal() {
@@ -118,7 +127,7 @@ async function publicarEnGitHub() {
 
     if (r.ok) {
       const res = await r.json();
-      ghSHA = res.content.sha; // actualizar SHA para el próximo PUT
+      ghSHA = res.content.sha;
       localStorage.removeItem(LS_KEY); // limpiar borrador local
       toast('✅ Publicado en GitHub — el campus se actualizará en unos segundos');
       renderEstadoPublicacion('ok');
@@ -153,8 +162,9 @@ function initTokenUI() {
   const inp = document.getElementById('ghToken');
   if (inp && saved) inp.value = saved;
 
-  // Estado inicial
-  renderEstadoPublicacion(saved ? 'pendiente' : 'sin-token');
+  // Estado inicial: si no hay borrador local, está sincronizado
+  const tieneBorrador = !!localStorage.getItem(LS_KEY);
+  renderEstadoPublicacion(tieneBorrador ? 'pendiente' : 'ok');
 }
 
 function guardarToken() {
@@ -215,7 +225,6 @@ function renderAll() {
   renderDrive();
 }
 
-// Marcar que hay cambios sin publicar
 function guardarLocalYMarcar() {
   guardarLocal();
   renderEstadoPublicacion('pendiente');
