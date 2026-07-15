@@ -3,12 +3,14 @@
    admin.js — CRUD + localStorage + GitHub API publish
    =================================================== */
 
-const DATA_URL  = '../data/2do.json';
 const LS_KEY    = 'cms_2do_2026';
 const GH_REPO   = 'sentiege/horariocentro';
 const GH_PATH   = 'data/2do.json';
 const GH_BRANCH = 'main';
 const LS_TOKEN  = 'gh_token_cms';
+
+// URL pública sin autenticación ni rate limit
+const RAW_URL = `https://raw.githubusercontent.com/${GH_REPO}/${GH_BRANCH}/${GH_PATH}`;
 
 let D     = null;
 let ghSHA = null;
@@ -33,22 +35,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function cargarDatos() {
   localStorage.removeItem(LS_KEY);
 
+  // 1) Leer el JSON desde raw.githubusercontent (público, sin rate limit)
+  try {
+    const r = await fetch(`${RAW_URL}?_v=${Date.now()}`, { cache: 'no-store' });
+    if (r.ok) {
+      D = await r.json();
+    }
+  } catch(e) {
+    console.warn('raw fetch falló:', e);
+  }
+
+  // 2) En paralelo, obtener el SHA via API (necesario para publicar)
+  //    No bloqueamos el render si esto falla.
+  obtenerSHA();
+
+  if (!D) D = datosVacios();
+}
+
+async function obtenerSHA() {
   try {
     const token = localStorage.getItem(LS_TOKEN);
     const headers = token ? { Authorization: `token ${token}` } : {};
     const r = await fetch(
-      `https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}?_v=${Date.now()}`,
+      `https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}`,
       { headers, cache: 'no-store' }
     );
     if (r.ok) {
       const meta = await r.json();
       ghSHA = meta.sha;
-      const raw = atob(meta.content.replace(/\n/g, ''));
-      D = JSON.parse(raw);
     }
-  } catch(e) {}
-
-  if (!D) D = datosVacios();
+  } catch(e) {
+    console.warn('obtenerSHA falló:', e);
+  }
 }
 
 function guardarLocal() {
@@ -85,6 +103,12 @@ async function publicarEnGitHub() {
     toast('Configurá el token de GitHub primero (panel Publicar)', 'error');
     abrirPanel('publicar');
     return;
+  }
+
+  // Si todavía no tenemos el SHA, intentar obtenerlo ahora
+  if (!ghSHA) {
+    toast('Obteniendo SHA del archivo...', 'ok');
+    await obtenerSHA();
   }
 
   const btn = document.getElementById('btnPublicar');
