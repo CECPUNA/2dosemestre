@@ -1,13 +1,14 @@
 /* Service Worker – Campus Informativo 2do Semestre */
-const CACHE_NAME = 'campus-2do-v2';
+const CACHE_NAME = 'campus-2do-v3';
 
-// Archivos estáticos que se cachean (cache-first)
+// Rutas relativas al scope del SW (funciona tanto en la raíz de un dominio
+// como en un project site de GitHub Pages, ej: usuario.github.io/horariocentro/)
 const ASSETS_ESTATICOS = [
-  '/',
-  '/index.html',
-  '/css/main.css',
-  '/js/app.js',
-  '/manifest.json',
+  './',
+  './index.html',
+  './css/main.css',
+  './js/app.js',
+  './manifest.json',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
