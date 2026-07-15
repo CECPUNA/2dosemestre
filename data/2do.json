@@ -1,23 +1,96 @@
 {
   "semestre": "Segundo",
   "anio": 2026,
-  "noticias": [],
-  "horario": [],
+  "noticias": [
+    {
+      "titulo": "Esta noticia es la 2da  y es urgente",
+      "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "tipo": "Noticia",
+      "fecha": "24 de septiembre",
+      "urgente": true
+    },
+    {
+      "titulo": "Noticia numero 1",
+      "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "tipo": "Noticia",
+      "fecha": "22 de septiembre",
+      "urgente": false
+    }
+  ],
+  "horario": [
+    {
+      "dia": "Lunes",
+      "hora": "18:10",
+      "materia": "Economía Política",
+      "profesor": "Prof Urquiza"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "18:40",
+      "materia": "Economía Política",
+      "profesor": "Prof Urquiza"
+    }
+  ],
   "examenes": [],
   "calendario": [],
   "programas": [
-    { "materia": "Economía Política", "descripcion": "Programa oficial · 2026", "pdf": "" },
-    { "materia": "Introducción a las Ciencias Políticas", "descripcion": "Programa oficial · 2026", "pdf": "" },
-    { "materia": "Historia Política Paraguaya", "descripcion": "Programa oficial · 2026", "pdf": "" },
-    { "materia": "Idioma Guaraní II", "descripcion": "Programa oficial · 2026", "pdf": "" },
-    { "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)", "descripcion": "Programa oficial · 2026", "pdf": "" }
+    {
+      "materia": "EconomÃ­a PolÃ­tica",
+      "descripcion": "Programa oficial Â· 2026",
+      "pdf": ""
+    },
+    {
+      "materia": "IntroducciÃ³n a las Ciencias PolÃ­ticas",
+      "descripcion": "Programa oficial Â· 2026",
+      "pdf": ""
+    },
+    {
+      "materia": "Historia PolÃ­tica Paraguaya",
+      "descripcion": "Programa oficial Â· 2026",
+      "pdf": ""
+    },
+    {
+      "materia": "Idioma GuaranÃ­ II",
+      "descripcion": "Programa oficial Â· 2026",
+      "pdf": ""
+    },
+    {
+      "materia": "Seminario II: Movimientos Sociales y PolÃ­ticos en AmÃ©rica Latina (Siglos XX y XXI)",
+      "descripcion": "Programa oficial Â· 2026",
+      "pdf": ""
+    }
   ],
   "libros": [],
   "drive": [
-    { "materia": "Economía Política", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
-    { "materia": "Introducción a las Ciencias Políticas", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
-    { "materia": "Historia Política Paraguaya", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
-    { "materia": "Idioma Guaraní II", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
-    { "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" }
+    {
+      "materia": "EconomÃ­a PolÃ­tica",
+      "descripcion": "Carpeta del docente",
+      "url": "",
+      "urlClassroom": ""
+    },
+    {
+      "materia": "IntroducciÃ³n a las Ciencias PolÃ­ticas",
+      "descripcion": "Carpeta del docente",
+      "url": "",
+      "urlClassroom": ""
+    },
+    {
+      "materia": "Historia PolÃ­tica Paraguaya",
+      "descripcion": "Carpeta del docente",
+      "url": "",
+      "urlClassroom": ""
+    },
+    {
+      "materia": "Idioma GuaranÃ­ II",
+      "descripcion": "Carpeta del docente",
+      "url": "",
+      "urlClassroom": ""
+    },
+    {
+      "materia": "Seminario II: Movimientos Sociales y PolÃ­ticos en AmÃ©rica Latina (Siglos XX y XXI)",
+      "descripcion": "Carpeta del docente",
+      "url": "",
+      "urlClassroom": ""
+    }
   ]
 }
