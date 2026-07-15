@@ -383,7 +383,7 @@
         <button class="btn btn-outline-secondary" onclick="A.descargarJSON()"><i class="bi bi-file-earmark-arrow-down me-2"></i>Descargar archivo</button>
         <button class="btn btn-outline-danger" onclick="A.resetearDatos()"><i class="bi bi-arrow-counterclockwise me-2"></i>Resetear al último publicado</button>
       </div>
-      <div id="jsonOutput">Presíoná "Copiar" para generar el JSON...</div>
+      <div id="jsonOutput">Presínoa &quot;Copiar&quot; para generar el JSON...</div>
     </div>
   </div>
 
@@ -394,13 +394,13 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/admin.js"></script>
 <script>
-  // Sincronizar segundo badge de estado de publicación
-  const _origRender = renderEstadoPublicacion;
-  function renderEstadoPublicacion(e) {
-    _origRender(e);
+  // Sincronizar el badge de estado en el panel Publicar
+  // Usa addEventListener para no pisar la funcion definida en admin.js
+  document.addEventListener('estadoPublicacionChanged', function(e) {
     const el2 = document.getElementById('estadoPublicacion2');
-    if (el2) el2.innerHTML = document.getElementById('estadoPublicacion').innerHTML;
-  }
+    const el1 = document.getElementById('estadoPublicacion');
+    if (el2 && el1) el2.innerHTML = el1.innerHTML;
+  });
 </script>
 </body>
 </html>
