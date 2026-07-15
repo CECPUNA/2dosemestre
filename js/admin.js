@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // CARGA DE DATOS
 // =====================
 async function cargarDatos() {
-  // Limpiar cualquier borrador residual: GitHub es la única fuente de verdad
   localStorage.removeItem(LS_KEY);
 
   try {
@@ -53,7 +52,7 @@ async function cargarDatos() {
 }
 
 function guardarLocal() {
-  // Los cambios viven solo en memoria hasta publicar; no se persisten en localStorage
+  // cambios viven en memoria hasta publicar
 }
 
 function datosVacios() {
@@ -115,7 +114,7 @@ async function publicarEnGitHub() {
     if (r.ok) {
       const res = await r.json();
       ghSHA = res.content.sha;
-      localStorage.removeItem(LS_KEY); // limpiar borrador local
+      localStorage.removeItem(LS_KEY);
       toast('✅ Publicado en GitHub — el campus se actualizará en unos segundos');
       renderEstadoPublicacion('ok');
     } else {
@@ -148,8 +147,6 @@ function initTokenUI() {
   const saved = localStorage.getItem(LS_TOKEN);
   const inp = document.getElementById('ghToken');
   if (inp && saved) inp.value = saved;
-
-  // Sin borrador local, siempre parte sincronizado
   renderEstadoPublicacion('ok');
 }
 
@@ -216,18 +213,19 @@ function guardarLocalYMarcar() {
 }
 
 // =====================
-// DASHBOARD STATS
+// DASHBOARD STATS + PREVIEWS
 // =====================
 function renderDashboard() {
   const stats = [
-    { label:'Noticias',  val: D.noticias?.length||0,  icon:'bi-megaphone-fill',       color:'#1a237e', bg:'#e8eaf6' },
-    { label:'Clases',    val: D.horario?.length||0,   icon:'bi-clock-fill',           color:'#2e7d32', bg:'#e8f5e9' },
-    { label:'Exámenes',  val: D.examenes?.length||0,  icon:'bi-journal-check',        color:'#c62828', bg:'#ffebee' },
-    { label:'Libros',    val: D.libros?.length||0,    icon:'bi-book-fill',            color:'#e65100', bg:'#fff3e0' },
-    { label:'Programas', val: D.programas?.filter(p=>p.pdf).length||0, icon:'bi-file-earmark-pdf-fill', color:'#4a148c', bg:'#f3e5f5' },
+    { label:'Noticias',   val: D.noticias?.length||0,  icon:'bi-megaphone-fill',        color:'#1a237e', bg:'#e8eaf6' },
+    { label:'Clases',     val: D.horario?.length||0,   icon:'bi-clock-fill',            color:'#2e7d32', bg:'#e8f5e9' },
+    { label:'Exámenes',   val: D.examenes?.length||0,  icon:'bi-journal-check',         color:'#c62828', bg:'#ffebee' },
+    { label:'Libros',     val: D.libros?.length||0,    icon:'bi-book-fill',             color:'#e65100', bg:'#fff3e0' },
+    { label:'Programas',  val: D.programas?.filter(p=>p.pdf).length||0, icon:'bi-file-earmark-pdf-fill', color:'#4a148c', bg:'#f3e5f5' },
     { label:'Drive/Class',val: D.drive?.filter(d=>d.url||d.urlClassroom).length||0, icon:'bi-folder2-open', color:'#01579b', bg:'#e1f5fe' },
   ];
-  document.getElementById('statsRow').innerHTML = stats.map(s => `
+  const sr = document.getElementById('statsRow');
+  if (sr) sr.innerHTML = stats.map(s => `
     <div class="col-6 col-md-4 col-lg-2">
       <div class="g-card">
         <div class="stat-icon mb-3" style="background:${s.bg};color:${s.color}"><i class="bi ${s.icon}"></i></div>
@@ -235,6 +233,126 @@ function renderDashboard() {
         <div style="font-size:.78rem;color:#6b7280;font-weight:600">${s.label}</div>
       </div>
     </div>`).join('');
+
+  renderDashboardPreviews();
+}
+
+function renderDashboardPreviews() {
+  const empty = '<p style="color:#9ca3af;font-size:.82rem;font-style:italic;padding:8px 0">Sin datos cargados.</p>';
+
+  // --- Noticias ---
+  const dn = document.getElementById('dash-noticias');
+  if (dn) {
+    if (!D.noticias?.length) { dn.innerHTML = empty; }
+    else {
+      const rows = D.noticias.slice(0,5).map(n =>
+        `<tr>
+          <td><strong>${n.titulo}</strong>${n.urgente?' <span class="bt" style="background:#ffebee;color:#c62828">Urgente</span>':''}</td>
+          <td style="color:#6b7280">${n.tipo||'Aviso'}</td>
+          <td style="color:#6b7280">${n.fecha||'—'}</td>
+        </tr>`).join('');
+      dn.innerHTML = `<table class="dash-tbl"><thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th></tr></thead><tbody>${rows}</tbody></table>`;
+      if (D.noticias.length > 5) dn.innerHTML += `<p style="color:#9ca3af;font-size:.78rem;margin-top:6px">+${D.noticias.length-5} más — <button class="dash-link" onclick="abrirPanel('noticias')">ver todas</button></p>`;
+    }
+  }
+
+  // --- Exámenes ---
+  const de = document.getElementById('dash-examenes');
+  if (de) {
+    if (!D.examenes?.length) { de.innerHTML = empty; }
+    else {
+      const rows = D.examenes.slice(0,5).map(e =>
+        `<tr>
+          <td style="font-size:.78rem;font-weight:600">${e.materia}</td>
+          <td><span class="bt" style="background:#ffebee;color:#c62828">${e.tipo}</span></td>
+          <td style="color:#6b7280">${e.fecha} ${e.hora}</td>
+        </tr>`).join('');
+      de.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>Tipo</th><th>Fecha / Hora</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+  }
+
+  // --- Horario ---
+  const dh = document.getElementById('dash-horario');
+  if (dh) {
+    if (!D.horario?.length) { dh.innerHTML = empty; }
+    else {
+      const ORDEN = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+      const sorted = [...D.horario].sort((a,b) =>
+        ORDEN.indexOf(a.dia) - ORDEN.indexOf(b.dia) || a.hora.localeCompare(b.hora));
+      const rows = sorted.map(c =>
+        `<tr>
+          <td style="font-weight:600">${c.dia}</td>
+          <td>${c.hora}</td>
+          <td style="font-size:.78rem">${c.materia}</td>
+          <td style="color:#6b7280;font-size:.75rem">${c.profesor||'—'}</td>
+        </tr>`).join('');
+      dh.innerHTML = `<table class="dash-tbl"><thead><tr><th>Día</th><th>Hora</th><th>Materia</th><th>Profesor</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+  }
+
+  // --- Calendario ---
+  const dc = document.getElementById('dash-calendario');
+  if (dc) {
+    if (!D.calendario?.length) { dc.innerHTML = empty; }
+    else {
+      const col = {normal:'#3949ab', parcial:'#c62828', final:'#e65100'};
+      const rows = D.calendario.map(p =>
+        `<tr>
+          <td>${p.mes}</td>
+          <td style="font-weight:600">${p.nombre}</td>
+          <td style="color:#6b7280">${p.fecha||'—'}</td>
+          <td><span class="bt" style="background:${col[p.tipo]||'#3949ab'};color:#fff">${p.tipo}</span></td>
+        </tr>`).join('');
+      dc.innerHTML = `<table class="dash-tbl"><thead><tr><th>Mes</th><th>Nombre</th><th>Fecha</th><th>Tipo</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+  }
+
+  // --- Programas ---
+  const dp = document.getElementById('dash-programas');
+  if (dp) {
+    if (!D.programas?.length) { dp.innerHTML = empty; }
+    else {
+      const rows = D.programas.map(p =>
+        `<tr>
+          <td style="font-size:.78rem">${p.materia}</td>
+          <td>${p.pdf
+            ? `<a href="${p.pdf}" target="_blank" class="bt" style="background:#e8eaf6;color:#3949ab"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</a>`
+            : '<span style="color:#9ca3af;font-size:.78rem">Sin PDF</span>'}</td>
+        </tr>`).join('');
+      dp.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>PDF</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+  }
+
+  // --- Libros ---
+  const dl = document.getElementById('dash-libros');
+  if (dl) {
+    if (!D.libros?.length) { dl.innerHTML = empty; }
+    else {
+      const rows = D.libros.slice(0,6).map(l =>
+        `<tr>
+          <td style="font-size:.78rem">${l.materia}</td>
+          <td style="font-weight:600">${l.titulo}</td>
+          <td style="color:#6b7280;font-size:.75rem">${l.autor||'—'}</td>
+          <td>${l.pdf ? `<a href="${l.pdf}" target="_blank" class="bt" style="background:#e8eaf6;color:#3949ab"><i class="bi bi-eye"></i></a>` : '—'}</td>
+        </tr>`).join('');
+      dl.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>Título</th><th>Autor</th><th>PDF</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+  }
+
+  // --- Drive / Classroom ---
+  const dd = document.getElementById('dash-drive');
+  if (dd) {
+    if (!D.drive?.length) { dd.innerHTML = empty; }
+    else {
+      const rows = D.drive.map(d =>
+        `<tr>
+          <td style="font-size:.8rem;font-weight:600">${d.materia}</td>
+          <td>${d.url ? `<a href="${d.url}" target="_blank" class="bt" style="background:#e3f2fd;color:#1565c0"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : '<span style="color:#9ca3af;font-size:.78rem">—</span>'}</td>
+          <td>${d.urlClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="bt" style="background:#e8f5e9;color:#2e7d32"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : '<span style="color:#9ca3af;font-size:.78rem">—</span>'}</td>
+        </tr>`).join('');
+      dd.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>Drive</th><th>Classroom</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+  }
 }
 
 // =====================

@@ -47,7 +47,7 @@
     .btn-edit{background:#e3f2fd;color:#1565c0;border:none;border-radius:6px;font-size:.75rem;padding:3px 10px;}
     .btn-edit:hover{background:#bbdefb;color:#0d47a1;}
     .sbox{background:var(--card);border-radius:var(--radius);box-shadow:0 3px 16px rgba(26,35,126,.07);padding:24px;margin-bottom:24px;}
-    .sbox-title{font-size:.95rem;font-weight:700;color:var(--una);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8eaf6;}
+    .sbox-title{font-size:.95rem;font-weight:700;color:var(--una);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8eaf6;display:flex;align-items:center;justify-content:space-between;}
     .bt{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:6px;}
     .toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
     .toast-item{background:#1a237e;color:#fff;padding:12px 18px;border-radius:10px;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.25);animation:slideIn .3s ease;}
@@ -69,15 +69,13 @@
     .hg-cell.ocupada:hover .hg-del{display:inline;}
     .pub-bar{background:#fff;border-bottom:1px solid #e8eaf6;padding:10px 32px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
     @media(max-width:860px){.pub-bar{padding:10px 16px;}}
-    /* Dashboard preview tables */
     .dash-tbl{width:100%;border-collapse:collapse;font-size:.8rem;}
     .dash-tbl th{background:#e8eaf6;color:#3949ab;font-weight:700;padding:7px 10px;text-align:left;}
     .dash-tbl td{padding:7px 10px;border-bottom:1px solid #f0f2f8;vertical-align:middle;}
     .dash-tbl tr:last-child td{border-bottom:none;}
     .dash-tbl tbody tr:hover{background:#f5f6fd;}
-    .empty-state{color:#9ca3af;font-size:.82rem;font-style:italic;padding:10px 0;}
-    .dash-link{color:var(--una2);font-weight:600;font-size:.78rem;cursor:pointer;text-decoration:none;border:none;background:none;padding:0;}
-    .dash-link:hover{text-decoration:underline;color:var(--una);}
+    .dash-link{color:var(--una2);font-weight:600;font-size:.8rem;cursor:pointer;text-decoration:none;border:none;background:none;padding:0;}
+    .dash-link:hover{text-decoration:underline;}
   </style>
 </head>
 <body>
@@ -112,8 +110,7 @@
 <!-- MAIN -->
 <div style="flex:1;display:flex;flex-direction:column;">
 
-  <!-- BARRA PUBLICAR (siempre visible) -->
-  <div class="pub-bar" style="margin-left:0">
+  <div class="pub-bar">
     <button class="btn-pub" id="btnPublicar" onclick="publicarEnGitHub()">
       <i class="bi bi-cloud-upload-fill"></i> Publicar en GitHub
     </button>
@@ -128,89 +125,62 @@
     <div class="panel-title"><i class="bi bi-speedometer2 me-2"></i>Dashboard</div>
     <div class="panel-sub">Resumen del contenido del portal</div>
 
-    <!-- Stats cards -->
     <div class="row g-3" id="statsRow"></div>
 
-    <!-- Preview: Noticias -->
     <div class="row g-3 mt-1">
       <div class="col-12 col-lg-6">
         <div class="sbox">
-          <div class="sbox-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-megaphone me-2"></i>Noticias recientes</span>
-            <button class="dash-link" onclick="abrirPanel('noticias')">Ver todas <i class="bi bi-arrow-right"></i></button>
-          </div>
+          <div class="sbox-title"><span><i class="bi bi-megaphone me-2"></i>Noticias recientes</span><button class="dash-link" onclick="abrirPanel('noticias')">Ver todas <i class="bi bi-arrow-right"></i></button></div>
           <div id="dash-noticias"></div>
         </div>
       </div>
       <div class="col-12 col-lg-6">
         <div class="sbox">
-          <div class="sbox-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-journal-check me-2"></i>Próximos exámenes</span>
-            <button class="dash-link" onclick="abrirPanel('examenes')">Ver todos <i class="bi bi-arrow-right"></i></button>
-          </div>
+          <div class="sbox-title"><span><i class="bi bi-journal-check me-2"></i>Próximos exámenes</span><button class="dash-link" onclick="abrirPanel('examenes')">Ver todos <i class="bi bi-arrow-right"></i></button></div>
           <div id="dash-examenes"></div>
         </div>
       </div>
     </div>
 
-    <!-- Preview: Horario + Calendario -->
     <div class="row g-3">
       <div class="col-12 col-lg-6">
         <div class="sbox">
-          <div class="sbox-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-clock me-2"></i>Horario cargado</span>
-            <button class="dash-link" onclick="abrirPanel('horario')">Editar <i class="bi bi-arrow-right"></i></button>
-          </div>
+          <div class="sbox-title"><span><i class="bi bi-clock me-2"></i>Horario cargado</span><button class="dash-link" onclick="abrirPanel('horario')">Editar <i class="bi bi-arrow-right"></i></button></div>
           <div id="dash-horario"></div>
         </div>
       </div>
       <div class="col-12 col-lg-6">
         <div class="sbox">
-          <div class="sbox-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-calendar-event me-2"></i>Períodos de evaluación</span>
-            <button class="dash-link" onclick="abrirPanel('calendario')">Ver todos <i class="bi bi-arrow-right"></i></button>
-          </div>
+          <div class="sbox-title"><span><i class="bi bi-calendar-event me-2"></i>Períodos de evaluación</span><button class="dash-link" onclick="abrirPanel('calendario')">Ver todos <i class="bi bi-arrow-right"></i></button></div>
           <div id="dash-calendario"></div>
         </div>
       </div>
     </div>
 
-    <!-- Preview: Programas + Libros -->
     <div class="row g-3">
       <div class="col-12 col-lg-6">
         <div class="sbox">
-          <div class="sbox-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-file-earmark-text me-2"></i>Programas de estudio</span>
-            <button class="dash-link" onclick="abrirPanel('programas')">Editar <i class="bi bi-arrow-right"></i></button>
-          </div>
+          <div class="sbox-title"><span><i class="bi bi-file-earmark-text me-2"></i>Programas de estudio</span><button class="dash-link" onclick="abrirPanel('programas')">Editar <i class="bi bi-arrow-right"></i></button></div>
           <div id="dash-programas"></div>
         </div>
       </div>
       <div class="col-12 col-lg-6">
         <div class="sbox">
-          <div class="sbox-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-book me-2"></i>Libros / Material</span>
-            <button class="dash-link" onclick="abrirPanel('libros')">Ver todos <i class="bi bi-arrow-right"></i></button>
-          </div>
+          <div class="sbox-title"><span><i class="bi bi-book me-2"></i>Libros / Material</span><button class="dash-link" onclick="abrirPanel('libros')">Ver todos <i class="bi bi-arrow-right"></i></button></div>
           <div id="dash-libros"></div>
         </div>
       </div>
     </div>
 
-    <!-- Preview: Drive/Classroom -->
     <div class="row g-3">
       <div class="col-12">
         <div class="sbox">
-          <div class="sbox-title d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-folder2-open me-2"></i>Google Drive / Classroom</span>
-            <button class="dash-link" onclick="abrirPanel('drive')">Editar <i class="bi bi-arrow-right"></i></button>
-          </div>
+          <div class="sbox-title"><span><i class="bi bi-folder2-open me-2"></i>Google Drive / Classroom</span><button class="dash-link" onclick="abrirPanel('drive')">Editar <i class="bi bi-arrow-right"></i></button></div>
           <div id="dash-drive"></div>
         </div>
       </div>
     </div>
-
-  </div><!-- /panel-dashboard -->
+  </div>
 
   <!-- NOTICIAS -->
   <div id="panel-noticias" class="panel">
@@ -379,14 +349,12 @@
         <li>Andá a <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a></li>
         <li>Nombre: <code>gestor-horariocentro</code></li>
         <li>Expiración: la que quieras (90 días recomendado)</li>
-        <li>Permiso: tildá solo <strong><code>repo</code></strong> (acceso completo al repositorio)</li>
+        <li>Permiso: tildá solo <strong><code>repo</code></strong></li>
         <li>Copiá el token generado y pegálo abajo</li>
       </ol>
       <div class="row g-3">
-        <div class="col-md-8">
-          <label class="form-label">Token <span class="text-muted fw-normal">(ghp_...)</span></label>
-          <input class="form-control token-input" id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
-        </div>
+        <div class="col-md-8"><label class="form-label">Token (ghp_...)</label>
+          <input class="form-control token-input" id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" /></div>
         <div class="col-md-4 d-flex align-items-end gap-2">
           <button class="btn btn-una flex-grow-1" onclick="guardarToken()"><i class="bi bi-save me-2"></i>Guardar token</button>
           <button class="btn btn-outline-danger" onclick="borrarToken()" title="Eliminar token"><i class="bi bi-trash"></i></button>
@@ -395,7 +363,7 @@
     </div>
     <div class="sbox">
       <div class="sbox-title"><i class="bi bi-cloud-upload me-2"></i>Publicar ahora</div>
-      <p class="small text-muted mb-3">Esto actualiza <code>data/2do.json</code> directamente en el repositorio. El campus reflejará los cambios en segundos (GitHub Pages puede tardar ~30–60 segundos en propagar).</p>
+      <p class="small text-muted mb-3">Actualiza <code>data/2do.json</code> directamente en el repositorio. El campus reflejará los cambios en ~30–60 segundos.</p>
       <div class="d-flex align-items-center gap-3 flex-wrap">
         <button class="btn-pub" id="btnPublicar2" onclick="publicarEnGitHub()">
           <i class="bi bi-cloud-upload-fill"></i> Publicar en GitHub
@@ -419,154 +387,20 @@
     </div>
   </div>
 
-  </div><!-- /main -->
-</div><!-- /flex col -->
-</div><!-- /d-flex -->
+  </div>
+</div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/admin.js"></script>
 <script>
-  // Sincronizar segundo badge de estado
+  // Sincronizar segundo badge de estado de publicación
   const _origRender = renderEstadoPublicacion;
   function renderEstadoPublicacion(e) {
     _origRender(e);
     const el2 = document.getElementById('estadoPublicacion2');
     if (el2) el2.innerHTML = document.getElementById('estadoPublicacion').innerHTML;
   }
-
-  // =====================
-  // DASHBOARD PREVIEWS
-  // =====================
-  function renderDashboardPreviews() {
-    const empty = '<p class="empty-state">Sin datos cargados.</p>';
-
-    // Noticias (últimas 5)
-    const dn = document.getElementById('dash-noticias');
-    if (dn) {
-      if (!D.noticias?.length) { dn.innerHTML = empty; }
-      else {
-        const rows = D.noticias.slice(0,5).map(n =>
-          `<tr>
-            <td><strong>${n.titulo}</strong>${n.urgente?' <span class="bt" style="background:#ffebee;color:#c62828">Urgente</span>':''}</td>
-            <td class="text-muted">${n.tipo||'Aviso'}</td>
-            <td class="text-muted">${n.fecha||'—'}</td>
-          </tr>`).join('');
-        dn.innerHTML = `<table class="dash-tbl"><thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th></tr></thead><tbody>${rows}</tbody></table>`;
-        if (D.noticias.length > 5) dn.innerHTML += `<p class="text-muted small mt-2">+${D.noticias.length-5} más — <button class="dash-link" onclick="abrirPanel('noticias')">ver todas</button></p>`;
-      }
-    }
-
-    // Exámenes
-    const de = document.getElementById('dash-examenes');
-    if (de) {
-      if (!D.examenes?.length) { de.innerHTML = empty; }
-      else {
-        const rows = D.examenes.slice(0,5).map(e =>
-          `<tr>
-            <td class="fw-semibold" style="font-size:.78rem">${e.materia}</td>
-            <td><span class="bt" style="background:#ffebee;color:#c62828">${e.tipo}</span></td>
-            <td class="text-muted">${e.fecha} ${e.hora}</td>
-          </tr>`).join('');
-        de.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>Tipo</th><th>Fecha / Hora</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
-    }
-
-    // Horario
-    const dh = document.getElementById('dash-horario');
-    if (dh) {
-      if (!D.horario?.length) { dh.innerHTML = empty; }
-      else {
-        const sorted = [...D.horario].sort((a,b) => {
-          const dias = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
-          return dias.indexOf(a.dia) - dias.indexOf(b.dia) || a.hora.localeCompare(b.hora);
-        });
-        const rows = sorted.map(c =>
-          `<tr>
-            <td class="fw-semibold">${c.dia}</td>
-            <td>${c.hora}</td>
-            <td style="font-size:.78rem">${c.materia}</td>
-            <td class="text-muted" style="font-size:.75rem">${c.profesor||'—'}</td>
-          </tr>`).join('');
-        dh.innerHTML = `<table class="dash-tbl"><thead><tr><th>Día</th><th>Hora</th><th>Materia</th><th>Profesor</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
-    }
-
-    // Calendario
-    const dc = document.getElementById('dash-calendario');
-    if (dc) {
-      if (!D.calendario?.length) { dc.innerHTML = empty; }
-      else {
-        const colores = {normal:'#3949ab', parcial:'#c62828', final:'#e65100'};
-        const rows = D.calendario.map(p =>
-          `<tr>
-            <td>${p.mes}</td>
-            <td class="fw-semibold">${p.nombre}</td>
-            <td class="text-muted">${p.fecha||'—'}</td>
-            <td><span class="bt" style="background:${colores[p.tipo]||'#3949ab'};color:#fff">${p.tipo}</span></td>
-          </tr>`).join('');
-        dc.innerHTML = `<table class="dash-tbl"><thead><tr><th>Mes</th><th>Nombre</th><th>Fecha</th><th>Tipo</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
-    }
-
-    // Programas
-    const dp = document.getElementById('dash-programas');
-    if (dp) {
-      if (!D.programas?.length) { dp.innerHTML = empty; }
-      else {
-        const rows = D.programas.map(p =>
-          `<tr>
-            <td style="font-size:.78rem">${p.materia}</td>
-            <td>${p.pdf
-              ? `<a href="${p.pdf}" target="_blank" class="bt" style="background:#e8eaf6;color:#3949ab"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</a>`
-              : '<span class="text-muted small">Sin PDF</span>'}
-            </td>
-          </tr>`).join('');
-        dp.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>PDF</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
-    }
-
-    // Libros
-    const dl = document.getElementById('dash-libros');
-    if (dl) {
-      if (!D.libros?.length) { dl.innerHTML = empty; }
-      else {
-        const rows = D.libros.slice(0,6).map(l =>
-          `<tr>
-            <td style="font-size:.78rem">${l.materia}</td>
-            <td class="fw-semibold">${l.titulo}</td>
-            <td class="text-muted" style="font-size:.75rem">${l.autor||'—'}</td>
-            <td>${l.pdf ? `<a href="${l.pdf}" target="_blank" class="bt" style="background:#e8eaf6;color:#3949ab"><i class="bi bi-eye"></i></a>` : '—'}</td>
-          </tr>`).join('');
-        dl.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>Título</th><th>Autor</th><th>PDF</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
-    }
-
-    // Drive / Classroom
-    const dd = document.getElementById('dash-drive');
-    if (dd) {
-      if (!D.drive?.length) { dd.innerHTML = empty; }
-      else {
-        const rows = D.drive.map(d =>
-          `<tr>
-            <td class="fw-semibold" style="font-size:.8rem">${d.materia}</td>
-            <td>${d.url ? `<a href="${d.url}" target="_blank" class="bt" style="background:#e3f2fd;color:#1565c0"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : '<span class="text-muted small">—</span>'}</td>
-            <td>${d.urlClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="bt" style="background:#e8f5e9;color:#2e7d32"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : '<span class="text-muted small">—</span>'}</td>
-          </tr>`).join('');
-        dd.innerHTML = `<table class="dash-tbl"><thead><tr><th>Materia</th><th>Drive</th><th>Classroom</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }
-    }
-  }
-
-  // Llamar después de que admin.js cargue D
-  document.addEventListener('DOMContentLoaded', () => {
-    // Espera a que admin.js termine su DOMContentLoaded (cargarDatos es async)
-    // Se engancha sobreescribiendo renderDashboard
-    const _origDash = window.renderDashboard;
-    window.renderDashboard = function() {
-      _origDash();
-      renderDashboardPreviews();
-    };
-  });
 </script>
 </body>
 </html>
