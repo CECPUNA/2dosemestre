@@ -31,7 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 // CARGA DE DATOS
 // =====================
 async function cargarDatos() {
-  // 1. SIEMPRE cargar desde GitHub primero (fuente de verdad)
+  // Limpiar cualquier borrador residual: GitHub es la única fuente de verdad
+  localStorage.removeItem(LS_KEY);
+
   try {
     const token = localStorage.getItem(LS_TOKEN);
     const headers = token ? { Authorization: `token ${token}` } : {};
@@ -47,26 +49,11 @@ async function cargarDatos() {
     }
   } catch(e) {}
 
-  // 2. Si no se pudo cargar del repo, usar datos vacíos
   if (!D) D = datosVacios();
-
-  // 3. Aplicar borrador local ENCIMA (si existe)
-  //    Solo se usa si el usuario tenía cambios sin publicar
-  const guardado = localStorage.getItem(LS_KEY);
-  if (guardado) {
-    try {
-      const borrador = JSON.parse(guardado);
-      // Mostramos aviso de que hay un borrador pendiente
-      D = borrador;
-      renderEstadoPublicacion('pendiente');
-    } catch(e) {
-      localStorage.removeItem(LS_KEY); // borrador corrupto, descartarlo
-    }
-  }
 }
 
 function guardarLocal() {
-  localStorage.setItem(LS_KEY, JSON.stringify(D));
+  // Los cambios viven solo en memoria hasta publicar; no se persisten en localStorage
 }
 
 function datosVacios() {
@@ -162,9 +149,8 @@ function initTokenUI() {
   const inp = document.getElementById('ghToken');
   if (inp && saved) inp.value = saved;
 
-  // Estado inicial: si no hay borrador local, está sincronizado
-  const tieneBorrador = !!localStorage.getItem(LS_KEY);
-  renderEstadoPublicacion(tieneBorrador ? 'pendiente' : 'ok');
+  // Sin borrador local, siempre parte sincronizado
+  renderEstadoPublicacion('ok');
 }
 
 function guardarToken() {
@@ -172,7 +158,6 @@ function guardarToken() {
   if (!t) { toast('Ingresá el token','error'); return; }
   localStorage.setItem(LS_TOKEN, t);
   toast('Token guardado — ya podés publicar');
-  renderEstadoPublicacion('pendiente');
 }
 
 function borrarToken() {
