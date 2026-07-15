@@ -176,6 +176,14 @@
       "hora": "19:00",
       "aula": "1",
       "profesor": "Urquiza"
+    },
+    {
+      "materia": "Economía Política",
+      "tipo": "Primer Parcial",
+      "fecha": "12 de Octubre",
+      "hora": "19:00",
+      "aula": "1",
+      "profesor": "Urquiza"
     }
   ],
   "calendario": [
