@@ -1,265 +1,376 @@
-/* ================================================
-   Campus Informativo · admin.js
-   Panel de gestión del 2do Semestre
-   ================================================ */
+/* ===================================================
+   Gestor de Contenidos · 2do Semestre
+   admin.js — CRUD completo + localStorage
+   =================================================== */
 
-// Auth guard
-if (!sessionStorage.getItem('adminOk')) {
-  window.location.href = 'login.html';
-}
+const DATA_URL = '../data/2do.json';
+const LS_KEY   = 'cms_2do_2026';
 
-document.getElementById('btnSalir').addEventListener('click', () => {
-  sessionStorage.removeItem('adminOk');
-});
+let D = null; // datos en memoria
 
-// ===== DATA EN MEMORIA =====
-let D = null;
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', async () => {
+  await cargarDatos();
+  initNav();
+  renderDashboard();
+  renderAll();
 
-fetch('../data/2do.json')
-  .then(r => r.json())
-  .then(d => { D = JSON.parse(JSON.stringify(d)); initDashboard(); })
-  .catch(() => { D = { noticias:[], horario:[], examenes:[], calendario:[], programas:[], libros:[], drive:[] }; initDashboard(); });
-
-// ===== NAVEGACIÓN SIDEBAR =====
-document.querySelectorAll('[data-panel]').forEach(el => {
-  el.addEventListener('click', () => {
-    document.querySelectorAll('[data-panel]').forEach(e => e.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    const panel = document.getElementById('panel-' + el.dataset.panel);
-    if (panel) {
-      panel.classList.add('active');
-      renderPanel(el.dataset.panel);
-    }
+  // Cerrar sesión
+  document.getElementById('btnSalir')?.addEventListener('click', () => {
+    localStorage.removeItem('admin_auth');
+    window.location.href = 'login.html';
   });
 });
 
-function renderPanel(nombre) {
-  if (nombre === 'noticias')   renderNoticiasAdmin();
-  if (nombre === 'horario')    renderHorarioAdmin();
-  if (nombre === 'examenes')   renderExamenesAdmin();
-  if (nombre === 'calendario') renderCalendarioAdmin();
-  if (nombre === 'programas')  renderProgramasAdmin();
-  if (nombre === 'libros')     renderLibrosAdmin();
-  if (nombre === 'drive')      renderDriveAdmin();
-  if (nombre === 'exportar')   exportarJSON();
+// ===== CARGA =====
+async function cargarDatos() {
+  const guardado = localStorage.getItem(LS_KEY);
+  if (guardado) {
+    try { D = JSON.parse(guardado); return; } catch(e) {}
+  }
+  try {
+    const r = await fetch(DATA_URL);
+    D = await r.json();
+  } catch(e) {
+    D = datosVacios();
+  }
 }
 
-function initDashboard() {
+function guardarLocal() {
+  localStorage.setItem(LS_KEY, JSON.stringify(D));
+}
+
+function datosVacios() {
+  return { noticias:[], horario:[], examenes:[], calendario:[], programas:[
+    {materia:'Economía Política', descripcion:'Programa oficial · 2026', pdf:''},
+    {materia:'Introducción a las Ciencias Políticas', descripcion:'Programa oficial · 2026', pdf:''},
+    {materia:'Historia Política Paraguaya', descripcion:'Programa oficial · 2026', pdf:''},
+    {materia:'Idioma Guaraní II', descripcion:'Programa oficial · 2026', pdf:''},
+    {materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Programa oficial · 2026', pdf:''}
+  ], libros:[], drive:[
+    {materia:'Economía Política', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
+    {materia:'Introducción a las Ciencias Políticas', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
+    {materia:'Historia Política Paraguaya', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
+    {materia:'Idioma Guaraní II', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
+    {materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'', urlClassroom:''}
+  ]};
+}
+
+// ===== NAV =====
+function initNav() {
+  document.querySelectorAll('.sb-link[data-panel]').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.panel;
+      document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('panel-' + id)?.classList.add('active');
+      if (id === 'exportar') A.exportarJSON();
+    });
+  });
+}
+
+// ===== TOAST =====
+function toast(msg, tipo = 'ok') {
+  const w = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast-item' + (tipo === 'error' ? ' error' : '');
+  t.innerHTML = `<i class="bi ${tipo==='error'?'bi-x-circle':'bi-check-circle'} "></i>${msg}`;
+  w.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+// ===== RENDER ALL =====
+function renderAll() {
+  renderNoticias();
+  renderHorarioGrid();
+  renderExamenes();
+  renderCalendario();
+  renderProgramas();
+  renderLibros();
+  renderDrive();
+}
+
+// ===== DASHBOARD STATS =====
+function renderDashboard() {
   const stats = [
-    { label:'Noticias',    valor: D.noticias?.length || 0,   color:'#1a237e', icon:'bi-megaphone' },
-    { label:'Clases/sem',  valor: D.horario?.length || 0,    color:'#2e7d32', icon:'bi-clock' },
-    { label:'Exámenes',    valor: D.examenes?.length || 0,   color:'#c62828', icon:'bi-journal-check' },
-    { label:'Libros',      valor: D.libros?.length || 0,     color:'#e65100', icon:'bi-book' },
+    { label:'Noticias',  val: D.noticias?.length || 0,   icon:'bi-megaphone-fill',    color:'#1a237e', bg:'#e8eaf6' },
+    { label:'Clases',    val: D.horario?.length  || 0,   icon:'bi-clock-fill',        color:'#2e7d32', bg:'#e8f5e9' },
+    { label:'Exámenes',  val: D.examenes?.length || 0,   icon:'bi-journal-check',     color:'#c62828', bg:'#ffebee' },
+    { label:'Libros',    val: D.libros?.length   || 0,   icon:'bi-book-fill',         color:'#e65100', bg:'#fff3e0' },
+    { label:'Programas', val: D.programas?.filter(p=>p.pdf).length || 0, icon:'bi-file-earmark-pdf-fill', color:'#4a148c', bg:'#f3e5f5' },
+    { label:'Drive / Classroom', val: D.drive?.filter(d=>d.url||d.urlClassroom).length || 0, icon:'bi-folder2-open', color:'#01579b', bg:'#e1f5fe' },
   ];
   document.getElementById('statsRow').innerHTML = stats.map(s => `
-    <div class="col-6 col-md-3">
-      <div class="stat-card d-flex align-items-center gap-3">
-        <div class="icon" style="background:${s.color}20"><i class="bi ${s.icon}" style="color:${s.color}"></i></div>
-        <div><div class="fw-bold fs-4" style="color:${s.color}">${s.valor}</div><div class="small text-muted">${s.label}</div></div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="g-card">
+        <div class="stat-icon mb-3" style="background:${s.bg};color:${s.color}"><i class="bi ${s.icon}"></i></div>
+        <div style="font-size:1.6rem;font-weight:800;color:${s.color}">${s.val}</div>
+        <div style="font-size:.78rem;color:#6b7280;font-weight:600">${s.label}</div>
       </div>
     </div>`).join('');
 }
 
-// ===== NOTICIAS =====
-function renderNoticiasAdmin() {
+// =====================
+// NOTICIAS
+// =====================
+function renderNoticias() {
   const c = document.getElementById('listaNoticiasAdmin');
-  if (!D.noticias?.length) { c.innerHTML = '<p class="text-muted">Sin noticias.</p>'; return; }
-  c.innerHTML = D.noticias.map((n,i) => `
-    <div class="col-12 col-md-6">
-      <div class="card border-0 shadow-sm p-3 h-100">
-        <div class="d-flex justify-content-between">
-          <span class="badge" style="background:${n.urgente?'#c62828':'#3949ab'}">${n.tipo||'Aviso'}</span>
-          <button class="btn btn-sm btn-outline-danger" onclick="eliminar('noticias',${i})"><i class="bi bi-trash"></i></button>
-        </div>
-        <div class="fw-bold mt-2">${n.titulo}</div>
-        <div class="small text-muted">${n.descripcion||''}</div>
-      </div>
-    </div>`).join('');
+  if (!c) return;
+  if (!D.noticias?.length) { c.innerHTML = '<p class="text-muted small">Sin noticias cargadas.</p>'; return; }
+  c.innerHTML = '<div class="table-responsive"><table class="table tbl"><thead><tr><th>Título</th><th>Tipo</th><th>Fecha</th><th>Urgente</th><th></th></tr></thead><tbody>' +
+    D.noticias.map((n,i) => `<tr>
+      <td><strong>${n.titulo}</strong><br><small class="text-muted">${n.descripcion||''}</small></td>
+      <td><span class="bt" style="background:#e8eaf6;color:#3949ab">${n.tipo||'Aviso'}</span></td>
+      <td>${n.fecha||'—'}</td>
+      <td>${n.urgente ? '<span class="bt" style="background:#ffebee;color:#c62828">Sí</span>' : '<span class="text-muted small">No</span>'}</td>
+      <td><button class="btn-peligro" onclick="A.eliminarNoticia(${i})"><i class="bi bi-trash"></i></button></td>
+    </tr>`).join('') +
+  '</tbody></table></div>';
 }
-function agregarNoticia() {
-  const tit = document.getElementById('noTit').value.trim();
-  if (!tit) return;
-  D.noticias.push({
-    titulo: tit,
-    descripcion: document.getElementById('noDesc').value.trim(),
-    tipo: document.getElementById('noTipo').value.trim() || 'Aviso',
-    fecha: document.getElementById('noFecha').value.trim(),
-    urgente: document.getElementById('noUrgente').checked
+
+const A = {
+
+  agregarNoticia() {
+    const tit = v('noTit'); if (!tit) { toast('El título es obligatorio','error'); return; }
+    D.noticias.unshift({ titulo:tit, descripcion:v('noDesc'), tipo:v('noTipo')||'Aviso', fecha:v('noFecha'), urgente:document.getElementById('noUrgente').checked });
+    guardarLocal(); renderNoticias(); renderDashboard();
+    clear('noTit','noDesc','noTipo','noFecha'); document.getElementById('noUrgente').checked=false;
+    toast('Noticia agregada');
+  },
+
+  eliminarNoticia(i) {
+    if (!confirm('\u00bfEliminar esta noticia?')) return;
+    D.noticias.splice(i,1); guardarLocal(); renderNoticias(); renderDashboard(); toast('Noticia eliminada');
+  },
+
+  // =====================
+  // HORARIO
+  // =====================
+  agregarHorario() {
+    const dia  = v('hDia'), hora = v('hHora'), mat = v('hMateria'), prof = v('hProf');
+    if (!hora) { toast('Ingresá la hora','error'); return; }
+    const dup = D.horario.find(c => c.dia===dia && c.hora===hora);
+    if (dup) { toast(`Ya hay una clase los ${dia} a las ${hora}`,'error'); return; }
+    D.horario.push({ dia, hora, materia:mat, profesor:prof });
+    D.horario.sort((a,b) => a.hora.localeCompare(b.hora));
+    guardarLocal(); renderHorarioGrid(); renderDashboard(); toast('Clase agregada');
+  },
+
+  eliminarClase(dia, hora) {
+    D.horario = D.horario.filter(c => !(c.dia===dia && c.hora===hora));
+    guardarLocal(); renderHorarioGrid(); renderDashboard(); toast('Clase eliminada');
+  },
+
+  // =====================
+  // EXÁMENES
+  // =====================
+  agregarExamen() {
+    const mat=v('exMat'), tipo=v('exTipo'), fecha=v('exFecha'), hora=v('exHora'), aula=v('exAula'), prof=v('exProf');
+    if (!fecha||!hora) { toast('Fecha y hora son obligatorias','error'); return; }
+    D.examenes.push({ materia:mat, tipo, fecha, hora, aula, profesor:prof });
+    guardarLocal(); renderExamenes(); renderDashboard(); clear('exFecha','exHora','exAula','exProf'); toast('Exámen agregado');
+  },
+
+  eliminarExamen(i) {
+    if (!confirm('\u00bfEliminar este exámen?')) return;
+    D.examenes.splice(i,1); guardarLocal(); renderExamenes(); renderDashboard(); toast('Exámen eliminado');
+  },
+
+  // =====================
+  // CALENDARIO
+  // =====================
+  agregarCalendario() {
+    const mes=v('calMes'), nom=v('calNom'), fecha=v('calFecha'), tipo=v('calTipo');
+    if (!mes||!nom) { toast('Mes y nombre son obligatorios','error'); return; }
+    D.calendario.push({ mes, nombre:nom, fecha, tipo });
+    guardarLocal(); renderCalendario(); clear('calMes','calNom','calFecha'); toast('Período agregado');
+  },
+
+  eliminarCalendario(i) {
+    if (!confirm('\u00bfEliminar este período?')) return;
+    D.calendario.splice(i,1); guardarLocal(); renderCalendario(); toast('Período eliminado');
+  },
+
+  // =====================
+  // PROGRAMAS
+  // =====================
+  guardarPrograma() {
+    const mat=v('pgMat'), pdf=v('pgUrl'), desc=v('pgDesc');
+    const idx = D.programas.findIndex(p => p.materia===mat);
+    if (idx>=0) { D.programas[idx].pdf=pdf; if(desc) D.programas[idx].descripcion=desc; }
+    else D.programas.push({ materia:mat, descripcion:desc||'Programa oficial · 2026', pdf });
+    guardarLocal(); renderProgramas(); renderDashboard(); clear('pgUrl','pgDesc'); toast('Programa guardado');
+  },
+
+  // =====================
+  // LIBROS
+  // =====================
+  agregarLibro() {
+    const mat=v('lbMat'), tit=v('lbTit'), aut=v('lbAut');
+    if (!mat||!tit) { toast('Materia y título son obligatorios','error'); return; }
+    D.libros.push({ materia:mat, titulo:tit, autor:aut, pdf:v('lbPdf'), imagen:v('lbImg') });
+    guardarLocal(); renderLibros(); renderDashboard(); clear('lbMat','lbTit','lbAut','lbPdf','lbImg'); toast('Libro agregado');
+  },
+
+  eliminarLibro(i) {
+    if (!confirm('\u00bfEliminar este libro?')) return;
+    D.libros.splice(i,1); guardarLocal(); renderLibros(); renderDashboard(); toast('Libro eliminado');
+  },
+
+  // =====================
+  // DRIVE / CLASSROOM
+  // =====================
+  guardarDrive() {
+    const mat=v('drMat'), url=v('drUrl'), cls=v('drClassroom'), desc=v('drDesc');
+    const idx = D.drive.findIndex(d => d.materia===mat);
+    if (idx>=0) {
+      D.drive[idx].url=url;
+      D.drive[idx].urlClassroom=cls;
+      if (desc) D.drive[idx].descripcion=desc;
+    } else {
+      D.drive.push({ materia:mat, descripcion:desc||'Carpeta del docente', url, urlClassroom:cls });
+    }
+    guardarLocal(); renderDrive(); renderDashboard(); clear('drUrl','drClassroom','drDesc'); toast('Links guardados');
+  },
+
+  // =====================
+  // EXPORTAR
+  // =====================
+  exportarJSON() {
+    const json = JSON.stringify(D, null, 2);
+    document.getElementById('jsonOutput').textContent = json;
+    navigator.clipboard?.writeText(json).then(() => toast('JSON copiado al portapapeles')).catch(() => toast('Mostrá el JSON arriba — copiá manualmente','error'));
+  },
+
+  descargarJSON() {
+    const blob = new Blob([JSON.stringify(D, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '2do.json';
+    a.click();
+    toast('Archivo descargado');
+  },
+
+  resetearDatos() {
+    if (!confirm('\u00bfResetar todos los datos al último JSON del repositorio? Se perderán los cambios locales.')) return;
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  }
+};
+
+// =====================
+// RENDERS INTERNOS
+// =====================
+function renderHorarioGrid() {
+  const grid = document.getElementById('horarioGrid');
+  if (!grid) return;
+  const DIAS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+  const horas = [...new Set(D.horario.map(c=>c.hora))].sort();
+  // Agregar horas base si no hay datos
+  ['18:00','19:00','20:00','21:00'].forEach(h => { if(!horas.includes(h)) horas.push(h); });
+  horas.sort();
+
+  let html = '<div class="hg-head" style="grid-column:1">Hora</div>';
+  DIAS.forEach(d => html += `<div class="hg-head">${d}</div>`);
+
+  horas.forEach(h => {
+    html += `<div class="hg-hora">${h}</div>`;
+    DIAS.forEach(dia => {
+      const cls = D.horario.find(c=>c.dia===dia&&c.hora===h);
+      if (cls) {
+        html += `<div class="hg-cell ocupada" title="Clic para eliminar" onclick="A.eliminarClase('${dia}','${h}')">
+          <div class="hg-mat">${cls.materia.split(' ').slice(0,2).join(' ')}</div>
+          <div class="hg-prof">${cls.profesor||''}</div>
+          <div class="hg-del"><i class="bi bi-x-circle"></i> Quitar</div>
+        </div>`;
+      } else {
+        html += `<div class="hg-cell" title="Clic para agregar" onclick="prefillHorario('${dia}','${h}')"><i class="bi bi-plus text-muted" style="font-size:.9rem"></i></div>`;
+      }
+    });
   });
-  renderNoticiasAdmin();
-  ['noTit','noDesc','noTipo','noFecha'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('noUrgente').checked = false;
+  grid.innerHTML = html;
 }
 
-// ===== HORARIO =====
-function renderHorarioAdmin() {
-  const t = document.getElementById('tablaHorarioAdmin');
-  let html = '<thead><tr><th>Día</th><th>Hora</th><th>Materia</th><th>Profesor</th><th></th></tr></thead><tbody>';
-  (D.horario || []).forEach((c,i) => {
-    html += `<tr><td>${c.dia}</td><td>${c.hora}</td><td>${c.materia}</td><td>${c.profesor||''}</td><td><button class="btn btn-sm btn-outline-danger" onclick="eliminar('horario',${i})"><i class="bi bi-trash"></i></button></td></tr>`;
-  });
-  html += '</tbody>';
-  t.innerHTML = html;
-}
-function agregarHorario() {
-  const dia = document.getElementById('hDia').value;
-  const hora = document.getElementById('hHora').value.trim();
-  const mat  = document.getElementById('hMateria').value;
-  const prof = document.getElementById('hProf').value.trim();
-  if (!hora) return;
-  D.horario.push({ dia, hora, materia: mat, profesor: prof });
-  renderHorarioAdmin();
-  document.getElementById('hHora').value = '';
-  document.getElementById('hProf').value = '';
+function prefillHorario(dia, hora) {
+  const sel = document.getElementById('hDia');
+  const inp = document.getElementById('hHora');
+  if (sel) sel.value = dia;
+  if (inp) inp.value = hora;
+  document.getElementById('hProf')?.focus();
 }
 
-// ===== EXÁMENES =====
-function renderExamenesAdmin() {
-  const c = document.getElementById('listaExamenesAdmin');
-  if (!D.examenes?.length) { c.innerHTML = '<p class="text-muted">Sin exámenes.</p>'; return; }
-  c.innerHTML = D.examenes.map((e,i) => `
-    <div class="col-12 col-md-6">
-      <div class="card border-0 shadow-sm p-3 h-100">
-        <div class="d-flex justify-content-between">
-          <span class="badge bg-primary">${e.tipo}</span>
-          <button class="btn btn-sm btn-outline-danger" onclick="eliminar('examenes',${i})"><i class="bi bi-trash"></i></button>
-        </div>
-        <div class="fw-bold mt-2">${e.materia}</div>
-        <div class="small text-muted">${e.fecha} ${e.hora} · Aula ${e.aula||'-'} · ${e.profesor||''}</div>
-      </div>
-    </div>`).join('');
-}
-function agregarExamen() {
-  const mat = document.getElementById('exMat').value;
-  const fec = document.getElementById('exFecha').value.trim();
-  if (!fec) return;
-  D.examenes.push({
-    materia: mat,
-    tipo: document.getElementById('exTipo').value,
-    fecha: fec,
-    hora: document.getElementById('exHora').value.trim(),
-    aula: document.getElementById('exAula').value.trim(),
-    profesor: document.getElementById('exProf').value.trim()
-  });
-  renderExamenesAdmin();
-  ['exFecha','exHora','exAula','exProf'].forEach(id => document.getElementById(id).value = '');
+function renderExamenes() {
+  const tb = document.querySelector('#tablaExamenesAdmin tbody');
+  if (!tb) return;
+  tb.innerHTML = D.examenes?.length ? D.examenes.map((e,i) => `<tr>
+    <td>${e.materia}</td><td>${e.tipo}</td><td>${e.fecha}</td><td>${e.hora}</td>
+    <td>${e.aula||'—'}</td><td>${e.profesor||'—'}</td>
+    <td><button class="btn-peligro" onclick="A.eliminarExamen(${i})"><i class="bi bi-trash"></i></button></td>
+  </tr>`).join('') : '<tr><td colspan="7" class="text-muted text-center small">Sin exámenes</td></tr>';
 }
 
-// ===== CALENDARIO =====
-function renderCalendarioAdmin() {
-  const c = document.getElementById('listaCalendarioAdmin');
-  if (!D.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin períodos.</p>'; return; }
-  c.innerHTML = D.calendario.map((p,i) => `
-    <div class="col-12 col-md-4">
-      <div class="card border-0 shadow-sm p-3 h-100">
-        <div class="d-flex justify-content-between">
-          <span class="badge" style="background:${p.tipo==='final'?'#e65100':p.tipo==='parcial'?'#c62828':'#3949ab'}">${p.tipo}</span>
-          <button class="btn btn-sm btn-outline-danger" onclick="eliminar('calendario',${i})"><i class="bi bi-trash"></i></button>
-        </div>
-        <div class="fw-bold mt-2">${p.mes}</div>
-        <div class="small text-muted">${p.nombre} ${p.fecha||''}</div>
-      </div>
-    </div>`).join('');
-}
-function agregarCalendario() {
-  const mes = document.getElementById('calMes').value.trim();
-  if (!mes) return;
-  D.calendario.push({
-    mes, nombre: document.getElementById('calNom').value.trim(),
-    fecha: document.getElementById('calFecha').value.trim(),
-    tipo: document.getElementById('calTipo').value
-  });
-  renderCalendarioAdmin();
-  ['calMes','calNom','calFecha'].forEach(id => document.getElementById(id).value = '');
+function renderCalendario() {
+  const tb = document.querySelector('#tablaCalendarioAdmin tbody');
+  if (!tb) return;
+  const col = {normal:'#3949ab', parcial:'#c62828', final:'#e65100'};
+  tb.innerHTML = D.calendario?.length ? D.calendario.map((p,i) => `<tr>
+    <td>${p.mes}</td><td>${p.nombre}</td><td>${p.fecha||'—'}</td>
+    <td><span class="bt" style="background:${col[p.tipo]||'#3949ab'};color:#fff">${p.tipo}</span></td>
+    <td><button class="btn-peligro" onclick="A.eliminarCalendario(${i})"><i class="bi bi-trash"></i></button></td>
+  </tr>`).join('') : '<tr><td colspan="5" class="text-muted text-center small">Sin períodos</td></tr>';
 }
 
-// ===== PROGRAMAS =====
-function renderProgramasAdmin() {
-  const c = document.getElementById('listaProgramasAdmin');
-  c.innerHTML = (D.programas || []).map((p,i) => `
-    <div class="col-12 col-md-6">
-      <div class="card border-0 shadow-sm p-3">
-        <div class="fw-bold">${p.materia}</div>
-        <div class="small text-muted mt-1">${p.pdf ? `<a href="${p.pdf}" target="_blank">Ver PDF</a>` : 'Sin PDF'}</div>
-      </div>
-    </div>`).join('');
-}
-function guardarPrograma() {
-  const mat = document.getElementById('pgMat').value;
-  const url = document.getElementById('pgUrl').value.trim();
-  const idx = D.programas.findIndex(p => p.materia === mat);
-  if (idx >= 0) D.programas[idx].pdf = url;
-  else D.programas.push({ materia: mat, descripcion: '', pdf: url });
-  renderProgramasAdmin();
-  document.getElementById('pgUrl').value = '';
+function renderProgramas() {
+  const tb = document.querySelector('#tablaProgramasAdmin tbody');
+  if (!tb) return;
+  tb.innerHTML = D.programas?.map((p,i) => `<tr>
+    <td>${p.materia}</td>
+    <td class="text-muted small">${p.descripcion||''}</td>
+    <td>${p.pdf ? `<a href="${p.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye me-1"></i>Ver</a>` : '<span class="text-muted small">Sin URL</span>'}</td>
+    <td><button class="btn-edit" onclick="editarPrograma(${i})"><i class="bi bi-pencil"></i></button></td>
+  </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin programas</td></tr>';
 }
 
-// ===== LIBROS =====
-function renderLibrosAdmin() {
-  const c = document.getElementById('listaLibrosAdmin');
-  if (!D.libros?.length) { c.innerHTML = '<p class="text-muted">Sin libros.</p>'; return; }
-  c.innerHTML = D.libros.map((l,i) => `
-    <div class="col-12 col-md-6">
-      <div class="card border-0 shadow-sm p-3">
-        <div class="d-flex justify-content-between">
-          <div><div class="fw-bold">${l.titulo}</div><div class="small text-muted">${l.autor||''} · ${l.materia||''}</div></div>
-          <button class="btn btn-sm btn-outline-danger" onclick="eliminar('libros',${i})"><i class="bi bi-trash"></i></button>
-        </div>
-      </div>
-    </div>`).join('');
-}
-function agregarLibro() {
-  const tit = document.getElementById('lbTit').value.trim();
-  if (!tit) return;
-  D.libros.push({
-    materia: document.getElementById('lbMat').value.trim(),
-    titulo: tit,
-    autor: document.getElementById('lbAut').value.trim(),
-    pdf: document.getElementById('lbPdf').value.trim(),
-    imagen: document.getElementById('lbImg').value.trim()
-  });
-  renderLibrosAdmin();
-  ['lbMat','lbTit','lbAut','lbPdf','lbImg'].forEach(id => document.getElementById(id).value = '');
+function editarPrograma(i) {
+  const p = D.programas[i];
+  const sel = document.getElementById('pgMat');
+  if (sel) sel.value = p.materia;
+  document.getElementById('pgDesc').value = p.descripcion||'';
+  document.getElementById('pgUrl').value = p.pdf||'';
 }
 
-// ===== DRIVE =====
-function renderDriveAdmin() {
-  const c = document.getElementById('listaDriveAdmin');
-  c.innerHTML = (D.drive || []).map((d,i) => `
-    <div class="col-12 col-md-6">
-      <div class="card border-0 shadow-sm p-3">
-        <div class="fw-bold">${d.materia}</div>
-        <div class="small text-muted">${d.url ? `<a href="${d.url}" target="_blank">Abrir Drive</a>` : 'Sin enlace'}</div>
-      </div>
-    </div>`).join('');
-}
-function guardarDrive() {
-  const mat = document.getElementById('drMat').value;
-  const url = document.getElementById('drUrl').value.trim();
-  const idx = D.drive.findIndex(d => d.materia === mat);
-  if (idx >= 0) D.drive[idx].url = url;
-  else D.drive.push({ materia: mat, descripcion: 'Carpeta del docente', url });
-  renderDriveAdmin();
-  document.getElementById('drUrl').value = '';
+function renderLibros() {
+  const tb = document.querySelector('#tablaLibrosAdmin tbody');
+  if (!tb) return;
+  tb.innerHTML = D.libros?.length ? D.libros.map((l,i) => `<tr>
+    <td class="small">${l.materia}</td>
+    <td><strong>${l.titulo}</strong></td>
+    <td class="small">${l.autor||'—'}</td>
+    <td>${l.pdf ? `<a href="${l.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye"></i></a>` : '—'}</td>
+    <td><button class="btn-peligro" onclick="A.eliminarLibro(${i})"><i class="bi bi-trash"></i></button></td>
+  </tr>`).join('') : '<tr><td colspan="5" class="text-muted text-center small">Sin libros</td></tr>';
 }
 
-// ===== ELIMINAR GENÉRICO =====
-function eliminar(seccion, idx) {
-  if (!confirm('¿Eliminar este elemento?')) return;
-  D[seccion].splice(idx, 1);
-  renderPanel(seccion === 'calendario' ? 'calendario' : seccion);
+function renderDrive() {
+  const tb = document.querySelector('#tablaDriveAdmin tbody');
+  if (!tb) return;
+  tb.innerHTML = D.drive?.map((d,i) => `<tr>
+    <td class="small fw-semibold">${d.materia}</td>
+    <td>${d.url ? `<a href="${d.url}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : '<span class="text-muted small">Sin link</span>'}</td>
+    <td>${d.urlClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="btn btn-sm btn-outline-success py-0"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : '<span class="text-muted small">Sin link</span>'}</td>
+    <td><button class="btn-edit" onclick="editarDrive(${i})"><i class="bi bi-pencil"></i></button></td>
+  </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin datos</td></tr>';
 }
 
-// ===== EXPORTAR JSON =====
-function exportarJSON() {
-  const json = JSON.stringify(D, null, 2);
-  document.getElementById('jsonOutput').textContent = json;
-  navigator.clipboard?.writeText(json).then(() => {
-    const btn = document.querySelector('#panel-exportar .btn-una');
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>¡Copiado!';
-    btn.style.background = '#2e7d32';
-    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
-  });
+function editarDrive(i) {
+  const d = D.drive[i];
+  document.getElementById('drMat').value = d.materia;
+  document.getElementById('drUrl').value = d.url||'';
+  document.getElementById('drClassroom').value = d.urlClassroom||'';
+  document.getElementById('drDesc').value = d.descripcion||'';
 }
+
+// ===== HELPERS =====
+function v(id) { return document.getElementById(id)?.value.trim() || ''; }
+function clear(...ids) { ids.forEach(id => { const el = document.getElementById(id); if(el) el.value=''; }); }
