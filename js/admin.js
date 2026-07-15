@@ -12,11 +12,21 @@ const LS_TOKEN  = 'gh_token_cms';
 // URL pública sin autenticación ni rate limit
 const RAW_URL = `https://raw.githubusercontent.com/${GH_REPO}/${GH_BRANCH}/${GH_PATH}`;
 
+// Materias centralizadas — única fuente de verdad
+const MATERIAS = [
+  'Economía Política',
+  'Introducción a las Ciencias Políticas',
+  'Historia Política Paraguaya',
+  'Idioma Guaraní II',
+  'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)'
+];
+
 let D     = null;
 let ghSHA = null;
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
+  poblarSelects();
   await cargarDatos();
   initNav();
   initTokenUI();
@@ -28,6 +38,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = 'login.html';
   });
 });
+
+// =====================
+// POBLAR SELECTS
+// Inyecta <option value="..."> en los 4 selects que usan materias,
+// garantizando que .value coincida exactamente con el texto de la materia.
+// =====================
+function poblarSelects() {
+  const ids = ['pgMat', 'drMat', 'hMateria', 'exMat'];
+  ids.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = MATERIAS.map(m =>
+      `<option value="${m}">${m}</option>`
+    ).join('');
+  });
+}
 
 // =====================
 // CARGA DE DATOS
@@ -46,7 +72,6 @@ async function cargarDatos() {
   }
 
   // 2) En paralelo, obtener el SHA via API (necesario para publicar)
-  //    No bloqueamos el render si esto falla.
   obtenerSHA();
 
   if (!D) D = datosVacios();
@@ -76,21 +101,9 @@ function guardarLocal() {
 function datosVacios() {
   return {
     noticias:[], horario:[], examenes:[], calendario:[],
-    programas:[
-      {materia:'Economía Política', descripcion:'Programa oficial · 2026', pdf:''},
-      {materia:'Introducción a las Ciencias Políticas', descripcion:'Programa oficial · 2026', pdf:''},
-      {materia:'Historia Política Paraguaya', descripcion:'Programa oficial · 2026', pdf:''},
-      {materia:'Idioma Guaraní II', descripcion:'Programa oficial · 2026', pdf:''},
-      {materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Programa oficial · 2026', pdf:''}
-    ],
+    programas: MATERIAS.map(m => ({ materia: m, descripcion: 'Programa oficial · 2026', pdf: '' })),
     libros:[],
-    drive:[
-      {materia:'Economía Política', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
-      {materia:'Introducción a las Ciencias Políticas', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
-      {materia:'Historia Política Paraguaya', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
-      {materia:'Idioma Guaraní II', descripcion:'Carpeta del docente', url:'', urlClassroom:''},
-      {materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'', urlClassroom:''}
-    ]
+    drive: MATERIAS.map(m => ({ materia: m, descripcion: 'Carpeta del docente', url: '', urlClassroom: '' }))
   };
 }
 
@@ -105,7 +118,6 @@ async function publicarEnGitHub() {
     return;
   }
 
-  // Si todavía no tenemos el SHA, intentar obtenerlo ahora
   if (!ghSHA) {
     toast('Obteniendo SHA del archivo...', 'ok');
     await obtenerSHA();
@@ -440,7 +452,7 @@ const A = {
 
   agregarCalendario() {
     const mes=v('calMes'),nom=v('calNom'),fecha=v('calFecha'),tipo=v('calTipo');
-    if (!mes||!nom) { toast('Mes y nombre son obligatorios','error'); return; }
+    if (!mes||!nom) { toast('Mes y nombre son obligatorios','error'); return; }\
     D.calendario.push({ mes, nombre:nom, fecha, tipo });
     guardarLocalYMarcar(); renderCalendario(); clear('calMes','calNom','calFecha'); toast('Período agregado');
   },
@@ -451,11 +463,21 @@ const A = {
   },
 
   guardarPrograma() {
-    const mat=v('pgMat'),pdf=v('pgUrl'),desc=v('pgDesc');
-    const idx=D.programas.findIndex(p=>p.materia===mat);
-    if (idx>=0) { D.programas[idx].pdf=pdf; if(desc) D.programas[idx].descripcion=desc; }
-    else D.programas.push({ materia:mat, descripcion:desc||'Programa oficial · 2026', pdf });
-    guardarLocalYMarcar(); renderProgramas(); renderDashboard(); clear('pgUrl','pgDesc'); toast('Programa guardado');
+    const mat  = v('pgMat');
+    const pdf  = v('pgUrl');
+    const desc = v('pgDesc');
+    if (!mat) { toast('Seleccioná una materia','error'); return; }
+    const idx = D.programas.findIndex(p => p.materia === mat);
+    if (idx >= 0) {
+      D.programas[idx].pdf = pdf;
+      if (desc) D.programas[idx].descripcion = desc;
+    } else {
+      D.programas.push({ materia: mat, descripcion: desc || 'Programa oficial · 2026', pdf });
+    }
+    guardarLocalYMarcar(); renderProgramas(); renderDashboard(); clear('pgUrl','pgDesc');
+    // Mantener la materia seleccionada para edición continua
+    document.getElementById('pgMat').value = mat;
+    toast('Programa guardado');
   },
 
   agregarLibro() {
@@ -471,11 +493,23 @@ const A = {
   },
 
   guardarDrive() {
-    const mat=v('drMat'),url=v('drUrl'),cls=v('drClassroom'),desc=v('drDesc');
-    const idx=D.drive.findIndex(d=>d.materia===mat);
-    if (idx>=0) { D.drive[idx].url=url; D.drive[idx].urlClassroom=cls; if(desc) D.drive[idx].descripcion=desc; }
-    else D.drive.push({ materia:mat, descripcion:desc||'Carpeta del docente', url, urlClassroom:cls });
-    guardarLocalYMarcar(); renderDrive(); renderDashboard(); clear('drUrl','drClassroom','drDesc'); toast('Links guardados');
+    const mat  = v('drMat');
+    const url  = v('drUrl');
+    const cls  = v('drClassroom');
+    const desc = v('drDesc');
+    if (!mat) { toast('Seleccioná una materia','error'); return; }
+    const idx = D.drive.findIndex(d => d.materia === mat);
+    if (idx >= 0) {
+      D.drive[idx].url          = url;
+      D.drive[idx].urlClassroom = cls;
+      if (desc) D.drive[idx].descripcion = desc;
+    } else {
+      D.drive.push({ materia: mat, descripcion: desc || 'Carpeta del docente', url, urlClassroom: cls });
+    }
+    guardarLocalYMarcar(); renderDrive(); renderDashboard(); clear('drUrl','drClassroom','drDesc');
+    // Mantener la materia seleccionada para edición continua
+    document.getElementById('drMat').value = mat;
+    toast('Links guardados');
   },
 
   mostrarJSON() {
@@ -565,15 +599,19 @@ function renderProgramas() {
     <td>${p.materia}</td>
     <td class="text-muted small">${p.descripcion||''}</td>
     <td>${p.pdf?`<a href="${p.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye me-1"></i>Ver</a>`:'<span class="text-muted small">Sin URL</span>'}</td>
-    <td><button class="btn-edit" onclick="editarPrograma(${i})"><i class="bi bi-pencil"></i></button></td>
+    <td><button class="btn-edit" onclick="editarPrograma(${i})"><i class="bi bi-pencil"></i> Editar</button></td>
   </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin programas</td></tr>';
 }
 
 function editarPrograma(i) {
-  const p=D.programas[i];
-  document.getElementById('pgMat').value=p.materia;
-  document.getElementById('pgDesc').value=p.descripcion||'';
-  document.getElementById('pgUrl').value=p.pdf||'';
+  const p = D.programas[i];
+  // value= funciona porque poblarSelects() ya insertó <option value="...">
+  document.getElementById('pgMat').value  = p.materia;
+  document.getElementById('pgDesc').value = p.descripcion || '';
+  document.getElementById('pgUrl').value  = p.pdf || '';
+  // Scroll al formulario
+  document.getElementById('pgUrl').scrollIntoView({ behavior:'smooth', block:'center' });
+  document.getElementById('pgUrl').focus();
 }
 
 function renderLibros() {
@@ -593,16 +631,20 @@ function renderDrive() {
     <td class="small fw-semibold">${d.materia}</td>
     <td>${d.url?`<a href="${d.url}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-folder2-open me-1"></i>Drive</a>`:'<span class="text-muted small">Sin link</span>'}</td>
     <td>${d.urlClassroom?`<a href="${d.urlClassroom}" target="_blank" class="btn btn-sm btn-outline-success py-0"><i class="bi bi-mortarboard me-1"></i>Classroom</a>`:'<span class="text-muted small">Sin link</span>'}</td>
-    <td><button class="btn-edit" onclick="editarDrive(${i})"><i class="bi bi-pencil"></i></button></td>
+    <td><button class="btn-edit" onclick="editarDrive(${i})"><i class="bi bi-pencil"></i> Editar</button></td>
   </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin datos</td></tr>';
 }
 
 function editarDrive(i) {
-  const d=D.drive[i];
-  document.getElementById('drMat').value=d.materia;
-  document.getElementById('drUrl').value=d.url||'';
-  document.getElementById('drClassroom').value=d.urlClassroom||'';
-  document.getElementById('drDesc').value=d.descripcion||'';
+  const d = D.drive[i];
+  // value= funciona porque poblarSelects() ya insertó <option value="...">
+  document.getElementById('drMat').value        = d.materia;
+  document.getElementById('drUrl').value        = d.url || '';
+  document.getElementById('drClassroom').value  = d.urlClassroom || '';
+  document.getElementById('drDesc').value       = d.descripcion || '';
+  // Scroll al formulario
+  document.getElementById('drUrl').scrollIntoView({ behavior:'smooth', block:'center' });
+  document.getElementById('drUrl').focus();
 }
 
 // ===== HELPERS =====
