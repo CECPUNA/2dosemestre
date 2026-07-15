@@ -18,7 +18,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-una sticky-top" id="navbar">
   <div class="container">
     <a class="navbar-brand fw-bold" href="#">
-      <i class="bi bi-building me-2"></i>Ciencias Políticas · UNA
+      <i class="bi bi-building me-2"></i>Ciencias Políticas &ndash; 2do Semestre
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span class="navbar-toggler-icon"></span>
@@ -40,51 +40,22 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<header class="hero-section">
-  <div class="container text-center py-5">
-    <div class="hero-badge mb-3">Campus Informativo</div>
-    <h1 class="hero-title">Segundo Semestre</h1>
-    <p class="hero-sub">Escuela de Ciencias Políticas · Universidad Nacional de Asunción</p>
-    <div id="enClaseAhora" class="en-clase-ahora d-none mt-4">
-      <span class="punto-verde"></span>
-      <span id="enClaseTexto">En clase ahora</span>
-    </div>
-    <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
-      <button class="btn btn-light btn-lg fw-semibold" onclick="document.getElementById('horario').scrollIntoView({behavior:'smooth'})">
-        <i class="bi bi-clock me-2"></i>Ver Horario
-      </button>
-      <button id="btnInstalar" class="btn btn-outline-light btn-lg d-none">
-        <i class="bi bi-download me-2"></i>Instalar App
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- BUSCADOR -->
-<section class="buscador-section">
+<!-- HORARIO (primero) -->
+<section id="horario" class="seccion" style="padding-top:36px">
   <div class="container">
-    <div class="buscador-wrap">
-      <i class="bi bi-search buscador-icon"></i>
-      <input type="text" id="buscador" class="buscador-input" placeholder="Buscar materia, profesor, documento..." />
-    </div>
-    <div id="resultadosBusqueda" class="resultados-busqueda d-none"></div>
-  </div>
-</section>
 
-<!-- NOTICIAS / AVISOS -->
-<section id="noticias" class="seccion">
-  <div class="container">
-    <div class="seccion-header">
-      <h2><i class="bi bi-megaphone-fill me-2 text-una"></i>Noticias y Avisos</h2>
+    <!-- CLASE ACTIVA -->
+    <div id="claseActivaBanner" class="clase-activa-banner d-none mb-4">
+      <div class="clase-activa-inner">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <span class="punto-verde"></span>
+          <span class="clase-activa-label">Clase activa</span>
+        </div>
+        <div class="clase-activa-materia" id="claseActivaMateria"></div>
+        <div class="clase-activa-info" id="claseActivaInfo"></div>
+      </div>
     </div>
-    <div id="noticiasContainer" class="row g-3"></div>
-  </div>
-</section>
 
-<!-- HORARIO -->
-<section id="horario" class="seccion bg-light-custom">
-  <div class="container">
     <div class="seccion-header">
       <h2><i class="bi bi-clock-fill me-2 text-una"></i>Horario de Clases</h2>
     </div>
@@ -94,6 +65,16 @@
     </div>
     <!-- Mobile: tarjetas -->
     <div class="d-block d-md-none" id="horarioCards"></div>
+  </div>
+</section>
+
+<!-- NOTICIAS / AVISOS -->
+<section id="noticias" class="seccion bg-light-custom">
+  <div class="container">
+    <div class="seccion-header">
+      <h2><i class="bi bi-megaphone-fill me-2 text-una"></i>Noticias y Avisos</h2>
+    </div>
+    <div id="noticiasContainer" class="row g-3"></div>
   </div>
 </section>
 
@@ -137,11 +118,11 @@
   </div>
 </section>
 
-<!-- DRIVE -->
+<!-- DRIVE / CLASSROOM -->
 <section id="drive" class="seccion">
   <div class="container">
     <div class="seccion-header">
-      <h2><i class="bi bi-folder2-open me-2 text-una"></i>Google Drive Docentes</h2>
+      <h2><i class="bi bi-folder2-open me-2 text-una"></i>Google Drive / Classroom de los Docentes</h2>
     </div>
     <div id="driveContainer" class="row g-3"></div>
   </div>

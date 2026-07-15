@@ -10,12 +10,13 @@ const COLORES_MATERIAS = {
   'Introducción a las Ciencias Políticas': 'color-introccp',
   'Historia Política Paraguaya': 'color-historiapolit',
   'Idioma Guaraní II': 'color-guarani',
-  'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)': 'color-seminario'
+  'Seminario II': 'color-seminario'
 };
 
 function colorMateria(nombre) {
+  if (!nombre) return 'color-econopolitica';
   for (const [key, cls] of Object.entries(COLORES_MATERIAS)) {
-    if (nombre && nombre.includes(key.split(' ')[0])) return cls;
+    if (nombre.startsWith(key)) return cls;
   }
   return 'color-econopolitica';
 }
@@ -32,24 +33,22 @@ async function cargarDatos() {
 }
 
 function renderAll() {
-  renderNoticias();
   renderHorario();
+  verificarClaseActiva();
+  renderNoticias();
   renderExamenes();
   renderParciales();
   renderProgramas();
   renderLibros();
   renderDrive();
-  verificarEnClase();
-  initBuscador();
+  initTema();
 }
 
 // ===== NOTICIAS =====
 function renderNoticias() {
   const c = document.getElementById('noticiasContainer');
-  if (!c || !DATA.noticias?.length) {
-    if (c) c.innerHTML = '<p class="text-muted">Sin avisos por el momento.</p>';
-    return;
-  }
+  if (!c) return;
+  if (!DATA.noticias?.length) { c.innerHTML = '<p class="text-muted">Sin avisos por el momento.</p>'; return; }
   c.innerHTML = DATA.noticias.map(n => `
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card-campus ${n.urgente ? 'noticia-urgente' : ''}">
@@ -70,29 +69,39 @@ function renderNoticias() {
 const DIAS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
 
 function buildHorarioGrid() {
-  if (!DATA.horario?.length) return {};
+  if (!DATA.horario?.length) return { grid: {}, horas: [] };
+  const horas = [...new Set(DATA.horario.map(c => c.hora))].sort();
   const grid = {};
-  const horas = new Set();
-  DATA.horario.forEach(c => { horas.add(c.hora); });
-  Array.from(horas).sort().forEach(h => {
+  horas.forEach(h => {
     grid[h] = {};
     DIAS.forEach(d => { grid[h][d] = null; });
   });
-  DATA.horario.forEach(c => {
-    if (!grid[c.hora]) grid[c.hora] = {};
-    grid[c.hora][c.dia] = c;
-  });
-  return grid;
+  DATA.horario.forEach(c => { grid[c.hora][c.dia] = c; });
+  return { grid, horas };
+}
+
+function getClaseActual() {
+  if (!DATA.horario?.length) return null;
+  const ahora = new Date();
+  const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const diaHoy = diasSemana[ahora.getDay()];
+  const horaActual = ahora.getHours() * 100 + ahora.getMinutes();
+  return DATA.horario.find(c => {
+    if (c.dia !== diaHoy) return false;
+    const [h, m] = c.hora.split(':').map(Number);
+    const inicio = h * 100 + m;
+    return horaActual >= inicio && horaActual < inicio + 100;
+  }) || null;
 }
 
 function renderHorario() {
   const tabla = document.getElementById('tablaHorario');
   const cards = document.getElementById('horarioCards');
-  const grid = buildHorarioGrid();
-  const horas = Object.keys(grid).sort();
+  const { grid, horas } = buildHorarioGrid();
+  const claseActual = getClaseActual();
 
-  // Desktop
-  if (tabla) {
+  // Desktop tabla
+  if (tabla && horas.length) {
     let html = '<thead><tr><th>Hora</th>';
     DIAS.forEach(d => html += `<th>${d}</th>`);
     html += '</tr></thead><tbody>';
@@ -100,9 +109,10 @@ function renderHorario() {
       html += `<tr><td class="td-hora">${h}</td>`;
       DIAS.forEach(d => {
         const cls = grid[h][d];
+        const esActiva = claseActual && cls && cls.materia === claseActual.materia && cls.hora === claseActual.hora && cls.dia === claseActual.dia;
         if (cls) {
           const cc = colorMateria(cls.materia);
-          html += `<td><span class="pill-materia ${cc}">${cls.materia}<br><small class="fw-normal opacity-75">${cls.profesor || ''}</small></span></td>`;
+          html += `<td class="${esActiva ? 'td-activa' : ''}"><span class="pill-materia ${cc}">${cls.materia}<br><small class="fw-normal opacity-75">${cls.profesor || ''}</small></span></td>`;
         } else {
           html += `<td class="td-libre">—</td>`;
         }
@@ -113,7 +123,7 @@ function renderHorario() {
     tabla.innerHTML = html;
   }
 
-  // Mobile
+  // Mobile tarjetas
   if (cards) {
     let html = '';
     DIAS.forEach(dia => {
@@ -122,7 +132,12 @@ function renderHorario() {
       html += `<div class="horario-dia-card"><div class="horario-dia-header"><i class="bi bi-calendar-week me-2"></i>${dia}</div>`;
       clasesDia.forEach(c => {
         const cc = colorMateria(c.materia);
-        html += `<div class="horario-dia-item"><span class="hora-badge">${c.hora}</span><span class="pill-materia ${cc} flex-grow-1">${c.materia}${c.profesor ? `<br><small class="fw-normal opacity-75">${c.profesor}</small>` : ''}</span></div>`;
+        const esActiva = claseActual && c.materia === claseActual.materia && c.hora === claseActual.hora && c.dia === claseActual.dia;
+        html += `<div class="horario-dia-item ${esActiva ? 'activa-mobile' : ''}">
+          <span class="hora-badge">${c.hora}</span>
+          <span class="pill-materia ${cc} flex-grow-1">${c.materia}${c.profesor ? `<br><small class="fw-normal opacity-75">${c.profesor}</small>` : ''}</span>
+          ${esActiva ? '<span class="badge bg-success ms-1" style="font-size:.65rem">Ahora</span>' : ''}
+        </div>`;
       });
       html += '</div>';
     });
@@ -130,37 +145,25 @@ function renderHorario() {
   }
 }
 
-// ===== EN CLASE AHORA =====
-function verificarEnClase() {
-  if (!DATA.horario?.length) return;
-  const ahora = new Date();
-  const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-  const diaHoy = diasSemana[ahora.getDay()];
-  const horaActual = ahora.getHours() * 100 + ahora.getMinutes();
-
-  const clase = DATA.horario.find(c => {
-    if (c.dia !== diaHoy) return false;
-    const [h, m] = c.hora.split(':').map(Number);
-    const inicio = h * 100 + m;
-    return horaActual >= inicio && horaActual < inicio + 100;
-  });
-
-  const bloque = document.getElementById('enClaseAhora');
-  const texto = document.getElementById('enClaseTexto');
-  if (clase && bloque && texto) {
-    texto.textContent = `En clase ahora: ${clase.materia}`;
-    bloque.classList.remove('d-none');
-    bloque.classList.add('d-inline-flex');
+// ===== CLASE ACTIVA BANNER =====
+function verificarClaseActiva() {
+  const clase = getClaseActual();
+  const banner = document.getElementById('claseActivaBanner');
+  const materia = document.getElementById('claseActivaMateria');
+  const info = document.getElementById('claseActivaInfo');
+  if (!banner) return;
+  if (clase) {
+    materia.textContent = clase.materia;
+    info.textContent = `${clase.dia} · ${clase.hora} hs${clase.profesor ? ' · ' + clase.profesor : ''}`;
+    banner.classList.remove('d-none');
   }
 }
 
 // ===== EXÁMENES =====
 function renderExamenes() {
   const c = document.getElementById('examenesContainer');
-  if (!c || !DATA.examenes?.length) {
-    if (c) c.innerHTML = '<p class="text-muted">Sin exámenes programados.</p>';
-    return;
-  }
+  if (!c) return;
+  if (!DATA.examenes?.length) { c.innerHTML = '<p class="text-muted">Sin exámenes programados.</p>'; return; }
   const colores = { 'Primer Parcial':'#1a237e', 'Segundo Parcial':'#c62828', 'Final':'#e65100' };
   c.innerHTML = DATA.examenes.map(e => {
     const col = colores[e.tipo] || '#3949ab';
@@ -191,11 +194,9 @@ function renderExamenes() {
 // ===== PARCIALES / TIMELINE =====
 function renderParciales() {
   const c = document.getElementById('parcialesTimeline');
-  if (!c || !DATA.calendario?.length) {
-    if (c) c.innerHTML = '<p class="text-muted">Sin períodos cargados.</p>';
-    return;
-  }
-  const tipos = { 'normal':'', 'parcial':'parcial', 'final':'final' };
+  if (!c) return;
+  if (!DATA.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin períodos cargados.</p>'; return; }
+  const tipos = { normal:'', parcial:'parcial', final:'final' };
   c.innerHTML = DATA.calendario.map(p => `
     <div class="periodo-item ${tipos[p.tipo] || ''}">
       <div class="periodo-mes">${p.mes}</div>
@@ -207,10 +208,8 @@ function renderParciales() {
 // ===== PROGRAMAS =====
 function renderProgramas() {
   const c = document.getElementById('programasContainer');
-  if (!c || !DATA.programas?.length) {
-    if (c) c.innerHTML = '<p class="text-muted">Sin programas cargados.</p>';
-    return;
-  }
+  if (!c) return;
+  if (!DATA.programas?.length) { c.innerHTML = '<p class="text-muted">Sin programas cargados.</p>'; return; }
   c.innerHTML = DATA.programas.map(p => `
     <div class="col-12 col-md-6">
       <div class="programa-card">
@@ -227,10 +226,8 @@ function renderProgramas() {
 // ===== LIBROS =====
 function renderLibros() {
   const c = document.getElementById('librosContainer');
-  if (!c || !DATA.libros?.length) {
-    if (c) c.innerHTML = '<p class="text-muted">Sin libros cargados.</p>';
-    return;
-  }
+  if (!c) return;
+  if (!DATA.libros?.length) { c.innerHTML = '<p class="text-muted">Sin libros cargados.</p>'; return; }
   c.innerHTML = DATA.libros.map(l => `
     <div class="col-6 col-md-4 col-lg-3">
       <div class="libro-card">
@@ -254,58 +251,36 @@ function renderLibros() {
     </div>`).join('');
 }
 
-// ===== DRIVE =====
+// ===== DRIVE / CLASSROOM =====
 function renderDrive() {
   const c = document.getElementById('driveContainer');
-  if (!c || !DATA.drive?.length) {
-    if (c) c.innerHTML = '<p class="text-muted">Sin carpetas de Drive configuradas.</p>';
-    return;
-  }
-  c.innerHTML = DATA.drive.map(d => `
+  if (!c) return;
+  if (!DATA.drive?.length) { c.innerHTML = '<p class="text-muted">Sin carpetas de Drive configuradas.</p>'; return; }
+  c.innerHTML = DATA.drive.map(d => {
+    const tieneClassroom = d.urlClassroom;
+    const tieneDrive = d.url;
+    return `
     <div class="col-12 col-md-6 col-lg-4">
       <div class="drive-card">
-        <div class="d-flex align-items-center gap-3">
-          <i class="drive-icon bi bi-folder-fill"></i>
+        <div class="d-flex align-items-center gap-3 flex-grow-1">
+          <div class="drive-icon-wrap">
+            ${tieneDrive ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
+            ${tieneClassroom ? '<i class="bi bi-mortarboard-fill drive-icon classroom"></i>' : ''}
+            ${!tieneDrive && !tieneClassroom ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
+          </div>
           <div>
             <div class="fw-bold">${d.materia}</div>
             <div class="small text-muted">${d.descripcion || 'Material del docente'}</div>
           </div>
         </div>
-        ${d.url ? `<a href="${d.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-box-arrow-up-right me-1"></i>Abrir</a>` : '<span class="text-muted small">Próximamente</span>'}
+        <div class="d-flex flex-column gap-2">
+          ${tieneDrive ? `<a href="${d.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : ''}
+          ${tieneClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : ''}
+          ${!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Próximamente</span>' : ''}
+        </div>
       </div>
-    </div>`).join('');
-}
-
-// ===== BUSCADOR =====
-function initBuscador() {
-  const input = document.getElementById('buscador');
-  const resultados = document.getElementById('resultadosBusqueda');
-  if (!input || !resultados) return;
-
-  const items = [];
-  DATA.horario?.forEach(c => items.push({ tipo:'Materia', texto: c.materia, sub: c.profesor }));
-  DATA.examenes?.forEach(e => items.push({ tipo:'Examen', texto: e.materia, sub: `${e.fecha} ${e.hora}` }));
-  DATA.libros?.forEach(l => items.push({ tipo:'Libro', texto: l.titulo, sub: l.autor, url: l.pdf }));
-  DATA.drive?.forEach(d => items.push({ tipo:'Drive', texto: d.materia, sub: d.descripcion, url: d.url }));
-
-  input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    if (q.length < 2) { resultados.classList.add('d-none'); return; }
-    const found = items.filter(i => i.texto.toLowerCase().includes(q) || (i.sub || '').toLowerCase().includes(q)).slice(0, 8);
-    if (!found.length) { resultados.classList.add('d-none'); return; }
-    resultados.innerHTML = found.map(i => `
-      <div class="resultado-item" onclick="this.parentElement.classList.add('d-none')">
-        <span class="badge bg-secondary me-2" style="font-size:.68rem">${i.tipo}</span>
-        <span class="fw-semibold">${i.texto}</span>
-        ${i.sub ? `<span class="text-muted ms-2 small">${i.sub}</span>` : ''}
-        ${i.url ? `<a href="${i.url}" target="_blank" class="btn btn-sm btn-link p-0 ms-2">Abrir</a>` : ''}
-      </div>`).join('');
-    resultados.classList.remove('d-none');
-  });
-
-  document.addEventListener('click', e => {
-    if (!input.contains(e.target) && !resultados.contains(e.target)) resultados.classList.add('d-none');
-  });
+    </div>`;
+  }).join('');
 }
 
 // ===== MODO OSCURO =====
@@ -330,14 +305,6 @@ let deferredPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  const btn = document.getElementById('btnInstalar');
-  if (btn) {
-    btn.classList.remove('d-none');
-    btn.addEventListener('click', () => {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => { btn.classList.add('d-none'); });
-    });
-  }
 });
 
 // ===== DATOS DEMO =====
@@ -347,22 +314,22 @@ function datosDemo() {
       { titulo: 'Inicio de clases', descripcion: 'Las clases del segundo semestre comienzan el 4 de agosto.', tipo: 'Aviso', fecha: '1 Ago', urgente: false }
     ],
     horario: [
-      { dia:'Lunes',    hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Lunes',    hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Lunes',    hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
-      { dia:'Martes',   hora:'18:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes',   hora:'19:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes',   hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
-      { dia:'Martes',   hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Miércoles',hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Miércoles',hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Miércoles',hora:'20:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Jueves',   hora:'18:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Jueves',   hora:'19:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Jueves',   hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Viernes',  hora:'18:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
-      { dia:'Viernes',  hora:'19:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
-      { dia:'Viernes',  hora:'20:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' }
+      { dia:'Lunes',     hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Lunes',     hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Lunes',     hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
+      { dia:'Martes',    hora:'18:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes',    hora:'19:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes',    hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
+      { dia:'Martes',    hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Miércoles', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Miércoles', hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Miércoles', hora:'20:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Jueves',    hora:'18:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Jueves',    hora:'19:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Jueves',    hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Viernes',   hora:'18:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
+      { dia:'Viernes',   hora:'19:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
+      { dia:'Viernes',   hora:'20:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' }
     ],
     examenes: [
       { materia:'Economía Política', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. García' },
@@ -372,11 +339,11 @@ function datosDemo() {
       { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', tipo:'Primer Parcial', fecha:'24 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. López' }
     ],
     calendario: [
-      { mes:'Agosto', nombre:'Inicio de Clases', tipo:'normal' },
-      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'15–24 Sep' },
-      { mes:'Octubre', nombre:'Cursada', tipo:'normal' },
-      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'10–21 Nov' },
-      { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1–15 Dic' }
+      { mes:'Agosto',     nombre:'Inicio de Clases',  tipo:'normal' },
+      { mes:'Septiembre', nombre:'1er Parcial',       tipo:'parcial', fecha:'15–24 Sep' },
+      { mes:'Octubre',    nombre:'Cursada',           tipo:'normal' },
+      { mes:'Noviembre',  nombre:'2do Parcial',       tipo:'parcial', fecha:'10–21 Nov' },
+      { mes:'Diciembre',  nombre:'Finales',           tipo:'final',   fecha:'1–15 Dic' }
     ],
     programas: [
       { materia:'Economía Política', descripcion:'Programa oficial · 2026', pdf:'' },
@@ -391,17 +358,14 @@ function datosDemo() {
       { materia:'Introducción a las Ciencias Políticas', titulo:'Ciencia Política', autor:'Giovanni Sartori', pdf:'', imagen:'' }
     ],
     drive: [
-      { materia:'Economía Política', descripcion:'Carpeta del docente', url:'' },
-      { materia:'Historia Política Paraguaya', descripcion:'Carpeta del docente', url:'' },
-      { materia:'Introducción a las Ciencias Políticas', descripcion:'Carpeta del docente', url:'' },
-      { materia:'Idioma Guaraní II', descripcion:'Carpeta del docente', url:'' },
-      { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'' }
+      { materia:'Economía Política', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Historia Política Paraguaya', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Introducción a las Ciencias Políticas', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Idioma Guaraní II', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'', urlClassroom:'' }
     ]
   };
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-  initTema();
-  cargarDatos();
-});
+document.addEventListener('DOMContentLoaded', cargarDatos);

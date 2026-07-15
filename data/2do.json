@@ -55,10 +55,10 @@
     { "materia": "Introducción a las Ciencias Políticas", "titulo": "Ciencia Política", "autor": "Giovanni Sartori", "pdf": "", "imagen": "" }
   ],
   "drive": [
-    { "materia": "Economía Política", "descripcion": "Carpeta del docente", "url": "" },
-    { "materia": "Historia Política Paraguaya", "descripcion": "Carpeta del docente", "url": "" },
-    { "materia": "Introducción a las Ciencias Políticas", "descripcion": "Carpeta del docente", "url": "" },
-    { "materia": "Idioma Guaraní II", "descripcion": "Carpeta del docente", "url": "" },
-    { "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)", "descripcion": "Carpeta del docente", "url": "" }
+    { "materia": "Economía Política", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
+    { "materia": "Historia Política Paraguaya", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
+    { "materia": "Introducción a las Ciencias Políticas", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
+    { "materia": "Idioma Guaraní II", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" },
+    { "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)", "descripcion": "Carpeta del docente", "url": "", "urlClassroom": "" }
   ]
 }
