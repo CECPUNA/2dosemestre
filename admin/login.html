@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Campus Informativo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <style>
+    body { background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%); min-height: 100vh; display:flex; align-items:center; justify-content:center; }
+    .login-card { background: #fff; border-radius: 20px; padding: 40px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .login-logo { width: 64px; height: 64px; background: linear-gradient(135deg,#1a237e,#3949ab); border-radius: 16px; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; }
+    .login-logo i { font-size: 1.8rem; color: white; }
+    .form-control:focus { border-color: #3949ab; box-shadow: 0 0 0 3px rgba(57,73,171,.15); }
+    .btn-una { background: #1a237e; color: white; border: none; border-radius: 10px; padding: 12px; font-weight: 700; width: 100%; }
+    .btn-una:hover { background: #283593; color: white; }
+    .error-msg { display:none; color: #c62828; font-size: .85rem; margin-top: 10px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-logo"><i class="bi bi-building"></i></div>
+    <h4 class="text-center fw-bold mb-1" style="color:#1a237e">Panel de Administración</h4>
+    <p class="text-center text-muted small mb-4">Ciencias Políticas · UNA</p>
+    <form id="loginForm">
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Usuario</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input type="text" id="usuario" class="form-control" placeholder="admin" />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Contraseña</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" />
+          <button class="btn btn-outline-secondary" type="button" id="togglePass"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+      <div class="error-msg" id="errorMsg"><i class="bi bi-exclamation-circle me-1"></i>Usuario o contraseña incorrectos.</div>
+      <button type="submit" class="btn-una mt-3"><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</button>
+    </form>
+    <div class="text-center mt-3">
+      <a href="../index.html" class="text-muted small"><i class="bi bi-arrow-left me-1"></i>Volver al Campus</a>
+    </div>
+  </div>
+  <script>
+    // Credenciales embebidas (app personal de 1 usuario)
+    const ADMIN_USER = 'admin';
+    const ADMIN_PASS = 'campus2026';
+
+    document.getElementById('togglePass').addEventListener('click', function(){
+      const inp = document.getElementById('password');
+      const icon = this.querySelector('i');
+      if (inp.type === 'password') { inp.type = 'text'; icon.className = 'bi bi-eye-slash'; }
+      else { inp.type = 'password'; icon.className = 'bi bi-eye'; }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const u = document.getElementById('usuario').value.trim();
+      const p = document.getElementById('password').value;
+      if (u === ADMIN_USER && p === ADMIN_PASS) {
+        sessionStorage.setItem('adminOk', '1');
+        window.location.href = 'dashboard.html';
+      } else {
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
