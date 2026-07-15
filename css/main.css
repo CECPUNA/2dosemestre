@@ -1,0 +1,389 @@
+/* ===== VARIABLES ===== */
+:root {
+  --una-azul: #1a237e;
+  --una-azul-medio: #283593;
+  --una-azul-claro: #3949ab;
+  --una-rojo: #c62828;
+  --una-dorado: #f9a825;
+  --bg-suave: #f5f6fa;
+  --bg-card: #ffffff;
+  --texto-principal: #1c2340;
+  --texto-secundario: #5c6bc0;
+  --sombra: 0 4px 20px rgba(26,35,126,0.10);
+  --sombra-hover: 0 8px 30px rgba(26,35,126,0.18);
+  --radio: 14px;
+  --transicion: all 0.3s ease;
+}
+[data-theme="dark"] {
+  --bg-suave: #0f1320;
+  --bg-card: #1a1f35;
+  --texto-principal: #e8eaf6;
+  --texto-secundario: #9fa8da;
+  --sombra: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* ===== BASE ===== */
+body {
+  background: var(--bg-suave);
+  color: var(--texto-principal);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+.bg-una { background: var(--una-azul) !important; }
+.text-una { color: var(--una-azul) !important; }
+[data-theme="dark"] .text-una { color: #7986cb !important; }
+
+/* ===== NAVBAR ===== */
+.navbar { box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+.navbar-brand { font-size: 1rem; letter-spacing: .2px; }
+.nav-link { font-size: .88rem; border-radius: 8px; padding: 6px 12px !important; transition: var(--transicion); }
+.nav-link:hover { background: rgba(255,255,255,0.15); }
+
+/* ===== CLASE ACTIVA BANNER ===== */
+.clase-activa-banner {
+  background: var(--una-azul);
+  border-radius: var(--radio);
+  box-shadow: 0 6px 24px rgba(26,35,126,0.30);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.clase-activa-inner {
+  padding: 18px 24px;
+  border-left: 6px solid #4caf50;
+}
+.clase-activa-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.clase-activa-label {
+  color: #a5d6a7;
+  font-size: .75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.clase-activa-materia {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.clase-activa-info {
+  color: rgba(255,255,255,0.72);
+  font-size: .88rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.clase-activa-info i { font-size: .85rem; }
+
+/* Punto verde pulsante */
+.punto-verde {
+  width: 10px; height: 10px;
+  background: #4caf50;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulso 1.5s infinite;
+}
+@keyframes pulso {
+  0%   { box-shadow: 0 0 0 0 rgba(76,175,80,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
+  100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
+}
+
+/* ===== SECCIONES ===== */
+.seccion { padding: 52px 0; }
+.bg-light-custom { background: var(--bg-suave); }
+[data-theme="dark"] .bg-light-custom { background: #0d1124; }
+.seccion-header { margin-bottom: 28px; }
+.seccion-header h2 { font-size: 1.4rem; font-weight: 700; color: var(--texto-principal); }
+
+/* ===== TARJETAS GENÉRICAS ===== */
+.card-campus {
+  background: var(--bg-card);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  border: none;
+  transition: var(--transicion);
+  overflow: hidden;
+  height: 100%;
+}
+.card-campus:hover { transform: translateY(-4px); box-shadow: var(--sombra-hover); }
+.card-campus .card-franja { height: 5px; }
+.card-campus .card-body { padding: 20px; }
+
+/* ===== NOTICIAS ===== */
+.noticia-urgente { border-left: 4px solid var(--una-rojo) !important; }
+.badge-tipo { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ===== TABLA HORARIO DESKTOP ===== */
+/* table-layout:fixed + width:100% garantiza columnas iguales sin importar el contenido */
+.table-responsive { overflow-x: auto; }
+.table-horario {
+  border-collapse: separate;
+  border-spacing: 4px;
+  table-layout: fixed;
+  width: 100%;
+  min-width: 640px; /* scroll horizontal en pantallas chicas antes de mobile */
+}
+
+/* Columna hora: ancho fijo chico */
+.table-horario colgroup .col-hora { width: 70px; }
+/* Columnas días: se reparten el resto equitativamente (via table-layout:fixed) */
+
+.table-horario thead th {
+  background: var(--una-azul);
+  color: white;
+  font-weight: 700;
+  font-size: .82rem;
+  text-align: center;
+  padding: 11px 4px;
+  border-radius: 8px;
+  letter-spacing: .2px;
+  overflow: hidden;
+}
+.table-horario tbody td {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: .78rem;
+  vertical-align: middle;
+  /* SIN min-width ni width — table-layout:fixed lo controla todo */
+  box-shadow: 0 1px 6px rgba(26,35,126,0.07);
+  font-weight: 500;
+  height: 72px; /* altura uniforme para todas las celdas */
+}
+.td-hora {
+  background: var(--una-azul-medio) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: .88rem !important;
+  border-radius: 8px !important;
+}
+.td-libre { color: #b0bec5 !important; font-style: italic; font-size: .75rem; }
+.td-activa { outline: 3px solid #4caf50 !important; outline-offset: -2px; }
+
+/* Pill: texto truncado en 2 líneas para que no estire la celda */
+.pill-materia {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  border-radius: 7px;
+  padding: 5px 6px;
+  font-weight: 600;
+  font-size: .73rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+.pill-materia small {
+  display: block;
+  font-weight: 400;
+  opacity: .75;
+  font-size: .68rem;
+  margin-top: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ===== HORARIO MOBILE (tarjetas) ===== */
+.horario-dia-card {
+  background: var(--bg-card);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.horario-dia-header {
+  background: var(--una-azul);
+  color: white;
+  font-weight: 700;
+  padding: 12px 16px;
+  font-size: .95rem;
+}
+.horario-dia-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  gap: 12px;
+}
+.horario-dia-item.activa-mobile {
+  background: rgba(76,175,80,0.08);
+  border-left: 4px solid #4caf50;
+}
+.horario-dia-item:last-child { border-bottom: none; }
+.hora-badge {
+  background: var(--una-azul);
+  color: white;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: .8rem;
+  font-weight: 700;
+  min-width: 52px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ===== EXÁMENES ===== */
+.examen-card {
+  background: var(--bg-card);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  transition: var(--transicion);
+  height: 100%;
+}
+.examen-card:hover { transform: translateY(-3px); box-shadow: var(--sombra-hover); }
+.examen-top { padding: 20px 20px 14px; }
+.examen-bottom {
+  background: var(--bg-suave);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: .83rem;
+}
+[data-theme="dark"] .examen-bottom { background: rgba(0,0,0,0.2); }
+.examen-tipo {
+  font-size: .7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+/* ===== PERIODOS TIMELINE — CENTRADO ===== */
+.periodos-timeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+.periodo-item {
+  flex: 0 0 auto;
+  min-width: 150px;
+  background: var(--bg-card);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 20px 16px;
+  text-align: center;
+  border-top: 5px solid var(--una-azul-claro);
+  transition: var(--transicion);
+}
+.periodo-item:hover { transform: translateY(-3px); }
+.periodo-item.parcial { border-top-color: var(--una-rojo); }
+.periodo-item.final   { border-top-color: var(--una-dorado); }
+.periodo-mes    { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--texto-secundario); }
+.periodo-nombre { font-size: .95rem; font-weight: 700; margin: 6px 0 4px; color: var(--texto-principal); }
+.periodo-fecha  { font-size: .8rem; color: var(--texto-secundario); }
+
+/* ===== PROGRAMAS ===== */
+.programa-card {
+  background: var(--bg-card);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: var(--transicion);
+  height: 100%;
+}
+.programa-card:hover { transform: translateY(-3px); box-shadow: var(--sombra-hover); }
+.programa-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--una-azul), var(--una-azul-claro));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 1.4rem; flex-shrink: 0;
+}
+
+/* ===== LIBROS ===== */
+.libro-card {
+  background: var(--bg-card);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  transition: var(--transicion);
+  height: 100%;
+}
+.libro-card:hover { transform: translateY(-4px); box-shadow: var(--sombra-hover); }
+.libro-cover {
+  height: 160px;
+  background: linear-gradient(135deg, var(--una-azul) 0%, var(--una-azul-claro) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; color: white;
+  position: relative; overflow: hidden;
+}
+.libro-cover img { width: 100%; height: 100%; object-fit: cover; }
+.libro-cover .libro-overlay {
+  position: absolute; inset: 0;
+  background: rgba(26,35,126,0.55);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: var(--transicion);
+}
+.libro-card:hover .libro-overlay { opacity: 1; }
+.libro-body { padding: 16px; }
+.libro-materia { font-size: .72rem; text-transform: uppercase; font-weight: 700; letter-spacing: .5px; margin-bottom: 4px; }
+.libro-titulo  { font-size: .95rem; font-weight: 700; color: var(--texto-principal); margin-bottom: 3px; }
+.libro-autor   { font-size: .82rem; color: var(--texto-secundario); }
+
+/* ===== DRIVE / CLASSROOM ===== */
+.drive-card {
+  background: var(--bg-card);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: var(--transicion);
+  height: 100%;
+}
+.drive-card:hover { transform: translateY(-3px); box-shadow: var(--sombra-hover); }
+.drive-icon-wrap { display: flex; gap: 8px; flex-shrink: 0; }
+.drive-icon { font-size: 1.8rem; }
+.drive-icon.drive     { color: #1565c0; }
+.drive-icon.classroom { color: #2e7d32; }
+
+/* ===== FOOTER ===== */
+.footer-una { background: var(--una-azul); color: white; margin-top: 40px; }
+.footer-una .text-muted { color: rgba(255,255,255,0.6) !important; }
+.footer-una a { color: rgba(255,255,255,0.5); text-decoration: none; transition: var(--transicion); }
+.footer-una a:hover { color: white; }
+
+/* ===== COLORES MATERIAS ===== */
+.color-econopolitica { background-color: rgba(26,35,126,0.12); color: #1a237e; }
+.color-introccp      { background-color: rgba(56,142,60,0.13);  color: #2e7d32; }
+.color-historiapolit { background-color: rgba(183,28,28,0.12);  color: #b71c1c; }
+.color-guarani       { background-color: rgba(230,81,0,0.12);   color: #e65100; }
+.color-seminario     { background-color: rgba(106,27,154,0.12); color: #6a1b9a; }
+[data-theme="dark"] .color-econopolitica { background-color: rgba(26,35,126,0.3); color: #9fa8da; }
+[data-theme="dark"] .color-introccp      { background-color: rgba(56,142,60,0.3);  color: #a5d6a7; }
+[data-theme="dark"] .color-historiapolit { background-color: rgba(183,28,28,0.3);  color: #ef9a9a; }
+[data-theme="dark"] .color-guarani       { background-color: rgba(230,81,0,0.3);   color: #ffcc80; }
+[data-theme="dark"] .color-seminario     { background-color: rgba(106,27,154,0.3); color: #ce93d8; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-suave); }
+::-webkit-scrollbar-thumb { background: var(--una-azul-claro); border-radius: 4px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .seccion { padding: 36px 0; }
+  .periodo-item { min-width: 130px; padding: 16px 12px; }
+  .clase-activa-materia { font-size: 1rem; }
+  .clase-activa-inner { padding: 14px 16px; }
+}
