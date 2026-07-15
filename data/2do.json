@@ -3,6 +3,13 @@
   "anio": 2026,
   "noticias": [
     {
+      "titulo": "Nueva noticia",
+      "descripcion": "Descripcion",
+      "tipo": "Noticia",
+      "fecha": "22 Agosto",
+      "urgente": false
+    },
+    {
       "titulo": "Noticias de aayer",
       "descripcion": "Noticias de ayer extra extra",
       "tipo": "Urgent",
@@ -18,7 +25,7 @@
     },
     {
       "titulo": "Inicio del Segundo Semestre 2026",
-      "descripcion": "Las clases del segundo semestre comienzan el 4 de agosto de 2026. Se requiere presentaciÃÂ³n de documentaciÃÂ³n al momento de la inscripciÃÂ³n.",
+      "descripcion": "Las clases del segundo semestre comienzan el 4 de agosto de 2026. Se requiere presentaciÃÂÃÂ³n de documentaciÃÂÃÂ³n al momento de la inscripciÃÂÃÂ³n.",
       "tipo": "Aviso",
       "fecha": "1 Ago 2026",
       "urgente": false
@@ -28,141 +35,141 @@
     {
       "dia": "Lunes",
       "hora": "18:00",
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
-      "profesor": "Prof. GarcÃÂ­a"
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
+      "profesor": "Prof. GarcÃÂÃÂ­a"
     },
     {
       "dia": "Martes",
       "hora": "18:00",
-      "materia": "Historia PolÃÂ­tica Paraguaya",
+      "materia": "Historia PolÃÂÃÂ­tica Paraguaya",
       "profesor": "Prof. Romero"
     },
     {
-      "dia": "MiÃÂ©rcoles",
+      "dia": "MiÃÂÃÂ©rcoles",
       "hora": "18:00",
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
-      "profesor": "Prof. GarcÃÂ­a"
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
+      "profesor": "Prof. GarcÃÂÃÂ­a"
     },
     {
       "dia": "Jueves",
       "hora": "18:00",
-      "materia": "Idioma GuaranÃÂ­ II",
+      "materia": "Idioma GuaranÃÂÃÂ­ II",
       "profesor": "Prof. Ayala"
     },
     {
       "dia": "Viernes",
       "hora": "18:00",
-      "materia": "Seminario II: Movimientos Sociales y PolÃÂ­ticos en AmÃÂ©rica Latina (Siglos XX y XXI)",
-      "profesor": "Prof. LÃÂ³pez"
+      "materia": "Seminario II: Movimientos Sociales y PolÃÂÃÂ­ticos en AmÃÂÃÂ©rica Latina (Siglos XX y XXI)",
+      "profesor": "Prof. LÃÂÃÂ³pez"
     },
     {
-      "dia": "Miércoles",
+      "dia": "MiÃ©rcoles",
       "hora": "18:00",
-      "materia": "Economía Política",
+      "materia": "EconomÃ­a PolÃ­tica",
       "profesor": "Prof Urquiza"
     },
     {
       "dia": "Lunes",
       "hora": "19:00",
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
-      "profesor": "Prof. GarcÃÂ­a"
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
+      "profesor": "Prof. GarcÃÂÃÂ­a"
     },
     {
       "dia": "Martes",
       "hora": "19:00",
-      "materia": "Historia PolÃÂ­tica Paraguaya",
+      "materia": "Historia PolÃÂÃÂ­tica Paraguaya",
       "profesor": "Prof. Romero"
     },
     {
-      "dia": "MiÃÂ©rcoles",
+      "dia": "MiÃÂÃÂ©rcoles",
       "hora": "19:00",
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
-      "profesor": "Prof. GarcÃÂ­a"
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
+      "profesor": "Prof. GarcÃÂÃÂ­a"
     },
     {
       "dia": "Jueves",
       "hora": "19:00",
-      "materia": "Idioma GuaranÃÂ­ II",
+      "materia": "Idioma GuaranÃÂÃÂ­ II",
       "profesor": "Prof. Ayala"
     },
     {
       "dia": "Viernes",
       "hora": "19:00",
-      "materia": "Seminario II: Movimientos Sociales y PolÃÂ­ticos en AmÃÂ©rica Latina (Siglos XX y XXI)",
-      "profesor": "Prof. LÃÂ³pez"
+      "materia": "Seminario II: Movimientos Sociales y PolÃÂÃÂ­ticos en AmÃÂÃÂ©rica Latina (Siglos XX y XXI)",
+      "profesor": "Prof. LÃÂÃÂ³pez"
     },
     {
-      "dia": "Miércoles",
+      "dia": "MiÃ©rcoles",
       "hora": "19:00",
-      "materia": "Introducción a las Ciencias Políticas",
+      "materia": "IntroducciÃ³n a las Ciencias PolÃ­ticas",
       "profesor": "Prof Urquiza"
     },
     {
       "dia": "Lunes",
       "hora": "20:00",
-      "materia": "IntroducciÃÂ³n a las Ciencias PolÃÂ­ticas",
-      "profesor": "Prof. MartÃÂ­nez"
+      "materia": "IntroducciÃÂÃÂ³n a las Ciencias PolÃÂÃÂ­ticas",
+      "profesor": "Prof. MartÃÂÃÂ­nez"
     },
     {
       "dia": "Martes",
       "hora": "20:00",
-      "materia": "IntroducciÃÂ³n a las Ciencias PolÃÂ­ticas",
-      "profesor": "Prof. MartÃÂ­nez"
+      "materia": "IntroducciÃÂÃÂ³n a las Ciencias PolÃÂÃÂ­ticas",
+      "profesor": "Prof. MartÃÂÃÂ­nez"
     },
     {
-      "dia": "MiÃÂ©rcoles",
+      "dia": "MiÃÂÃÂ©rcoles",
       "hora": "20:00",
-      "materia": "Historia PolÃÂ­tica Paraguaya",
+      "materia": "Historia PolÃÂÃÂ­tica Paraguaya",
       "profesor": "Prof. Romero"
     },
     {
       "dia": "Viernes",
       "hora": "20:00",
-      "materia": "Seminario II: Movimientos Sociales y PolÃÂ­ticos en AmÃÂ©rica Latina (Siglos XX y XXI)",
-      "profesor": "Prof. LÃÂ³pez"
+      "materia": "Seminario II: Movimientos Sociales y PolÃÂÃÂ­ticos en AmÃÂÃÂ©rica Latina (Siglos XX y XXI)",
+      "profesor": "Prof. LÃÂÃÂ³pez"
     },
     {
-      "dia": "Miércoles",
+      "dia": "MiÃ©rcoles",
       "hora": "20:00",
-      "materia": "Idioma Guaraní II",
+      "materia": "Idioma GuaranÃ­ II",
       "profesor": "Prof Urquiza"
     },
     {
       "dia": "Martes",
       "hora": "21:00",
-      "materia": "Idioma GuaranÃÂ­ II",
+      "materia": "Idioma GuaranÃÂÃÂ­ II",
       "profesor": "Prof. Ayala"
     },
     {
       "dia": "Jueves",
       "hora": "21:00",
-      "materia": "Idioma GuaranÃÂ­ II",
+      "materia": "Idioma GuaranÃÂÃÂ­ II",
       "profesor": "Prof. Ayala"
     },
     {
       "dia": "Lunes",
       "hora": "22:00",
-      "materia": "Economía Política",
+      "materia": "EconomÃ­a PolÃ­tica",
       "profesor": "Prof Urquiza"
     },
     {
       "dia": "Lunes",
       "hora": "23:00",
-      "materia": "Economía Política",
+      "materia": "EconomÃ­a PolÃ­tica",
       "profesor": "Prof Urquiza"
     }
   ],
   "examenes": [
     {
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
       "tipo": "Primer Parcial",
       "fecha": "15 Septiembre",
       "hora": "18:00",
       "aula": "4",
-      "profesor": "Prof. GarcÃÂ­a"
+      "profesor": "Prof. GarcÃÂÃÂ­a"
     },
     {
-      "materia": "Historia PolÃÂ­tica Paraguaya",
+      "materia": "Historia PolÃÂÃÂ­tica Paraguaya",
       "tipo": "Primer Parcial",
       "fecha": "17 Septiembre",
       "hora": "18:00",
@@ -170,15 +177,15 @@
       "profesor": "Prof. Romero"
     },
     {
-      "materia": "IntroducciÃÂ³n a las Ciencias PolÃÂ­ticas",
+      "materia": "IntroducciÃÂÃÂ³n a las Ciencias PolÃÂÃÂ­ticas",
       "tipo": "Primer Parcial",
       "fecha": "19 Septiembre",
       "hora": "20:00",
       "aula": "3",
-      "profesor": "Prof. MartÃÂ­nez"
+      "profesor": "Prof. MartÃÂÃÂ­nez"
     },
     {
-      "materia": "Idioma GuaranÃÂ­ II",
+      "materia": "Idioma GuaranÃÂÃÂ­ II",
       "tipo": "Primer Parcial",
       "fecha": "22 Septiembre",
       "hora": "18:00",
@@ -186,15 +193,15 @@
       "profesor": "Prof. Ayala"
     },
     {
-      "materia": "Seminario II: Movimientos Sociales y PolÃÂ­ticos en AmÃÂ©rica Latina (Siglos XX y XXI)",
+      "materia": "Seminario II: Movimientos Sociales y PolÃÂÃÂ­ticos en AmÃÂÃÂ©rica Latina (Siglos XX y XXI)",
       "tipo": "Primer Parcial",
       "fecha": "24 Septiembre",
       "hora": "18:00",
       "aula": "4",
-      "profesor": "Prof. LÃÂ³pez"
+      "profesor": "Prof. LÃÂÃÂ³pez"
     },
     {
-      "materia": "Economía Política",
+      "materia": "EconomÃ­a PolÃ­tica",
       "tipo": "Primer Parcial",
       "fecha": "12 de Octubre",
       "hora": "19:00",
@@ -202,7 +209,7 @@
       "profesor": "Urquiza"
     },
     {
-      "materia": "Economía Política",
+      "materia": "EconomÃ­a PolÃ­tica",
       "tipo": "Primer Parcial",
       "fecha": "12 de Octubre",
       "hora": "19:00",
@@ -210,7 +217,7 @@
       "profesor": "Urquiza"
     },
     {
-      "materia": "Economía Política",
+      "materia": "EconomÃ­a PolÃ­tica",
       "tipo": "Primer Parcial",
       "fecha": "12 de Octubre",
       "hora": "19:00",
@@ -228,7 +235,7 @@
       "mes": "Septiembre",
       "nombre": "1er Parcial",
       "tipo": "parcial",
-      "fecha": "15Ã¢ÂÂ24 Sep"
+      "fecha": "15ÃÂ¢ÃÂÃÂ24 Sep"
     },
     {
       "mes": "Octubre",
@@ -239,60 +246,60 @@
       "mes": "Noviembre",
       "nombre": "2do Parcial",
       "tipo": "parcial",
-      "fecha": "10Ã¢ÂÂ21 Nov"
+      "fecha": "10ÃÂ¢ÃÂÃÂ21 Nov"
     },
     {
       "mes": "Diciembre",
       "nombre": "Finales",
       "tipo": "final",
-      "fecha": "1Ã¢ÂÂ15 Dic"
+      "fecha": "1ÃÂ¢ÃÂÃÂ15 Dic"
     }
   ],
   "programas": [
     {
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
-      "descripcion": "Programa oficial ÃÂ· 2026",
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
+      "descripcion": "Programa oficial ÃÂÃÂ· 2026",
       "pdf": ""
     },
     {
-      "materia": "Historia PolÃÂ­tica Paraguaya",
-      "descripcion": "Programa oficial ÃÂ· 2026",
+      "materia": "Historia PolÃÂÃÂ­tica Paraguaya",
+      "descripcion": "Programa oficial ÃÂÃÂ· 2026",
       "pdf": ""
     },
     {
-      "materia": "IntroducciÃÂ³n a las Ciencias PolÃÂ­ticas",
-      "descripcion": "Programa oficial ÃÂ· 2026",
+      "materia": "IntroducciÃÂÃÂ³n a las Ciencias PolÃÂÃÂ­ticas",
+      "descripcion": "Programa oficial ÃÂÃÂ· 2026",
       "pdf": ""
     },
     {
-      "materia": "Idioma GuaranÃÂ­ II",
-      "descripcion": "Programa oficial ÃÂ· 2026",
+      "materia": "Idioma GuaranÃÂÃÂ­ II",
+      "descripcion": "Programa oficial ÃÂÃÂ· 2026",
       "pdf": ""
     },
     {
-      "materia": "Seminario II: Movimientos Sociales y PolÃÂ­ticos en AmÃÂ©rica Latina (Siglos XX y XXI)",
-      "descripcion": "Programa oficial ÃÂ· 2026",
+      "materia": "Seminario II: Movimientos Sociales y PolÃÂÃÂ­ticos en AmÃÂÃÂ©rica Latina (Siglos XX y XXI)",
+      "descripcion": "Programa oficial ÃÂÃÂ· 2026",
       "pdf": ""
     }
   ],
   "libros": [
     {
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
-      "titulo": "Principios de EconomÃÂ­a",
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
+      "titulo": "Principios de EconomÃÂÃÂ­a",
       "autor": "N. Gregory Mankiw",
       "pdf": "",
       "imagen": ""
     },
     {
-      "materia": "Historia PolÃÂ­tica Paraguaya",
+      "materia": "Historia PolÃÂÃÂ­tica Paraguaya",
       "titulo": "Historia del Paraguay",
       "autor": "Carlos Pastore",
       "pdf": "",
       "imagen": ""
     },
     {
-      "materia": "IntroducciÃÂ³n a las Ciencias PolÃÂ­ticas",
-      "titulo": "Ciencia PolÃÂ­tica",
+      "materia": "IntroducciÃÂÃÂ³n a las Ciencias PolÃÂÃÂ­ticas",
+      "titulo": "Ciencia PolÃÂÃÂ­tica",
       "autor": "Giovanni Sartori",
       "pdf": "",
       "imagen": ""
@@ -300,31 +307,31 @@
   ],
   "drive": [
     {
-      "materia": "EconomÃÂ­a PolÃÂ­tica",
+      "materia": "EconomÃÂÃÂ­a PolÃÂÃÂ­tica",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "Historia PolÃÂ­tica Paraguaya",
+      "materia": "Historia PolÃÂÃÂ­tica Paraguaya",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "IntroducciÃÂ³n a las Ciencias PolÃÂ­ticas",
+      "materia": "IntroducciÃÂÃÂ³n a las Ciencias PolÃÂÃÂ­ticas",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "Idioma GuaranÃÂ­ II",
+      "materia": "Idioma GuaranÃÂÃÂ­ II",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
     },
     {
-      "materia": "Seminario II: Movimientos Sociales y PolÃÂ­ticos en AmÃÂ©rica Latina (Siglos XX y XXI)",
+      "materia": "Seminario II: Movimientos Sociales y PolÃÂÃÂ­ticos en AmÃÂÃÂ©rica Latina (Siglos XX y XXI)",
       "descripcion": "Carpeta del docente",
       "url": "",
       "urlClassroom": ""
