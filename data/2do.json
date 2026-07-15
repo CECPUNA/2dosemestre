@@ -3,6 +3,20 @@
   "anio": 2026,
   "noticias": [
     {
+      "titulo": "Noticias de aayer",
+      "descripcion": "Noticias de ayer extra extra",
+      "tipo": "Urgent",
+      "fecha": "22 Jul",
+      "urgente": true
+    },
+    {
+      "titulo": "Noticias de aayer",
+      "descripcion": "Noticias de ayer extra extra",
+      "tipo": "Urgent",
+      "fecha": "22 Jul",
+      "urgente": true
+    },
+    {
       "titulo": "Inicio del Segundo Semestre 2026",
       "descripcion": "Las clases del segundo semestre comienzan el 4 de agosto de 2026. Se requiere presentaciÃÂ³n de documentaciÃÂ³n al momento de la inscripciÃÂ³n.",
       "tipo": "Aviso",
