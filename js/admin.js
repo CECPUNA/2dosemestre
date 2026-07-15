@@ -41,8 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // =====================
 // POBLAR SELECTS
-// Inyecta <option value="..."> en los 4 selects que usan materias,
-// garantizando que .value coincida exactamente con el texto de la materia.
 // =====================
 function poblarSelects() {
   const ids = ['pgMat', 'drMat', 'hMateria', 'exMat'];
@@ -60,20 +58,13 @@ function poblarSelects() {
 // =====================
 async function cargarDatos() {
   localStorage.removeItem(LS_KEY);
-
-  // 1) Leer el JSON desde raw.githubusercontent (público, sin rate limit)
   try {
     const r = await fetch(`${RAW_URL}?_v=${Date.now()}`, { cache: 'no-store' });
-    if (r.ok) {
-      D = await r.json();
-    }
+    if (r.ok) D = await r.json();
   } catch(e) {
     console.warn('raw fetch falló:', e);
   }
-
-  // 2) En paralelo, obtener el SHA via API (necesario para publicar)
   obtenerSHA();
-
   if (!D) D = datosVacios();
 }
 
@@ -94,9 +85,7 @@ async function obtenerSHA() {
   }
 }
 
-function guardarLocal() {
-  // cambios viven en memoria hasta publicar
-}
+function guardarLocal() {}
 
 function datosVacios() {
   return {
@@ -117,17 +106,14 @@ async function publicarEnGitHub() {
     abrirPanel('publicar');
     return;
   }
-
   if (!ghSHA) {
     toast('Obteniendo SHA del archivo...', 'ok');
     await obtenerSHA();
   }
-
   const btn = document.getElementById('btnPublicar');
   const orig = btn.innerHTML;
   btn.innerHTML = '<i class="bi bi-arrow-repeat spin me-2"></i>Publicando...';
   btn.disabled = true;
-
   const contenido = btoa(unescape(encodeURIComponent(JSON.stringify(D, null, 2))));
   const body = {
     message: `[gestor] actualizar datos · ${new Date().toLocaleString('es-PY')}`,
@@ -135,7 +121,6 @@ async function publicarEnGitHub() {
     branch:  GH_BRANCH,
     ...(ghSHA ? { sha: ghSHA } : {})
   };
-
   try {
     const r = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}`, {
       method: 'PUT',
@@ -146,7 +131,6 @@ async function publicarEnGitHub() {
       },
       body: JSON.stringify(body)
     });
-
     if (r.ok) {
       const res = await r.json();
       ghSHA = res.content.sha;
@@ -249,7 +233,7 @@ function guardarLocalYMarcar() {
 }
 
 // =====================
-// DASHBOARD STATS + PREVIEWS
+// DASHBOARD
 // =====================
 function renderDashboard() {
   const stats = [
@@ -269,14 +253,12 @@ function renderDashboard() {
         <div style="font-size:.78rem;color:#6b7280;font-weight:600">${s.label}</div>
       </div>
     </div>`).join('');
-
   renderDashboardPreviews();
 }
 
 function renderDashboardPreviews() {
   const empty = '<p style="color:#9ca3af;font-size:.82rem;font-style:italic;padding:8px 0">Sin datos cargados.</p>';
 
-  // --- Noticias ---
   const dn = document.getElementById('dash-noticias');
   if (dn) {
     if (!D.noticias?.length) { dn.innerHTML = empty; }
@@ -292,7 +274,6 @@ function renderDashboardPreviews() {
     }
   }
 
-  // --- Exámenes ---
   const de = document.getElementById('dash-examenes');
   if (de) {
     if (!D.examenes?.length) { de.innerHTML = empty; }
@@ -307,7 +288,6 @@ function renderDashboardPreviews() {
     }
   }
 
-  // --- Horario ---
   const dh = document.getElementById('dash-horario');
   if (dh) {
     if (!D.horario?.length) { dh.innerHTML = empty; }
@@ -326,7 +306,6 @@ function renderDashboardPreviews() {
     }
   }
 
-  // --- Calendario ---
   const dc = document.getElementById('dash-calendario');
   if (dc) {
     if (!D.calendario?.length) { dc.innerHTML = empty; }
@@ -343,7 +322,6 @@ function renderDashboardPreviews() {
     }
   }
 
-  // --- Programas ---
   const dp = document.getElementById('dash-programas');
   if (dp) {
     if (!D.programas?.length) { dp.innerHTML = empty; }
@@ -359,7 +337,6 @@ function renderDashboardPreviews() {
     }
   }
 
-  // --- Libros ---
   const dl = document.getElementById('dash-libros');
   if (dl) {
     if (!D.libros?.length) { dl.innerHTML = empty; }
@@ -375,7 +352,6 @@ function renderDashboardPreviews() {
     }
   }
 
-  // --- Drive / Classroom ---
   const dd = document.getElementById('dash-drive');
   if (dd) {
     if (!D.drive?.length) { dd.innerHTML = empty; }
@@ -412,10 +388,12 @@ function renderNoticias() {
 const A = {
 
   agregarNoticia() {
-    const tit = v('noTit'); if (!tit) { toast('El título es obligatorio','error'); return; }
+    const tit = v('noTit');
+    if (!tit) { toast('El título es obligatorio','error'); return; }
     D.noticias.unshift({ titulo:tit, descripcion:v('noDesc'), tipo:v('noTipo')||'Aviso', fecha:v('noFecha'), urgente:document.getElementById('noUrgente').checked });
     guardarLocalYMarcar(); renderNoticias(); renderDashboard();
-    clear('noTit','noDesc','noTipo','noFecha'); document.getElementById('noUrgente').checked=false;
+    clear('noTit','noDesc','noTipo','noFecha');
+    document.getElementById('noUrgente').checked = false;
     toast('Noticia agregada');
   },
 
@@ -451,8 +429,8 @@ const A = {
   },
 
   agregarCalendario() {
-    const mes=v('calMes'),nom=v('calNom'),fecha=v('calFecha'),tipo=v('calTipo');
-    if (!mes||!nom) { toast('Mes y nombre son obligatorios','error'); return; }\
+    const mes=v('calMes'), nom=v('calNom'), fecha=v('calFecha'), tipo=v('calTipo');
+    if (!mes||!nom) { toast('Mes y nombre son obligatorios','error'); return; }
     D.calendario.push({ mes, nombre:nom, fecha, tipo });
     guardarLocalYMarcar(); renderCalendario(); clear('calMes','calNom','calFecha'); toast('Período agregado');
   },
@@ -475,13 +453,12 @@ const A = {
       D.programas.push({ materia: mat, descripcion: desc || 'Programa oficial · 2026', pdf });
     }
     guardarLocalYMarcar(); renderProgramas(); renderDashboard(); clear('pgUrl','pgDesc');
-    // Mantener la materia seleccionada para edición continua
     document.getElementById('pgMat').value = mat;
     toast('Programa guardado');
   },
 
   agregarLibro() {
-    const mat=v('lbMat'),tit=v('lbTit'),aut=v('lbAut');
+    const mat=v('lbMat'), tit=v('lbTit'), aut=v('lbAut');
     if (!mat||!tit) { toast('Materia y título son obligatorios','error'); return; }
     D.libros.push({ materia:mat, titulo:tit, autor:aut, pdf:v('lbPdf'), imagen:v('lbImg') });
     guardarLocalYMarcar(); renderLibros(); renderDashboard(); clear('lbMat','lbTit','lbAut','lbPdf','lbImg'); toast('Libro agregado');
@@ -507,7 +484,6 @@ const A = {
       D.drive.push({ materia: mat, descripcion: desc || 'Carpeta del docente', url, urlClassroom: cls });
     }
     guardarLocalYMarcar(); renderDrive(); renderDashboard(); clear('drUrl','drClassroom','drDesc');
-    // Mantener la materia seleccionada para edición continua
     document.getElementById('drMat').value = mat;
     toast('Links guardados');
   },
@@ -549,7 +525,6 @@ function renderHorarioGrid() {
   const horas = [...new Set(D.horario.map(c=>c.hora))];
   ['18:00','19:00','20:00','21:00'].forEach(h=>{if(!horas.includes(h)) horas.push(h);});
   horas.sort();
-
   let html = '<div class="hg-head" style="grid-column:1">Hora</div>';
   DIAS.forEach(d=>html+=`<div class="hg-head">${d}</div>`);
   horas.forEach(h=>{
@@ -569,7 +544,7 @@ function renderHorarioGrid() {
 }
 
 function prefillHorario(dia, hora) {
-  document.getElementById('hDia').value = dia;
+  document.getElementById('hDia').value  = dia;
   document.getElementById('hHora').value = hora;
   document.getElementById('hProf')?.focus();
 }
@@ -598,18 +573,16 @@ function renderProgramas() {
   tb.innerHTML = D.programas?.map((p,i)=>`<tr>
     <td>${p.materia}</td>
     <td class="text-muted small">${p.descripcion||''}</td>
-    <td>${p.pdf?`<a href="${p.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye me-1"></i>Ver</a>`:'<span class="text-muted small">Sin URL</span>'}</td>
+    <td>${p.pdf ? `<a href="${p.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye me-1"></i>Ver</a>` : '<span class="text-muted small">Sin URL</span>'}</td>
     <td><button class="btn-edit" onclick="editarPrograma(${i})"><i class="bi bi-pencil"></i> Editar</button></td>
   </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin programas</td></tr>';
 }
 
 function editarPrograma(i) {
   const p = D.programas[i];
-  // value= funciona porque poblarSelects() ya insertó <option value="...">
   document.getElementById('pgMat').value  = p.materia;
   document.getElementById('pgDesc').value = p.descripcion || '';
   document.getElementById('pgUrl').value  = p.pdf || '';
-  // Scroll al formulario
   document.getElementById('pgUrl').scrollIntoView({ behavior:'smooth', block:'center' });
   document.getElementById('pgUrl').focus();
 }
@@ -620,7 +593,7 @@ function renderLibros() {
     <td class="small">${l.materia}</td>
     <td><strong>${l.titulo}</strong></td>
     <td class="small">${l.autor||'—'}</td>
-    <td>${l.pdf?`<a href="${l.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye"></i></a>`:'—'}</td>
+    <td>${l.pdf ? `<a href="${l.pdf}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-eye"></i></a>` : '—'}</td>
     <td><button class="btn-peligro" onclick="A.eliminarLibro(${i})"><i class="bi bi-trash"></i></button></td>
   </tr>`).join('') : '<tr><td colspan="5" class="text-muted text-center small">Sin libros</td></tr>';
 }
@@ -629,20 +602,18 @@ function renderDrive() {
   const tb=document.querySelector('#tablaDriveAdmin tbody'); if(!tb) return;
   tb.innerHTML = D.drive?.map((d,i)=>`<tr>
     <td class="small fw-semibold">${d.materia}</td>
-    <td>${d.url?`<a href="${d.url}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-folder2-open me-1"></i>Drive</a>`:'<span class="text-muted small">Sin link</span>'}</td>
-    <td>${d.urlClassroom?`<a href="${d.urlClassroom}" target="_blank" class="btn btn-sm btn-outline-success py-0"><i class="bi bi-mortarboard me-1"></i>Classroom</a>`:'<span class="text-muted small">Sin link</span>'}</td>
+    <td>${d.url ? `<a href="${d.url}" target="_blank" class="btn btn-sm btn-outline-primary py-0"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : '<span class="text-muted small">Sin link</span>'}</td>
+    <td>${d.urlClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="btn btn-sm btn-outline-success py-0"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : '<span class="text-muted small">Sin link</span>'}</td>
     <td><button class="btn-edit" onclick="editarDrive(${i})"><i class="bi bi-pencil"></i> Editar</button></td>
   </tr>`).join('') || '<tr><td colspan="4" class="text-muted text-center small">Sin datos</td></tr>';
 }
 
 function editarDrive(i) {
   const d = D.drive[i];
-  // value= funciona porque poblarSelects() ya insertó <option value="...">
-  document.getElementById('drMat').value        = d.materia;
-  document.getElementById('drUrl').value        = d.url || '';
-  document.getElementById('drClassroom').value  = d.urlClassroom || '';
-  document.getElementById('drDesc').value       = d.descripcion || '';
-  // Scroll al formulario
+  document.getElementById('drMat').value       = d.materia;
+  document.getElementById('drUrl').value       = d.url || '';
+  document.getElementById('drClassroom').value = d.urlClassroom || '';
+  document.getElementById('drDesc').value      = d.descripcion || '';
   document.getElementById('drUrl').scrollIntoView({ behavior:'smooth', block:'center' });
   document.getElementById('drUrl').focus();
 }
