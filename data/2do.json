@@ -3,6 +3,13 @@
   "anio": 2026,
   "noticias": [
     {
+      "titulo": "Esta noticia no es tan urgente porque es un",
+      "descripcion": "Una noticia no tan urgente, pero que es interesante mencionar",
+      "tipo": "AVISO",
+      "fecha": "22 de Septiembre",
+      "urgente": false
+    },
+    {
       "titulo": "Esta noticia es la 2da  y es urgente",
       "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "tipo": "Noticia",
@@ -195,11 +202,6 @@
   ],
   "programas": [
     {
-      "materia": "Seminario II: Movimientos Sociales y PolÃ­ticos en AmÃ©rica Latina (Siglos XX y XXI)",
-      "descripcion": "Programa oficial Â· 2026",
-      "pdf": ""
-    },
-    {
       "materia": "Economía Política",
       "descripcion": "Programa Oficial 2026",
       "pdf": ""
@@ -216,6 +218,11 @@
     },
     {
       "materia": "Idioma Guaraní II",
+      "descripcion": "Programa Oficial 2026",
+      "pdf": ""
+    },
+    {
+      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
       "descripcion": "Programa Oficial 2026",
       "pdf": ""
     }
