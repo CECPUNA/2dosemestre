@@ -450,9 +450,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/admin.js"></script>
 <script>
-  // ===== INFO CI: métodos extra para el panel =====
-  A.renderTablaCI = function() {
-    const lista = A.datos.infoci || [];
+  // ===== INFO CI — métodos corregidos (usan D y toast() del admin.js) =====
+
+  function renderTablaCI() {
+    if (!D.infoci) D.infoci = [];
+    const lista = D.infoci;
     const tbody = document.querySelector('#tablaCIAdmin tbody');
     const count = document.getElementById('ciCount');
     if (count) count.textContent = lista.length;
@@ -465,48 +467,48 @@
       <tr>
         <td><span class="ci-badge">${r.ci}</span></td>
         <td><span class="ci-msg-preview" title="${r.mensaje.replace(/"/g,'&quot;')}">${r.mensaje}</span></td>
-        <td><button class="btn-peligro" onclick="A.eliminarCI(${i})"><i class="bi bi-trash"></i></button></td>
+        <td><button class="btn-peligro" onclick="eliminarCI(${i})"><i class="bi bi-trash"></i></button></td>
       </tr>`).join('');
-  };
+  }
 
   A.agregarRegistroCI = function() {
     const ci  = document.getElementById('ciNuevoCI')?.value.trim();
     const msg = document.getElementById('ciNuevoMsg')?.value.trim();
-    if (!ci || !msg) { mostrarToast('Completá el C.I. y el mensaje.', true); return; }
-    if (!A.datos.infoci) A.datos.infoci = [];
-    const idx = A.datos.infoci.findIndex(r => String(r.ci) === ci);
+    if (!ci || !msg) { toast('Completá el C.I. y el mensaje.', 'error'); return; }
+    if (!D.infoci) D.infoci = [];
+    const idx = D.infoci.findIndex(r => String(r.ci) === ci);
     if (idx >= 0) {
-      A.datos.infoci[idx].mensaje = msg;
+      D.infoci[idx].mensaje = msg;
     } else {
-      A.datos.infoci.push({ ci, mensaje: msg });
+      D.infoci.push({ ci, mensaje: msg });
     }
-    A.guardarLocal();
-    A.renderTablaCI();
+    guardarLocalYMarcar();
+    renderTablaCI();
     document.getElementById('ciNuevoCI').value = '';
     document.getElementById('ciNuevoMsg').value = '';
-    mostrarToast('Registro guardado.');
+    toast('Registro guardado.');
   };
 
-  A.eliminarCI = function(idx) {
+  function eliminarCI(idx) {
     if (!confirm('¿Eliminar este registro?')) return;
-    A.datos.infoci.splice(idx, 1);
-    A.guardarLocal();
-    A.renderTablaCI();
-    mostrarToast('Registro eliminado.');
-  };
+    D.infoci.splice(idx, 1);
+    guardarLocalYMarcar();
+    renderTablaCI();
+    toast('Registro eliminado.');
+  }
 
   A.limpiarInfoCI = function() {
     if (!confirm('¿Borrar TODA la lista de Info por CI?')) return;
-    A.datos.infoci = [];
-    A.guardarLocal();
-    A.renderTablaCI();
-    mostrarToast('Lista vaciada.');
+    D.infoci = [];
+    guardarLocalYMarcar();
+    renderTablaCI();
+    toast('Lista vaciada.');
   };
 
   A.importarCsvCI = function() {
     const raw = document.getElementById('ciCsvInput')?.value.trim();
-    if (!raw) { mostrarToast('Pegá datos en el área de texto.', true); return; }
-    if (!A.datos.infoci) A.datos.infoci = [];
+    if (!raw) { toast('Pegá datos en el área de texto.', 'error'); return; }
+    if (!D.infoci) D.infoci = [];
     let importados = 0, errores = 0;
     raw.split('\n').forEach(linea => {
       linea = linea.trim();
@@ -516,34 +518,27 @@
       const ci  = linea.slice(0, sep).trim();
       const msg = linea.slice(sep + 1).trim();
       if (!ci || !msg) { errores++; return; }
-      const idx = A.datos.infoci.findIndex(r => String(r.ci) === ci);
+      const idx = D.infoci.findIndex(r => String(r.ci) === ci);
       if (idx >= 0) {
-        A.datos.infoci[idx].mensaje = msg;
+        D.infoci[idx].mensaje = msg;
       } else {
-        A.datos.infoci.push({ ci, mensaje: msg });
+        D.infoci.push({ ci, mensaje: msg });
       }
       importados++;
     });
-    A.guardarLocal();
-    A.renderTablaCI();
+    guardarLocalYMarcar();
+    renderTablaCI();
     document.getElementById('ciCsvInput').value = '';
-    mostrarToast(`${importados} registro/s importado/s${errores ? ` · ${errores} línea/s con error` : ''}.`, errores > 0);
+    toast(`${importados} registro/s importado/s${errores ? ` · ${errores} línea/s con error` : ''}.`, errores > 0 ? 'error' : 'ok');
   };
 
   // Renderizar tabla CI al abrir el panel
   document.querySelectorAll('.sb-link').forEach(link => {
     link.addEventListener('click', () => {
       if (link.dataset.panel === 'infoci') {
-        setTimeout(() => A.renderTablaCI(), 50);
+        setTimeout(() => renderTablaCI(), 50);
       }
     });
-  });
-
-  // Sincronizar el badge de estado en el panel Publicar
-  document.addEventListener('estadoPublicacionChanged', function(e) {
-    const el2 = document.getElementById('estadoPublicacion2');
-    const el1 = document.getElementById('estadoPublicacion');
-    if (el2 && el1) el2.innerHTML = el1.innerHTML;
   });
 </script>
 </body>
