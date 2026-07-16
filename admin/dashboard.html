@@ -76,6 +76,9 @@
     .dash-tbl tbody tr:hover{background:#f5f6fd;}
     .dash-link{color:var(--una2);font-weight:600;font-size:.8rem;cursor:pointer;text-decoration:none;border:none;background:none;padding:0;}
     .dash-link:hover{text-decoration:underline;}
+    /* Info CI */
+    .ci-badge{background:#e8eaf6;color:#1a237e;border-radius:6px;padding:2px 8px;font-family:monospace;font-weight:700;font-size:.82rem;letter-spacing:.03em;}
+    .ci-msg-preview{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#555;font-size:.8rem;}
   </style>
 </head>
 <body>
@@ -98,6 +101,7 @@
     <a class="sb-link" data-panel="programas"><i class="bi bi-file-earmark-text"></i>Programas</a>
     <a class="sb-link" data-panel="libros"><i class="bi bi-book"></i>Libros</a>
     <a class="sb-link" data-panel="drive"><i class="bi bi-folder2-open"></i>Drive / Classroom</a>
+    <a class="sb-link" data-panel="infoci"><i class="bi bi-person-badge"></i>Info por CI</a>
     <a class="sb-link" data-panel="publicar"><i class="bi bi-cloud-upload"></i>Publicar</a>
     <a class="sb-link" data-panel="exportar"><i class="bi bi-download"></i>Exportar JSON</a>
   </nav>
@@ -338,6 +342,58 @@
     </div>
   </div>
 
+  <!-- INFO POR CI ==================== -->
+  <div id="panel-infoci" class="panel">
+    <div class="panel-title"><i class="bi bi-person-badge me-2"></i>Info Rápida por C.I.</div>
+    <div class="panel-sub">Cargá la lista de C.I. con su mensaje personalizado. Los estudiantes consultan su info desde el campus.</div>
+
+    <!-- Carga masiva -->
+    <div class="sbox">
+      <div class="sbox-title"><span><i class="bi bi-upload me-2"></i>Importar lista (CSV / texto)</span></div>
+      <p class="small text-muted mb-2">Pegá filas en formato <code>CI,mensaje</code> — una por línea. Se agregarán a la lista existente (duplicados se sobreescriben).</p>
+      <textarea class="form-control font-monospace mb-3" id="ciCsvInput" rows="5" placeholder="12345678,Tu puntaje fue 14 en el último examen&#10;98765432,Aprobaste con 12 puntos. ¡Felicitaciones!&#10;11223344,No rendiste el parcial. Contactá al delegado."></textarea>
+      <button class="btn btn-una px-4" onclick="A.importarCsvCI()">
+        <i class="bi bi-upload me-2"></i>Importar filas
+      </button>
+    </div>
+
+    <!-- Tabla de registros -->
+    <div class="sbox">
+      <div class="sbox-title">
+        <span><i class="bi bi-table me-2"></i>Lista cargada (<span id="ciCount">0</span> registros)</span>
+        <button class="btn btn-outline-danger btn-sm" onclick="A.limpiarInfoCI()" title="Borrar toda la lista">
+          <i class="bi bi-trash me-1"></i>Limpiar todo
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table class="table tbl" id="tablaCIAdmin">
+          <thead><tr><th style="width:140px">C.I.</th><th>Mensaje</th><th style="width:80px"></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agregar registro individual -->
+    <div class="sbox">
+      <div class="sbox-title"><i class="bi bi-plus-circle me-2"></i>Agregar / actualizar registro</div>
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">C.I. <span class="text-muted fw-normal">(solo números)</span></label>
+          <input class="form-control font-monospace" id="ciNuevoCI" placeholder="12345678" maxlength="10" type="number" min="0" />
+        </div>
+        <div class="col-md-9">
+          <label class="form-label">Mensaje personalizado</label>
+          <input class="form-control" id="ciNuevoMsg" placeholder="Tu puntaje fue 14 en el último examen." />
+        </div>
+        <div class="col-12">
+          <button class="btn btn-una px-4" onclick="A.agregarRegistroCI()">
+            <i class="bi bi-plus-circle me-2"></i>Agregar / actualizar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- PUBLICAR -->
   <div id="panel-publicar" class="panel">
     <div class="panel-title"><i class="bi bi-cloud-upload me-2"></i>Publicar en GitHub</div>
@@ -383,7 +439,7 @@
         <button class="btn btn-outline-secondary" onclick="A.descargarJSON()"><i class="bi bi-file-earmark-arrow-down me-2"></i>Descargar archivo</button>
         <button class="btn btn-outline-danger" onclick="A.resetearDatos()"><i class="bi bi-arrow-counterclockwise me-2"></i>Resetear al último publicado</button>
       </div>
-      <div id="jsonOutput">Presínoa &quot;Copiar&quot; para generar el JSON...</div>
+      <div id="jsonOutput">Presionná &quot;Copiar&quot; para generar el JSON...</div>
     </div>
   </div>
 
@@ -394,8 +450,96 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/admin.js"></script>
 <script>
+  // ===== INFO CI: métodos extra para el panel =====
+  A.renderTablaCI = function() {
+    const lista = A.datos.infoci || [];
+    const tbody = document.querySelector('#tablaCIAdmin tbody');
+    const count = document.getElementById('ciCount');
+    if (count) count.textContent = lista.length;
+    if (!tbody) return;
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-3">Sin registros. Importá una lista o agregá uno por uno.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map((r, i) => `
+      <tr>
+        <td><span class="ci-badge">${r.ci}</span></td>
+        <td><span class="ci-msg-preview" title="${r.mensaje.replace(/"/g,'&quot;')}">${r.mensaje}</span></td>
+        <td><button class="btn-peligro" onclick="A.eliminarCI(${i})"><i class="bi bi-trash"></i></button></td>
+      </tr>`).join('');
+  };
+
+  A.agregarRegistroCI = function() {
+    const ci  = document.getElementById('ciNuevoCI')?.value.trim();
+    const msg = document.getElementById('ciNuevoMsg')?.value.trim();
+    if (!ci || !msg) { mostrarToast('Completá el C.I. y el mensaje.', true); return; }
+    if (!A.datos.infoci) A.datos.infoci = [];
+    const idx = A.datos.infoci.findIndex(r => String(r.ci) === ci);
+    if (idx >= 0) {
+      A.datos.infoci[idx].mensaje = msg;
+    } else {
+      A.datos.infoci.push({ ci, mensaje: msg });
+    }
+    A.guardarLocal();
+    A.renderTablaCI();
+    document.getElementById('ciNuevoCI').value = '';
+    document.getElementById('ciNuevoMsg').value = '';
+    mostrarToast('Registro guardado.');
+  };
+
+  A.eliminarCI = function(idx) {
+    if (!confirm('¿Eliminar este registro?')) return;
+    A.datos.infoci.splice(idx, 1);
+    A.guardarLocal();
+    A.renderTablaCI();
+    mostrarToast('Registro eliminado.');
+  };
+
+  A.limpiarInfoCI = function() {
+    if (!confirm('¿Borrar TODA la lista de Info por CI?')) return;
+    A.datos.infoci = [];
+    A.guardarLocal();
+    A.renderTablaCI();
+    mostrarToast('Lista vaciada.');
+  };
+
+  A.importarCsvCI = function() {
+    const raw = document.getElementById('ciCsvInput')?.value.trim();
+    if (!raw) { mostrarToast('Pegá datos en el área de texto.', true); return; }
+    if (!A.datos.infoci) A.datos.infoci = [];
+    let importados = 0, errores = 0;
+    raw.split('\n').forEach(linea => {
+      linea = linea.trim();
+      if (!linea) return;
+      const sep = linea.indexOf(',');
+      if (sep < 1) { errores++; return; }
+      const ci  = linea.slice(0, sep).trim();
+      const msg = linea.slice(sep + 1).trim();
+      if (!ci || !msg) { errores++; return; }
+      const idx = A.datos.infoci.findIndex(r => String(r.ci) === ci);
+      if (idx >= 0) {
+        A.datos.infoci[idx].mensaje = msg;
+      } else {
+        A.datos.infoci.push({ ci, mensaje: msg });
+      }
+      importados++;
+    });
+    A.guardarLocal();
+    A.renderTablaCI();
+    document.getElementById('ciCsvInput').value = '';
+    mostrarToast(`${importados} registro/s importado/s${errores ? ` · ${errores} línea/s con error` : ''}.`, errores > 0);
+  };
+
+  // Renderizar tabla CI al abrir el panel
+  document.querySelectorAll('.sb-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (link.dataset.panel === 'infoci') {
+        setTimeout(() => A.renderTablaCI(), 50);
+      }
+    });
+  });
+
   // Sincronizar el badge de estado en el panel Publicar
-  // Usa addEventListener para no pisar la funcion definida en admin.js
   document.addEventListener('estadoPublicacionChanged', function(e) {
     const el2 = document.getElementById('estadoPublicacion2');
     const el1 = document.getElementById('estadoPublicacion');

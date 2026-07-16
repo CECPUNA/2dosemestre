@@ -44,6 +44,7 @@ function renderAll() {
   renderLibros();
   renderDrive();
   initTema();
+  // El módulo InfoCI no necesita render inicial — es bajo demanda
 }
 
 // ===== NOTICIAS =====
@@ -296,6 +297,57 @@ function renderDrive() {
   }).join('');
 }
 
+// ===== INFO RÁPIDA POR CI =====
+function consultarCI() {
+  const input = document.getElementById('ciInput');
+  const inline = document.getElementById('ciResultadoInline');
+  const ci = input ? input.value.trim() : '';
+
+  if (!ci) {
+    if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingresá tu número de C.I.</div>';
+    return;
+  }
+
+  const lista = DATA?.infoci || [];
+  const registro = lista.find(r => String(r.ci).trim() === ci);
+
+  if (registro) {
+    // Mostrar popup modal
+    const modalBody = document.getElementById('ciModalBody');
+    if (modalBody) {
+      modalBody.innerHTML = `
+        <div class="text-center mb-3">
+          <div style="width:56px;height:56px;border-radius:50%;background:#e8eaf6;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;color:#1a237e">
+            <i class="bi bi-person-check"></i>
+          </div>
+        </div>
+        <p class="text-center text-muted small mb-3">C.I.: <strong>${ci}</strong></p>
+        <div class="p-3" style="background:#f0f2f8;border-radius:10px;font-size:.97rem;line-height:1.6;">
+          ${registro.mensaje.replace(/\n/g, '<br>')}
+        </div>`;
+    }
+    const modal = new bootstrap.Modal(document.getElementById('ciModal'));
+    modal.show();
+    if (inline) inline.innerHTML = '';
+  } else {
+    if (inline) {
+      inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontró información para ese número de C.I.</div>';
+    }
+  }
+
+  // Permitir consultar con Enter
+}
+
+// Tecla Enter en el input de CI
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('ciInput');
+  if (input) {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') consultarCI();
+    });
+  }
+});
+
 // ===== MODO OSCURO =====
 function initTema() {
   const btn      = document.getElementById('themeToggle');
@@ -342,11 +394,7 @@ function datosDemo() {
       { dia:'Viernes',   hora:'20:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' }
     ],
     examenes: [
-      { materia:'Economía Política', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. García' },
-      { materia:'Historia Política Paraguaya', tipo:'Primer Parcial', fecha:'17 Septiembre', hora:'18:00', aula:'2', profesor:'Prof. Romero' },
-      { materia:'Introducción a las Ciencias Políticas', tipo:'Primer Parcial', fecha:'19 Septiembre', hora:'20:00', aula:'3', profesor:'Prof. Martínez' },
-      { materia:'Idioma Guaraní II', tipo:'Primer Parcial', fecha:'22 Septiembre', hora:'18:00', aula:'1', profesor:'Prof. Ayala' },
-      { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', tipo:'Primer Parcial', fecha:'24 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. López' }
+      { materia:'Economía Política', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. García' }
     ],
     calendario: [
       { mes:'Agosto',     nombre:'Inicio de Clases', tipo:'normal' },
@@ -373,7 +421,8 @@ function datosDemo() {
       { materia:'Introducción a las Ciencias Políticas', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
       { materia:'Idioma Guaraní II', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
       { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'', urlClassroom:'' }
-    ]
+    ],
+    infoci: []
   };
 }
 

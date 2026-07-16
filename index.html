@@ -32,6 +32,7 @@
         <li class="nav-item"><a class="nav-link" href="#programas"><i class="bi bi-file-earmark-text me-1"></i>Programas</a></li>
         <li class="nav-item"><a class="nav-link" href="#libros"><i class="bi bi-book me-1"></i>Libros</a></li>
         <li class="nav-item"><a class="nav-link" href="#drive"><i class="bi bi-folder2-open me-1"></i>Drive</a></li>
+        <li class="nav-item"><a class="nav-link" href="#infoci"><i class="bi bi-person-badge me-1"></i>Info Rápida</a></li>
       </ul>
       <button class="btn btn-sm btn-outline-light ms-3" id="themeToggle" title="Cambiar modo">
         <i class="bi bi-moon-stars"></i>
@@ -137,6 +138,62 @@
     <div id="driveContainer" class="row g-3"></div>
   </div>
 </section>
+
+<!-- INFO RÁPIDA POR CI -->
+<section id="infoci" class="seccion bg-light-custom">
+  <div class="container">
+    <div class="seccion-header">
+      <h2><i class="bi bi-person-badge me-2 text-una"></i>Info Rápida por C.I.</h2>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+        <div class="card-campus infoci-card">
+          <div class="card-franja" style="background:var(--una-azul,#1a237e)"></div>
+          <div class="card-body">
+            <p class="small text-muted mb-3">
+              <i class="bi bi-info-circle me-1"></i>
+              Ingresá tu número de Cédula de Identidad para consultar información personalizada.
+            </p>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
+              <input
+                type="number"
+                class="form-control"
+                id="ciInput"
+                placeholder="Ej: 12345678"
+                maxlength="8"
+                min="0"
+                style="font-size:1.05rem;letter-spacing:.05em"
+              />
+              <button class="btn btn-primary fw-semibold" onclick="consultarCI()">
+                <i class="bi bi-search me-1"></i>Consultar
+              </button>
+            </div>
+            <div id="ciResultadoInline" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL INFO CI -->
+<div class="modal fade" id="ciModal" tabindex="-1" aria-labelledby="ciModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px;border:none;overflow:hidden">
+      <div class="modal-header" style="background:var(--una-azul,#1a237e);color:#fff;border:none">
+        <h5 class="modal-title fw-bold" id="ciModalLabel">
+          <i class="bi bi-person-check-fill me-2"></i>Tu Información
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body p-4" id="ciModalBody"></div>
+      <div class="modal-footer" style="border:none;padding-top:0">
+        <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer class="footer-una">
