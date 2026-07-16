@@ -28,16 +28,158 @@ body {
   color: var(--texto-principal);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   transition: background 0.3s, color 0.3s;
+  padding-top: 88px; /* altura total del topbar (2 filas) */
 }
 .bg-una { background: var(--una-azul) !important; }
 .text-una { color: var(--una-azul) !important; }
 [data-theme="dark"] .text-una { color: #7986cb !important; }
 
-/* ===== NAVBAR ===== */
-.navbar { box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
-.navbar-brand { font-size: 1rem; letter-spacing: .2px; }
-.nav-link { font-size: .88rem; border-radius: 8px; padding: 6px 12px !important; transition: var(--transicion); }
-.nav-link:hover { background: rgba(255,255,255,0.15); }
+/* ===================================================
+   TOPBAR — 2 filas
+   Fila 1: Marca  (~48px)
+   Fila 2: Navegación delgada (~40px)
+   =================================================== */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.28);
+}
+
+/* ---- Fila 1: Marca ---- */
+.topbar-brand {
+  background: var(--una-azul);
+  padding: 10px 0;
+}
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #fff;
+  font-size: .95rem;
+}
+.topbar-logo i { font-size: 1.1rem; opacity: .85; }
+.topbar-titulo {
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.topbar-separador {
+  opacity: .4;
+  font-weight: 300;
+  margin: 0 2px;
+}
+.topbar-sub {
+  opacity: .72;
+  font-weight: 400;
+  font-size: .85rem;
+}
+.btn-topbar-outline {
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: .85rem;
+  transition: var(--transicion);
+}
+.btn-topbar-outline:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-color: rgba(255,255,255,0.6);
+}
+.topbar-toggler {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+.topbar-toggler:hover { background: rgba(255,255,255,0.15); }
+
+/* ---- Fila 2: Navegación ---- */
+.topbar-nav {
+  background: var(--una-azul-medio);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.topbar-links {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.topbar-links::-webkit-scrollbar { display: none; }
+.topbar-links li a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 13px;
+  color: rgba(255,255,255,.78);
+  text-decoration: none;
+  font-size: .82rem;
+  font-weight: 500;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: var(--transicion);
+}
+.topbar-links li a i {
+  font-size: .85rem;
+  opacity: .7;
+}
+.topbar-links li a:hover,
+.topbar-links li a.active {
+  background: rgba(255,255,255,.14);
+  color: #fff;
+}
+.topbar-links li a:hover i,
+.topbar-links li a.active i { opacity: 1; }
+
+/* Info Rápida — destacado suave */
+.link-infoci {
+  background: rgba(255,255,255,.08) !important;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 6px;
+}
+.link-infoci:hover {
+  background: rgba(255,255,255,.2) !important;
+  border-color: rgba(255,255,255,.4) !important;
+}
+
+/* ---- Mobile nav ---- */
+@media (max-width: 991px) {
+  body { padding-top: 104px; }
+  .topbar-nav {
+    display: none;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .topbar-nav.open { display: block; }
+  .topbar-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 6px 0;
+  }
+  .topbar-links li a {
+    padding: 11px 20px;
+    border-radius: 0;
+    font-size: .9rem;
+    gap: 10px;
+  }
+  .topbar-links li a i { font-size: 1rem; opacity: .85; }
+  .link-infoci { border-radius: 0 !important; border: none !important; }
+}
+@media (min-width: 992px) {
+  .topbar-nav { display: block !important; }
+  /* Ocultar íconos en desktop — solo texto = menos ruido visual */
+  .topbar-links li a i { display: none; }
+}
 
 /* ===== CLASE ACTIVA BANNER ===== */
 .clase-activa-banner {
@@ -120,20 +262,14 @@ body {
 .badge-tipo { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
 /* ===== TABLA HORARIO DESKTOP ===== */
-/* table-layout:fixed + width:100% garantiza columnas iguales sin importar el contenido */
 .table-responsive { overflow-x: auto; }
 .table-horario {
   border-collapse: separate;
   border-spacing: 4px;
   table-layout: fixed;
   width: 100%;
-  min-width: 640px; /* scroll horizontal en pantallas chicas antes de mobile */
+  min-width: 640px;
 }
-
-/* Columna hora: ancho fijo chico */
-.table-horario colgroup .col-hora { width: 70px; }
-/* Columnas días: se reparten el resto equitativamente (via table-layout:fixed) */
-
 .table-horario thead th {
   background: var(--una-azul);
   color: white;
@@ -152,10 +288,9 @@ body {
   text-align: center;
   font-size: .78rem;
   vertical-align: middle;
-  /* SIN min-width ni width — table-layout:fixed lo controla todo */
   box-shadow: 0 1px 6px rgba(26,35,126,0.07);
   font-weight: 500;
-  height: 72px; /* altura uniforme para todas las celdas */
+  height: 72px;
 }
 .td-hora {
   background: var(--una-azul-medio) !important;
@@ -167,7 +302,6 @@ body {
 .td-libre { color: #b0bec5 !important; font-style: italic; font-size: .75rem; }
 .td-activa { outline: 3px solid #4caf50 !important; outline-offset: -2px; }
 
-/* Pill: texto truncado en 2 líneas para que no estire la celda */
 .pill-materia {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -261,7 +395,7 @@ body {
   padding: 3px 10px;
 }
 
-/* ===== PERIODOS TIMELINE — CENTRADO ===== */
+/* ===== PERIODOS TIMELINE ===== */
 .periodos-timeline {
   display: flex;
   flex-wrap: wrap;

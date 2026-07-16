@@ -14,32 +14,47 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-una sticky-top" id="navbar">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#">
-      <i class="bi bi-building me-2"></i>Ciencias Políticas &ndash; 2do Semestre
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto gap-1">
-        <li class="nav-item"><a class="nav-link" href="#horario"><i class="bi bi-clock me-1"></i>Horario</a></li>
-        <li class="nav-item"><a class="nav-link" href="#noticias"><i class="bi bi-megaphone me-1"></i>Noticias</a></li>
-        <li class="nav-item"><a class="nav-link" href="#examenes"><i class="bi bi-journal-check me-1"></i>Exámenes</a></li>
-        <li class="nav-item"><a class="nav-link" href="#parciales"><i class="bi bi-calendar-event me-1"></i>Parciales</a></li>
-        <li class="nav-item"><a class="nav-link" href="#programas"><i class="bi bi-file-earmark-text me-1"></i>Programas</a></li>
-        <li class="nav-item"><a class="nav-link" href="#libros"><i class="bi bi-book me-1"></i>Libros</a></li>
-        <li class="nav-item"><a class="nav-link" href="#drive"><i class="bi bi-folder2-open me-1"></i>Drive</a></li>
-        <li class="nav-item"><a class="nav-link" href="#infoci"><i class="bi bi-person-badge me-1"></i>Info Rápida</a></li>
-      </ul>
-      <button class="btn btn-sm btn-outline-light ms-3" id="themeToggle" title="Cambiar modo">
-        <i class="bi bi-moon-stars"></i>
-      </button>
+<!-- TOPBAR -->
+<header class="topbar" id="topbar">
+
+  <!-- Fila 1: Marca -->
+  <div class="topbar-brand">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a href="#" class="topbar-logo">
+        <i class="bi bi-building me-2"></i>
+        <span class="topbar-titulo">Ciencias Políticas</span>
+        <span class="topbar-separador">·</span>
+        <span class="topbar-sub">2do Semestre</span>
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-topbar-outline" id="themeToggle" title="Cambiar modo">
+          <i class="bi bi-moon-stars"></i>
+        </button>
+        <!-- Toggler mobile -->
+        <button class="topbar-toggler d-lg-none" id="navToggler" aria-label="Menú">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
     </div>
   </div>
-</nav>
+
+  <!-- Fila 2: Navegación -->
+  <nav class="topbar-nav" id="topbarNav">
+    <div class="container">
+      <ul class="topbar-links">
+        <li><a href="#horario"><i class="bi bi-clock"></i><span>Horario</span></a></li>
+        <li><a href="#noticias"><i class="bi bi-megaphone"></i><span>Noticias</span></a></li>
+        <li><a href="#examenes"><i class="bi bi-journal-check"></i><span>Exámenes</span></a></li>
+        <li><a href="#parciales"><i class="bi bi-calendar-event"></i><span>Parciales</span></a></li>
+        <li><a href="#programas"><i class="bi bi-file-earmark-text"></i><span>Programas</span></a></li>
+        <li><a href="#libros"><i class="bi bi-book"></i><span>Libros</span></a></li>
+        <li><a href="#drive"><i class="bi bi-folder2-open"></i><span>Drive</span></a></li>
+        <li><a href="#infoci" class="link-infoci"><i class="bi bi-person-badge"></i><span>Info Rápida</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+</header>
 
 <!-- HORARIO (primero) -->
 <section id="horario" class="seccion" style="padding-top:36px">
@@ -237,6 +252,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/app.js"></script>
 <script>
+  // Mobile nav toggle
+  document.getElementById('navToggler')?.addEventListener('click', () => {
+    document.getElementById('topbarNav')?.classList.toggle('open');
+  });
+  // Cerrar nav mobile al hacer click en un link
+  document.querySelectorAll('.topbar-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('topbarNav')?.classList.remove('open');
+    });
+  });
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
   }
