@@ -28,134 +28,32 @@
     {
       "dia": "Lunes",
       "hora": "18:00",
-      "materia": "Economía Política",
-      "profesor": "Maximo Zorrilla"
-    },
-    {
-      "dia": "Martes",
-      "hora": "18:00",
-      "materia": "Idioma Guaraní II",
-      "profesor": "Nery de Dios"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "18:00",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "profesor": "Marcelo Melame"
-    },
-    {
-      "dia": "Jueves",
-      "hora": "18:00",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "profesor": "Cristaldo"
-    },
-    {
-      "dia": "Viernes",
-      "hora": "18:00",
-      "materia": "Historia Política Paraguaya",
-      "profesor": "Adolfo Medina"
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedez Ibarra"
     },
     {
       "dia": "Lunes",
-      "hora": "19:00",
-      "materia": "Economía Política",
-      "profesor": "Maximo Zorrilla"
-    },
-    {
-      "dia": "Martes",
-      "hora": "19:00",
-      "materia": "Idioma Guaraní II",
-      "profesor": "Nery de Dios"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "19:00",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "profesor": "Marcelo Melame"
-    },
-    {
-      "dia": "Jueves",
-      "hora": "19:00",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "profesor": "Cristaldo"
-    },
-    {
-      "dia": "Viernes",
-      "hora": "19:00",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "profesor": "Adolfo Medina"
+      "hora": "18:45",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedez Ibarra"
     },
     {
       "dia": "Lunes",
-      "hora": "20:00",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Oscar Baez"
-    },
-    {
-      "dia": "Martes",
-      "hora": "20:00",
-      "materia": "Historia Política Paraguaya",
-      "profesor": "Antonio Gramsi"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "20:00",
-      "materia": "Economía Política",
-      "profesor": "Marcelo Melame"
-    },
-    {
-      "dia": "Jueves",
-      "hora": "20:00",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Cristaldo"
-    },
-    {
-      "dia": "Viernes",
-      "hora": "20:00",
+      "hora": "19:45",
       "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "profesor": "Adolfo Medina"
+      "profesor": "Sonia Guerreño"
     },
     {
       "dia": "Lunes",
       "hora": "20:30",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Oscar Baez"
-    },
-    {
-      "dia": "Martes",
-      "hora": "20:30",
-      "materia": "Historia Política Paraguaya",
-      "profesor": "Antonio Gramsi"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "20:30",
-      "materia": "Economía Política",
-      "profesor": "Cristaldo"
-    },
-    {
-      "dia": "Jueves",
-      "hora": "20:30",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Cristaldo"
-    },
-    {
-      "dia": "Viernes",
-      "hora": "20:30",
       "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "profesor": "Adolfo Medina"
+      "profesor": "Sonia Guerreño"
     },
     {
       "dia": "Lunes",
-      "hora": "21:00",
-      "materia": "Idioma Guaraní II",
-      "profesor": "Nery de Dios"
-    },
-    {
-      "dia": "Jueves",
-      "hora": "21:00",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Cristaldo"
+      "hora": "21:25",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
+      "profesor": "Sonia Guerreño"
     }
   ],
   "examenes": [
