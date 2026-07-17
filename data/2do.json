@@ -3,24 +3,10 @@
   "anio": 2026,
   "noticias": [
     {
-      "titulo": "No se cargo una noticai",
-      "descripcion": "pruevba",
-      "tipo": "Prueba",
-      "fecha": "06 Agosto",
-      "urgente": false
-    },
-    {
-      "titulo": "Esta noticia es la 2da  y es urgente",
-      "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      "tipo": "Noticia",
-      "fecha": "24 de septiembre",
-      "urgente": true
-    },
-    {
-      "titulo": "Noticia numero 1",
-      "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      "tipo": "Noticia",
-      "fecha": "22 de septiembre",
+      "titulo": "Bienvenidos al CPOL",
+      "descripcion": "Esta aplicación que da una mano a nuestros delegados, los mismos también merecen una mano",
+      "tipo": "Aviso",
+      "fecha": "",
       "urgente": false
     }
   ],
@@ -164,48 +150,7 @@
       "profesor": "Cecilia Garcete"
     }
   ],
-  "examenes": [
-    {
-      "materia": "Economía Política",
-      "tipo": "Primer Parcial",
-      "fecha": "11 de Septiembre",
-      "hora": "19:00",
-      "aula": "2",
-      "profesor": "Adolfo Medina"
-    },
-    {
-      "materia": "Introducción a las Ciencias Políticas",
-      "tipo": "Primer Parcial",
-      "fecha": "18 de Septiembre",
-      "hora": "16:00",
-      "aula": "2",
-      "profesor": "Zorrilla"
-    },
-    {
-      "materia": "Historia Política Paraguaya",
-      "tipo": "Primer Parcial",
-      "fecha": "21 de Septiembre",
-      "hora": "20:00",
-      "aula": "2",
-      "profesor": "Adalberto"
-    },
-    {
-      "materia": "Idioma Guaraní II",
-      "tipo": "Primer Parcial",
-      "fecha": "25 de Septiembre",
-      "hora": "21:00",
-      "aula": "1",
-      "profesor": "Profe Nery Benitez de Dios"
-    },
-    {
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "tipo": "Primer Parcial",
-      "fecha": "11 de Septiembre",
-      "hora": "17:00",
-      "aula": "2",
-      "profesor": "La mejor Prof Olga"
-    }
-  ],
+  "examenes": [],
   "calendario": [
     {
       "mes": "Agosto",
