@@ -3,10 +3,10 @@
   "anio": 2026,
   "noticias": [
     {
-      "titulo": "Bienvenidos al CPOL",
-      "descripcion": "Esta aplicación que da una mano a nuestros delegados, los mismos también merecen una mano",
-      "tipo": "Aviso",
-      "fecha": "",
+      "titulo": "Bienvenidos a esta herramienta!",
+      "descripcion": "Esta aplicación que da una mano a nuestros delegados, los mismos también merecen una mano!\nSe desarrollo con cariño para los compañeros de Ciencias Politicas",
+      "tipo": "Bienvenida",
+      "fecha": "04 de Agosto",
       "urgente": false
     }
   ],
