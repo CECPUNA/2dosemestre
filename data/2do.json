@@ -202,11 +202,11 @@
   ],
   "libros": [
     {
-      "materia": "Economia",
-      "titulo": "Ciencias economicas",
-      "autor": "Lucas Alfonso",
-      "pdf": "https://www.amazon.com/dp/9509109681?lv=shuf&language=es&channelId=500&plpRedirect=mhFallback",
-      "imagen": "https://m.media-amazon.com/images/I/61lNDBRVTRL._SY385_.jpg"
+      "materia": "Introduccion a las Ciencias Politicas",
+      "titulo": "Manual de derecho politico",
+      "autor": "",
+      "pdf": "https://drive.google.com/file/d/1TGd7_gglaGeDnZigil7An9Qt1SdbDk3L/view?usp=drive_link",
+      "imagen": "https://www.editorialmetropolitana.cl/producto/manual-de-derecho-politico-2/"
     }
   ],
   "drive": [
