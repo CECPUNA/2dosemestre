@@ -244,8 +244,31 @@
       }
     });
   });
+
+  // ── Service Worker: registro con actualización automática ──
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
+    window.addEventListener('load', async () => {
+      try {
+        const registration = await navigator.serviceWorker.register('./sw.js', {
+          updateViaCache: 'none'  // nunca usa caché HTTP para sw.js
+        });
+
+        // Fuerza verificación de nueva versión en cada carga
+        registration.update();
+
+        // Cuando el SW nuevo toma control, recarga la página una sola vez
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+
+      } catch (error) {
+        console.error('[SW] Error al registrar:', error);
+      }
+    });
   }
 </script>
 </body>
