@@ -17,15 +17,17 @@
 <!-- TOPBAR -->
 <header class="topbar" id="topbar">
 
+  <!-- Logo lateral que abarca las 2 filas -->
+  <a href="#" class="topbar-logo-lateral" aria-label="Inicio">
+    <img src="img/logo-cecp.png" alt="CECP" />
+  </a>
+
   <!-- Fila 1: Marca -->
   <div class="topbar-brand">
-    <div class="container d-flex align-items-center justify-content-between">
-      <a href="#" class="topbar-logo">
-        <img src="img/logo-cecp.png" alt="CECP" class="topbar-logo-img" />
-        <span class="topbar-titulo">Ciencias Políticas</span>
-        <span class="topbar-separador">·</span>
-      </a>
-      <div class="d-flex align-items-center gap-2">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-end gap-2">
+        <span class="topbar-titulo me-auto">Ciencias Políticas</span>
+        <span class="topbar-separador d-none d-sm-inline">·</span>
         <span class="topbar-semestre-badge">2do Semestre</span>
         <button class="btn btn-sm btn-topbar-outline" id="themeToggle" title="Cambiar modo">
           <i class="bi bi-moon-stars"></i>
@@ -42,7 +44,6 @@
   <nav class="topbar-nav" id="topbarNav">
     <div class="container">
       <ul class="topbar-links">
-        <!-- Espaciador: empuja todo a la derecha -->
         <li class="topbar-spacer"></li>
         <li><a href="#horario"><i class="bi bi-clock"></i><span>Horario</span></a></li>
         <li><a href="#noticias"><i class="bi bi-megaphone"></i><span>Noticias</span></a></li>
@@ -52,7 +53,6 @@
         <li><a href="#libros"><i class="bi bi-book"></i><span>Libros</span></a></li>
         <li><a href="#drive"><i class="bi bi-folder2-open"></i><span>Drive</span></a></li>
         <li><a href="#infoci"><i class="bi bi-person-badge"></i><span>Info Rápida</span></a></li>
-        <!-- EALU destacado al final -->
         <li><a href="https://www.cnc.una.py/ealu/#/pages/login?returnUrl=%2Fdashboard" target="_blank" rel="noopener" class="link-ealu"><i class="bi bi-box-arrow-up-right"></i><span>EALU</span></a></li>
       </ul>
     </div>

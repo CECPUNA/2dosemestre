@@ -13,6 +13,8 @@
   --sombra-hover: 0 8px 30px rgba(26,35,126,0.18);
   --radio: 14px;
   --transicion: all 0.3s ease;
+  /* Ancho reservado para el logo lateral */
+  --logo-w: 130px;
 }
 [data-theme="dark"] {
   --bg-suave: #0f1320;
@@ -35,38 +37,66 @@ body {
 [data-theme="dark"] .text-una { color: #7986cb !important; }
 
 /* ===================================================
-   TOPBAR — 2 filas
+   TOPBAR — 2 filas + logo lateral
    =================================================== */
 .topbar {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
   box-shadow: 0 2px 16px rgba(0,0,0,0.28);
+  /* Necesario para que el logo absoluto quede contenido */
+  overflow: visible;
 }
 
-/* ---- Fila 1: Marca con degradado azul → blanco ---- */
-.topbar-brand {
-  background: linear-gradient(to right, var(--una-azul) 0%, var(--una-azul) 55%, #4a5fc4 78%, #ffffff 100%);
-  padding: 10px 0;
-}
-.topbar-logo {
+/* ---- Logo lateral: abarca las 2 filas ---- */
+.topbar-logo-lateral {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* altura = fila 1 (56px aprox) + fila 2 (38px aprox) */
+  height: 100%;
+  width: var(--logo-w);
+  background: #ffffff;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  z-index: 10;
   text-decoration: none;
+  /* Degradado que "disuelve" el blanco hacia la derecha para que no quede cuadrado */
+}
+/* Pseudo-elemento que genera el fade blanco -> transparente al borde derecho */
+.topbar-logo-lateral::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -36px;
+  width: 36px;
+  height: 100%;
+  background: linear-gradient(to right, #ffffff, transparent);
+  pointer-events: none;
+}
+.topbar-logo-lateral img {
+  width: calc(var(--logo-w) - 20px);
+  height: auto;
+  max-height: 70px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ---- Fila 1: Marca ---- */
+.topbar-brand {
+  background: var(--una-azul);
+  padding: 10px 0;
+  /* Empujar contenido para no quedar detrás del logo */
+  padding-left: var(--logo-w);
+}
+.topbar-titulo {
+  font-weight: 800;
+  letter-spacing: .2px;
   color: #fff;
   font-size: .95rem;
 }
-.topbar-logo-img {
-  height: 36px;
-  width: auto;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  flex-shrink: 0;
-}
-.topbar-titulo { font-weight: 800; letter-spacing: .2px; }
-.topbar-separador { opacity: .4; font-weight: 300; margin: 0 2px; }
-.topbar-sub { opacity: .72; font-weight: 400; font-size: .85rem; }
+.topbar-separador { opacity: .4; font-weight: 300; margin: 0 4px; color: #fff; }
 
 /* Badge "2do Semestre" junto al toggle */
 .topbar-semestre-badge {
@@ -111,6 +141,7 @@ body {
 .topbar-nav {
   background: var(--una-azul-medio);
   border-top: 1px solid rgba(255,255,255,0.1);
+  padding-left: var(--logo-w);
 }
 .topbar-links {
   list-style: none;
@@ -124,7 +155,6 @@ body {
 }
 .topbar-links::-webkit-scrollbar { display: none; }
 
-/* Espaciador flexible — empuja los links a la derecha */
 .topbar-spacer { flex: 1; }
 
 .topbar-links li a {
@@ -167,9 +197,12 @@ body {
 
 /* ---- Mobile nav ---- */
 @media (max-width: 991px) {
+  :root { --logo-w: 90px; }
   body { padding-top: 104px; }
   .topbar-nav { display: none; border-top: 1px solid rgba(255,255,255,0.12); }
   .topbar-nav.open { display: block; }
+  /* En mobile el nav se expande full, sin padding del logo */
+  .topbar-nav.open { padding-left: 0; }
   .topbar-links {
     flex-direction: column;
     align-items: stretch;
@@ -191,17 +224,17 @@ body {
     margin-left: 0 !important;
     border-top: 1px solid rgba(249,168,37,0.3) !important;
   }
-  /* En mobile el badge puede ser más compacto */
   .topbar-semestre-badge {
     font-size: .7rem;
     padding: 2px 8px;
   }
+  .topbar-logo-lateral img {
+    max-height: 50px;
+  }
 }
 @media (min-width: 992px) {
   .topbar-nav { display: block !important; }
-  /* Sin íconos en desktop */
   .topbar-links li a i { display: none; }
-  /* Excepto EALU — el ícono de enlace externo sí se muestra */
   .link-ealu i { display: inline !important; }
 }
 
