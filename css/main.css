@@ -14,7 +14,7 @@
   --radio: 14px;
   --transicion: all 0.3s ease;
   /* Ancho reservado para el logo lateral */
-  --logo-w: 160px;
+  --logo-w: 320px;
 }
 [data-theme="dark"] {
   --bg-suave: #0f1320;
@@ -60,24 +60,24 @@ body {
   justify-content: center;
   z-index: 10;
   text-decoration: none;
-  padding: 6px 10px;
+  padding: 6px 16px;
 }
 /* Fade blanco -> transparente al borde derecho */
 .topbar-logo-lateral::after {
   content: '';
   position: absolute;
   top: 0;
-  right: -44px;
-  width: 44px;
+  right: -60px;
+  width: 60px;
   height: 100%;
   background: linear-gradient(to right, #ffffff, transparent);
   pointer-events: none;
 }
 .topbar-logo-lateral img {
   width: 100%;
-  max-width: calc(var(--logo-w) - 20px);
+  max-width: calc(var(--logo-w) - 32px);
   height: auto;
-  max-height: 80px;
+  max-height: 160px;
   object-fit: contain;
   display: block;
 }
@@ -188,7 +188,7 @@ body {
 
 /* ---- Mobile nav ---- */
 @media (max-width: 991px) {
-  :root { --logo-w: 100px; }
+  :root { --logo-w: 200px; }
   body { padding-top: 104px; }
   .topbar-nav { display: none; border-top: 1px solid rgba(255,255,255,0.12); }
   .topbar-nav.open { display: block; padding-left: 0; }
@@ -218,7 +218,7 @@ body {
     padding: 2px 8px;
   }
   .topbar-logo-lateral img {
-    max-height: 54px;
+    max-height: 80px;
   }
 }
 @media (min-width: 992px) {
