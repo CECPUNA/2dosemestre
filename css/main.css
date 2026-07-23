@@ -44,23 +44,43 @@ body {
   box-shadow: 0 2px 16px rgba(0,0,0,0.28);
 }
 
-/* ---- Fila 1: Marca ---- */
+/* ---- Fila 1: Marca con degradado azul → blanco ---- */
 .topbar-brand {
-  background: var(--una-azul);
+  background: linear-gradient(to right, var(--una-azul) 0%, var(--una-azul) 55%, #4a5fc4 78%, #ffffff 100%);
   padding: 10px 0;
 }
 .topbar-logo {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   text-decoration: none;
   color: #fff;
   font-size: .95rem;
 }
-.topbar-logo i { font-size: 1.1rem; opacity: .85; }
+.topbar-logo-img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
+}
 .topbar-titulo { font-weight: 800; letter-spacing: .2px; }
 .topbar-separador { opacity: .4; font-weight: 300; margin: 0 2px; }
 .topbar-sub { opacity: .72; font-weight: 400; font-size: .85rem; }
+
+/* Badge "2do Semestre" junto al toggle */
+.topbar-semestre-badge {
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .3px;
+  white-space: nowrap;
+}
+
 .btn-topbar-outline {
   border: 1.5px solid rgba(255,255,255,0.35);
   color: #fff;
@@ -170,6 +190,11 @@ body {
     border-right: none !important;
     margin-left: 0 !important;
     border-top: 1px solid rgba(249,168,37,0.3) !important;
+  }
+  /* En mobile el badge puede ser más compacto */
+  .topbar-semestre-badge {
+    font-size: .7rem;
+    padding: 2px 8px;
   }
 }
 @media (min-width: 992px) {
