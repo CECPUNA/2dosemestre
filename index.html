@@ -14,35 +14,18 @@
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- TOPBAR: una sola fila -->
 <header class="topbar" id="topbar">
+  <div class="topbar-inner">
 
-  <!-- Logo lateral que abarca las 2 filas -->
-  <a href="#" class="topbar-logo-lateral" aria-label="Inicio">
-    <img src="img/logo-cecp.png" alt="CECP" />
-  </a>
+    <!-- Logo lateral blanco -->
+    <a href="#" class="topbar-logo-lateral" aria-label="Inicio">
+      <img src="img/logo-cecp.png" alt="CECP" />
+    </a>
 
-  <!-- Fila 1: Marca -->
-  <div class="topbar-brand">
-    <div class="container">
-      <div class="d-flex align-items-center justify-content-end gap-2">
-        <span class="topbar-semestre-badge ms-auto">2do Semestre</span>
-        <button class="btn btn-sm btn-topbar-outline" id="themeToggle" title="Cambiar modo">
-          <i class="bi bi-moon-stars"></i>
-        </button>
-        <!-- Toggler mobile -->
-        <button class="topbar-toggler d-lg-none" id="navToggler" aria-label="Menú">
-          <i class="bi bi-list"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Fila 2: Navegación -->
-  <nav class="topbar-nav" id="topbarNav">
-    <div class="container">
+    <!-- Nav links (desktop: inline | mobile: colapsable) -->
+    <nav class="topbar-nav" id="topbarNav">
       <ul class="topbar-links">
-        <li class="topbar-spacer"></li>
         <li><a href="#horario"><i class="bi bi-clock"></i><span>Horario</span></a></li>
         <li><a href="#noticias"><i class="bi bi-megaphone"></i><span>Noticias</span></a></li>
         <li><a href="#examenes"><i class="bi bi-journal-check"></i><span>Exámenes</span></a></li>
@@ -53,9 +36,20 @@
         <li><a href="#infoci"><i class="bi bi-person-badge"></i><span>Info Rápida</span></a></li>
         <li><a href="https://www.cnc.una.py/ealu/#/pages/login?returnUrl=%2Fdashboard" target="_blank" rel="noopener" class="link-ealu"><i class="bi bi-box-arrow-up-right"></i><span>EALU</span></a></li>
       </ul>
-    </div>
-  </nav>
+    </nav>
 
+    <!-- Controles derecha -->
+    <div class="topbar-controls">
+      <span class="topbar-semestre-badge">2do Semestre</span>
+      <button class="btn btn-sm btn-topbar-outline" id="themeToggle" title="Cambiar modo">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+      <button class="topbar-toggler d-lg-none" id="navToggler" aria-label="Menú">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+
+  </div>
 </header>
 
 <!-- HORARIO (primero) -->

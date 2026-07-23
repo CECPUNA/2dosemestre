@@ -13,8 +13,8 @@
   --sombra-hover: 0 8px 30px rgba(26,35,126,0.18);
   --radio: 14px;
   --transicion: all 0.3s ease;
-  /* Ancho reservado para el logo lateral */
-  --logo-w: 320px;
+  --logo-w: 220px;
+  --topbar-h: 72px;
 }
 [data-theme="dark"] {
   --bg-suave: #0f1320;
@@ -30,109 +30,68 @@ body {
   color: var(--texto-principal);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   transition: background 0.3s, color 0.3s;
-  padding-top: 88px;
+  padding-top: var(--topbar-h);
 }
 .bg-una { background: var(--una-azul) !important; }
 .text-una { color: var(--una-azul) !important; }
 [data-theme="dark"] .text-una { color: #7986cb !important; }
 
-/* ===================================================
-   TOPBAR — 2 filas + logo lateral
-   =================================================== */
+/* =============================================
+   TOPBAR — UNA SOLA FILA
+   ============================================= */
 .topbar {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.28);
-  overflow: visible;
+  background: var(--una-azul);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.32);
+  height: var(--topbar-h);
 }
 
-/* ---- Logo lateral: abarca las 2 filas ---- */
-.topbar-logo-lateral {
-  position: absolute;
-  top: 0;
-  left: 0;
+/* Contenedor flex de la barra */
+.topbar-inner {
+  display: flex;
+  align-items: stretch;
   height: 100%;
+}
+
+/* ---- Logo blanco a la izquierda ---- */
+.topbar-logo-lateral {
+  flex-shrink: 0;
   width: var(--logo-w);
-  background: #ffffff;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  padding: 8px 14px;
   text-decoration: none;
-  padding: 6px 16px;
+  position: relative;
 }
-/* Fade blanco -> transparente al borde derecho */
+/* Fade blanco -> azul hacia la derecha */
 .topbar-logo-lateral::after {
   content: '';
   position: absolute;
-  top: 0;
-  right: -60px;
-  width: 60px;
-  height: 100%;
+  top: 0; right: -48px;
+  width: 48px; height: 100%;
   background: linear-gradient(to right, #ffffff, transparent);
   pointer-events: none;
+  z-index: 1;
 }
 .topbar-logo-lateral img {
-  width: 100%;
-  max-width: calc(var(--logo-w) - 32px);
-  height: auto;
-  max-height: 160px;
+  width: auto;
+  height: calc(var(--topbar-h) - 16px);
+  max-width: calc(var(--logo-w) - 28px);
   object-fit: contain;
   display: block;
 }
 
-/* ---- Fila 1: Marca ---- */
-.topbar-brand {
-  background: var(--una-azul);
-  padding: 10px 0;
-  padding-left: var(--logo-w);
-}
-
-/* Badge "2do Semestre" junto al toggle */
-.topbar-semestre-badge {
-  background: rgba(255,255,255,0.18);
-  border: 1.5px solid rgba(255,255,255,0.35);
-  color: #fff;
-  border-radius: 20px;
-  padding: 3px 12px;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .3px;
-  white-space: nowrap;
-}
-
-.btn-topbar-outline {
-  border: 1.5px solid rgba(255,255,255,0.35);
-  color: #fff;
-  background: transparent;
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: .85rem;
-  transition: var(--transicion);
-}
-.btn-topbar-outline:hover {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  border-color: rgba(255,255,255,0.6);
-}
-.topbar-toggler {
-  background: transparent;
-  border: 1.5px solid rgba(255,255,255,0.35);
-  color: #fff;
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: var(--transicion);
-}
-.topbar-toggler:hover { background: rgba(255,255,255,0.15); }
-
-/* ---- Fila 2: Navegación ---- */
+/* ---- Nav links (ocupa el espacio restante) ---- */
 .topbar-nav {
-  background: var(--una-azul-medio);
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding-left: var(--logo-w);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-left: 52px; /* espacio para no quedar bajo el fade */
 }
 .topbar-links {
   list-style: none;
@@ -141,43 +100,42 @@ body {
   align-items: center;
   gap: 2px;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
 }
 .topbar-links::-webkit-scrollbar { display: none; }
-
-.topbar-spacer { flex: 1; }
 
 .topbar-links li a {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 9px 13px;
-  color: rgba(255,255,255,.78);
+  padding: 8px 12px;
+  color: rgba(255,255,255,.82);
   text-decoration: none;
-  font-size: .82rem;
+  font-size: .83rem;
   font-weight: 500;
   border-radius: 6px;
   white-space: nowrap;
   transition: var(--transicion);
+  height: 100%;
 }
-.topbar-links li a i { font-size: .85rem; opacity: .7; }
 .topbar-links li a:hover,
 .topbar-links li a.active {
   background: rgba(255,255,255,.14);
   color: #fff;
 }
-.topbar-links li a:hover i,
-.topbar-links li a.active i { opacity: 1; }
+.topbar-links li a i { font-size: .85rem; opacity: .7; }
+.topbar-links li a:hover i { opacity: 1; }
 
-/* EALU — destacado al final */
+/* EALU destacado */
 .link-ealu {
   background: rgba(249,168,37,0.18) !important;
   color: #ffd54f !important;
   border: 1px solid rgba(249,168,37,0.35);
   border-radius: 6px;
   font-weight: 700 !important;
-  margin-left: 6px;
+  margin-left: 4px;
 }
 .link-ealu i { color: #ffd54f !important; opacity: 1 !important; }
 .link-ealu:hover {
@@ -186,26 +144,87 @@ body {
   border-color: rgba(249,168,37,0.6) !important;
 }
 
-/* ---- Mobile nav ---- */
+/* ---- Controles derecha ---- */
+.topbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  flex-shrink: 0;
+}
+.topbar-semestre-badge {
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  border-radius: 20px;
+  padding: 3px 11px;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .3px;
+  white-space: nowrap;
+}
+.btn-topbar-outline {
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  background: transparent;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: .88rem;
+  transition: var(--transicion);
+  line-height: 1;
+}
+.btn-topbar-outline:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+.topbar-toggler {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: #fff;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: var(--transicion);
+  line-height: 1;
+}
+.topbar-toggler:hover { background: rgba(255,255,255,0.15); }
+
+/* ---- Mobile: nav colapsable debajo del topbar ---- */
 @media (max-width: 991px) {
-  :root { --logo-w: 200px; }
-  body { padding-top: 104px; }
-  .topbar-nav { display: none; border-top: 1px solid rgba(255,255,255,0.12); }
-  .topbar-nav.open { display: block; padding-left: 0; }
+  :root {
+    --logo-w: 160px;
+    --topbar-h: 64px;
+  }
+  .topbar { height: var(--topbar-h); overflow: visible; }
+  .topbar-nav {
+    display: none;
+    position: absolute;
+    top: var(--topbar-h);
+    left: 0; right: 0;
+    background: var(--una-azul-medio);
+    padding-left: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 999;
+    overflow: visible;
+  }
+  .topbar-nav.open { display: block; }
   .topbar-links {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
+    height: auto;
     padding: 6px 0;
+    overflow-x: visible;
   }
-  .topbar-spacer { display: none; }
   .topbar-links li a {
-    padding: 11px 20px;
+    padding: 12px 20px;
     border-radius: 0;
     font-size: .9rem;
     gap: 10px;
+    height: auto;
   }
-  .topbar-links li a i { font-size: 1rem; opacity: .85; }
+  .topbar-links li a i { font-size: 1rem; opacity: .85; display: inline !important; }
   .link-ealu {
     border-radius: 0 !important;
     border-left: none !important;
@@ -213,16 +232,10 @@ body {
     margin-left: 0 !important;
     border-top: 1px solid rgba(249,168,37,0.3) !important;
   }
-  .topbar-semestre-badge {
-    font-size: .7rem;
-    padding: 2px 8px;
-  }
-  .topbar-logo-lateral img {
-    max-height: 80px;
-  }
+  .topbar-semestre-badge { font-size: .7rem; padding: 2px 8px; }
+  .topbar-logo-lateral img { height: calc(var(--topbar-h) - 14px); }
 }
 @media (min-width: 992px) {
-  .topbar-nav { display: block !important; }
   .topbar-links li a i { display: none; }
   .link-ealu i { display: inline !important; }
 }
