@@ -329,6 +329,14 @@
     {
       "ci": "5000000",
       "mensaje": "Tu calificación fue 11/20"
+    },
+    {
+      "ci": "1234567",
+      "mensaje": "excelente 20/20 en tu examen"
+    },
+    {
+      "ci": "7654321",
+      "mensaje": "Calificacion 11/20"
     }
   ]
 }
