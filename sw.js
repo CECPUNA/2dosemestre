@@ -1,66 +1,85 @@
-/* Service Worker – Campus Informativo 2do Semestre */
-const CACHE_NAME = 'campus-2do-v3';
+// ============================================================
+// HorarioCentro — Service Worker
+// Versión: portal-v2026-07-23-1
+// Estrategia: network-first para HTML, cache-first para assets
+// ============================================================
 
-// Rutas relativas al scope del SW (funciona tanto en la raíz de un dominio
-// como en un project site de GitHub Pages, ej: usuario.github.io/horariocentro/)
-const ASSETS_ESTATICOS = [
+const CACHE_NAME = 'portal-v2026-07-23-1';
+
+const STATIC_ASSETS = [
   './',
   './index.html',
-  './css/main.css',
-  './js/app.js',
   './manifest.json',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-  'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
+  './css/styles.css',
+  './js/app.js',
+  './img/icon-192.png',
+  './img/icon-512.png'
 ];
 
-// Archivos de datos: siempre network-first (nunca del caché viejo)
-const DATOS_DINAMICOS = [
-  '/data/2do.json'
-];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(c => c.addAll(ASSETS_ESTATICOS))
-      .then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('fetch', e => {
-  const url = new URL(e.request.url);
-
-  // Network-first para datos dinámicos (JSON del campus)
-  const esDato = DATOS_DINAMICOS.some(p => url.pathname.includes(p)) ||
-                 url.searchParams.has('_v'); // cache-busting param
-
-  if (esDato) {
-    e.respondWith(
-      fetch(e.request)
-        .catch(() => caches.match('/data/2do.json')) // fallback offline
-    );
-    return;
-  }
-
-  // Cache-first para estáticos
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(res => {
-        if (res && res.status === 200 && e.request.method === 'GET') {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => cached);
+// ── INSTALL: pre-cachea assets estáticos y activa inmediatamente ──
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(STATIC_ASSETS);
     })
   );
+  self.skipWaiting(); // toma control sin esperar que se cierren pestañas
+});
+
+// ── ACTIVATE: elimina cachés viejos y reclama clientes ──
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim(); // controla todas las pestañas abiertas de inmediato
+});
+
+// ── FETCH: estrategia según tipo de recurso ──
+self.addEventListener('fetch', event => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Solo interceptar peticiones del mismo origen
+  if (url.origin !== location.origin) return;
+
+  const isNavigation =
+    request.mode === 'navigate' ||
+    request.headers.get('accept')?.includes('text/html');
+
+  if (isNavigation) {
+    // Network-first para HTML: siempre intenta la red primero
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          // Actualiza la caché con la respuesta fresca
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          return response;
+        })
+        .catch(() => {
+          // Solo cae a caché si la red falla (offline)
+          return caches.match(request).then(cached => {
+            return cached || caches.match('./index.html');
+          });
+        })
+    );
+  } else {
+    // Cache-first para assets estáticos (CSS, JS, imágenes)
+    event.respondWith(
+      caches.match(request).then(cached => {
+        if (cached) return cached;
+        return fetch(request).then(response => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          return response;
+        });
+      })
+    );
+  }
 });
