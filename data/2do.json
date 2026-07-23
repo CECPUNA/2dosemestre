@@ -18,12 +18,6 @@
       "profesor": "Francisco Llamas"
     },
     {
-      "dia": "Lunes",
-      "hora": "18:00",
-      "materia": "Historia Política Paraguaya",
-      "profesor": "Maria Mercedes Ibarra"
-    },
-    {
       "dia": "Miércoles",
       "hora": "18:00",
       "materia": "Introducción a las Ciencias Políticas",
@@ -40,6 +34,12 @@
       "hora": "18:00",
       "materia": "Economía Política",
       "profesor": "Felipe Huerta"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "18:00",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedez ibarra"
     },
     {
       "dia": "Lunes",
@@ -326,10 +326,6 @@
     }
   ],
   "infoci": [
-    {
-      "ci": "4991604",
-      "mensaje": "Tu calificacion fue 14/20 primer parcial"
-    },
     {
       "ci": "5000000",
       "mensaje": "Tu calificación fue 11/20"
