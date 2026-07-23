@@ -14,7 +14,7 @@
   --radio: 14px;
   --transicion: all 0.3s ease;
   /* Ancho reservado para el logo lateral */
-  --logo-w: 130px;
+  --logo-w: 160px;
 }
 [data-theme="dark"] {
   --bg-suave: #0f1320;
@@ -44,7 +44,6 @@ body {
   top: 0; left: 0; right: 0;
   z-index: 1000;
   box-shadow: 0 2px 16px rgba(0,0,0,0.28);
-  /* Necesario para que el logo absoluto quede contenido */
   overflow: visible;
 }
 
@@ -53,7 +52,6 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  /* altura = fila 1 (56px aprox) + fila 2 (38px aprox) */
   height: 100%;
   width: var(--logo-w);
   background: #ffffff;
@@ -62,23 +60,24 @@ body {
   justify-content: center;
   z-index: 10;
   text-decoration: none;
-  /* Degradado que "disuelve" el blanco hacia la derecha para que no quede cuadrado */
+  padding: 6px 10px;
 }
-/* Pseudo-elemento que genera el fade blanco -> transparente al borde derecho */
+/* Fade blanco -> transparente al borde derecho */
 .topbar-logo-lateral::after {
   content: '';
   position: absolute;
   top: 0;
-  right: -36px;
-  width: 36px;
+  right: -44px;
+  width: 44px;
   height: 100%;
   background: linear-gradient(to right, #ffffff, transparent);
   pointer-events: none;
 }
 .topbar-logo-lateral img {
-  width: calc(var(--logo-w) - 20px);
+  width: 100%;
+  max-width: calc(var(--logo-w) - 20px);
   height: auto;
-  max-height: 70px;
+  max-height: 80px;
   object-fit: contain;
   display: block;
 }
@@ -87,16 +86,8 @@ body {
 .topbar-brand {
   background: var(--una-azul);
   padding: 10px 0;
-  /* Empujar contenido para no quedar detrás del logo */
   padding-left: var(--logo-w);
 }
-.topbar-titulo {
-  font-weight: 800;
-  letter-spacing: .2px;
-  color: #fff;
-  font-size: .95rem;
-}
-.topbar-separador { opacity: .4; font-weight: 300; margin: 0 4px; color: #fff; }
 
 /* Badge "2do Semestre" junto al toggle */
 .topbar-semestre-badge {
@@ -197,12 +188,10 @@ body {
 
 /* ---- Mobile nav ---- */
 @media (max-width: 991px) {
-  :root { --logo-w: 90px; }
+  :root { --logo-w: 100px; }
   body { padding-top: 104px; }
   .topbar-nav { display: none; border-top: 1px solid rgba(255,255,255,0.12); }
-  .topbar-nav.open { display: block; }
-  /* En mobile el nav se expande full, sin padding del logo */
-  .topbar-nav.open { padding-left: 0; }
+  .topbar-nav.open { display: block; padding-left: 0; }
   .topbar-links {
     flex-direction: column;
     align-items: stretch;
@@ -229,7 +218,7 @@ body {
     padding: 2px 8px;
   }
   .topbar-logo-lateral img {
-    max-height: 50px;
+    max-height: 54px;
   }
 }
 @media (min-width: 992px) {
