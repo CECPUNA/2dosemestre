@@ -82,7 +82,7 @@ self.addEventListener('push', event => {
     icon: './img/icon-192.png',
     badge: './img/icon-192.png',
     vibrate: [200, 100, 200],
-    data: { url: data.url || 'https://sentiege.github.io/horariocentro/' }
+    data: { url: data.url || 'https://cecpuna.github.io/2dosemestre/' }
   };
   event.waitUntil(self.registration.showNotification(data.title, options));
 });
@@ -90,7 +90,7 @@ self.addEventListener('push', event => {
 // ── NOTIFICATION CLICK: abrir/enfocar la app ──
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const target = event.notification.data?.url || 'https://sentiege.github.io/horariocentro/';
+  const target = event.notification.data?.url || 'https://cecpuna.github.io/2dosemestre/';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
       for (const client of clientList) {
