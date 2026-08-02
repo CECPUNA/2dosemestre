@@ -4,8 +4,8 @@
 > PWA instalable — Ciencias Políticas UNA · v1.0
 
 ## Acceso
-- **Campus:** `https://sentiege.github.io/horariocentro/`
-- **Admin:** `https://sentiege.github.io/horariocentro/admin/login.html`
+- **Campus:** `https://cecpuna.github.io/2dosemestre/`
+- **Admin:** `https://cecpuna.github.io/2dosemestre/admin/login.html`
 
 ## Estructura
 ```
