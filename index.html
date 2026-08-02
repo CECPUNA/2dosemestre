@@ -15,12 +15,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="css/main.css" />
   <style>
+    /* ── Banner Android/Chrome ── */
     #pwa-install-banner {
       display: none;
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       z-index: 9999;
       background: #1a237e;
       color: #fff;
@@ -34,6 +33,66 @@
       border-top-right-radius: 16px;
       animation: slideUp 0.35s ease;
     }
+    /* ── Banner iOS/Safari ── */
+    #ios-install-banner {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 9999;
+      background: #1a237e;
+      color: #fff;
+      padding: 16px 16px 20px;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      animation: slideUp 0.35s ease;
+    }
+    #ios-install-banner .ios-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #ios-install-banner .ios-title {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    #ios-install-banner .ios-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+    #ios-install-banner .ios-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+    #ios-install-banner .ios-step-num {
+      background: #fff;
+      color: #1a237e;
+      font-weight: 800;
+      font-size: 0.8rem;
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    #ios-install-banner .ios-arrow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 12px solid #1a237e;
+    }
     @keyframes slideUp {
       from { transform: translateY(100%); }
       to   { transform: translateY(0); }
@@ -41,30 +100,22 @@
     #pwa-install-banner .pwa-text { flex: 1; font-size: 0.92rem; line-height: 1.35; }
     #pwa-install-banner .pwa-text strong { font-size: 1rem; display: block; margin-bottom: 2px; }
     #pwa-install-btn {
-      background: #fff;
-      color: #1a237e;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 16px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      white-space: nowrap;
+      background: #fff; color: #1a237e;
+      border: none; border-radius: 8px;
+      padding: 8px 16px; font-weight: 700;
+      font-size: 0.9rem; cursor: pointer; white-space: nowrap;
     }
-    #pwa-dismiss-btn {
-      background: transparent;
-      border: none;
+    #pwa-dismiss-btn, #ios-dismiss-btn {
+      background: transparent; border: none;
       color: rgba(255,255,255,0.7);
-      font-size: 1.3rem;
-      cursor: pointer;
-      padding: 4px 6px;
-      line-height: 1;
+      font-size: 1.3rem; cursor: pointer;
+      padding: 4px 6px; line-height: 1;
     }
   </style>
 </head>
 <body>
 
-<!-- BANNER INSTALACIÓN PWA (móvil) -->
+<!-- BANNER INSTALACIÓN Android/Chrome -->
 <div id="pwa-install-banner">
   <div class="pwa-text">
     <strong><i class="bi bi-phone me-1"></i>Instalá Info 2do</strong>
@@ -72,6 +123,28 @@
   </div>
   <button id="pwa-install-btn"><i class="bi bi-download me-1"></i>Instalar</button>
   <button id="pwa-dismiss-btn" aria-label="Cerrar">✕</button>
+</div>
+
+<!-- BANNER INSTALACIÓN iOS/Safari -->
+<div id="ios-install-banner">
+  <div class="ios-header">
+    <span class="ios-title"><i class="bi bi-phone me-1"></i>Instalá Info 2do en tu iPhone</span>
+    <button id="ios-dismiss-btn" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="ios-steps">
+    <div class="ios-step">
+      <span class="ios-step-num">1</span>
+      <span>Tocá el botón <strong>Compartir</strong> <i class="bi bi-box-arrow-up"></i> en la barra de Safari (abajo o arriba de la pantalla)</span>
+    </div>
+    <div class="ios-step">
+      <span class="ios-step-num">2</span>
+      <span>Deslizá y tocá <strong>"Agregar a pantalla de inicio"</strong> <i class="bi bi-plus-square"></i></span>
+    </div>
+    <div class="ios-step">
+      <span class="ios-step-num">3</span>
+      <span>Confirmá tocando <strong>"Agregar"</strong> — la app se llamará <strong>Info 2do</strong></span>
+    </div>
+  </div>
 </div>
 
 <!-- TOPBAR: una sola fila -->
@@ -305,7 +378,13 @@
     });
   });
 
-  // ── PWA Install Banner ──
+  // ── Detección de plataforma ──
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const isMobile = window.innerWidth <= 768;
+  const dismissed = sessionStorage.getItem('pwa-dismissed');
+
+  // ── Banner Android/Chrome ──
   let deferredPrompt = null;
   const installBanner = document.getElementById('pwa-install-banner');
   const installBtn    = document.getElementById('pwa-install-btn');
@@ -314,8 +393,7 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    // Solo mostrar en móvil
-    if (window.innerWidth <= 768) {
+    if (isMobile && !dismissed) {
       installBanner.style.display = 'flex';
     }
   });
@@ -324,27 +402,34 @@
     if (!deferredPrompt) return;
     installBanner.style.display = 'none';
     deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    await deferredPrompt.userChoice;
     deferredPrompt = null;
   });
 
   dismissBtn.addEventListener('click', () => {
     installBanner.style.display = 'none';
-    // No volver a mostrar en esta sesión
     sessionStorage.setItem('pwa-dismissed', '1');
   });
 
-  // No mostrar si ya fue descartado en esta sesión
-  if (sessionStorage.getItem('pwa-dismissed')) {
-    installBanner.style.display = 'none';
-  }
-
-  // Ocultar si ya está instalada
   window.addEventListener('appinstalled', () => {
     installBanner.style.display = 'none';
   });
 
-  // ── Service Worker: registro con actualización automática ──
+  // ── Banner iOS/Safari ──
+  const iosBanner  = document.getElementById('ios-install-banner');
+  const iosDismiss = document.getElementById('ios-dismiss-btn');
+
+  if (isIos && !isInStandaloneMode && !dismissed) {
+    // Pequeño delay para que no tape contenido al cargar
+    setTimeout(() => { iosBanner.style.display = 'flex'; }, 1500);
+  }
+
+  iosDismiss.addEventListener('click', () => {
+    iosBanner.style.display = 'none';
+    sessionStorage.setItem('pwa-dismissed', '1');
+  });
+
+  // ── Service Worker ──
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
@@ -354,10 +439,7 @@
         registration.update();
         let refreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (!refreshing) {
-            refreshing = true;
-            window.location.reload();
-          }
+          if (!refreshing) { refreshing = true; window.location.reload(); }
         });
       } catch (error) {
         console.error('[SW] Error al registrar:', error);
