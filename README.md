@@ -6,7 +6,6 @@
 ## Acceso
 - **Campus:** `https://sentiege.github.io/horariocentro/`
 - **Admin:** `https://sentiege.github.io/horariocentro/admin/login.html`
-  - Usuario: `admin` · Contraseña: `campus2026`
 
 ## Estructura
 ```
