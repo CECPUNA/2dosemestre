@@ -5,14 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#1a237e" />
   <meta name="description" content="Campus Informativo - Segundo Semestre - Escuela de Ciencias Políticas UNA" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Info 2do" />
   <title>2° Semestre · Ciencias Políticas UNA</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="img/icon-192.png" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="css/main.css" />
+  <style>
+    #pwa-install-banner {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: #1a237e;
+      color: #fff;
+      padding: 14px 16px;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      animation: slideUp 0.35s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    #pwa-install-banner .pwa-text { flex: 1; font-size: 0.92rem; line-height: 1.35; }
+    #pwa-install-banner .pwa-text strong { font-size: 1rem; display: block; margin-bottom: 2px; }
+    #pwa-install-btn {
+      background: #fff;
+      color: #1a237e;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    #pwa-dismiss-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 4px 6px;
+      line-height: 1;
+    }
+  </style>
 </head>
 <body>
+
+<!-- BANNER INSTALACIÓN PWA (móvil) -->
+<div id="pwa-install-banner">
+  <div class="pwa-text">
+    <strong><i class="bi bi-phone me-1"></i>Instalá Info 2do</strong>
+    Accedé rápido desde tu pantalla de inicio, sin necesidad de internet.
+  </div>
+  <button id="pwa-install-btn"><i class="bi bi-download me-1"></i>Instalar</button>
+  <button id="pwa-dismiss-btn" aria-label="Cerrar">✕</button>
+</div>
 
 <!-- TOPBAR: una sola fila -->
 <header class="topbar" id="topbar">
@@ -245,18 +305,53 @@
     });
   });
 
+  // ── PWA Install Banner ──
+  let deferredPrompt = null;
+  const installBanner = document.getElementById('pwa-install-banner');
+  const installBtn    = document.getElementById('pwa-install-btn');
+  const dismissBtn    = document.getElementById('pwa-dismiss-btn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Solo mostrar en móvil
+    if (window.innerWidth <= 768) {
+      installBanner.style.display = 'flex';
+    }
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    installBanner.style.display = 'none';
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  });
+
+  dismissBtn.addEventListener('click', () => {
+    installBanner.style.display = 'none';
+    // No volver a mostrar en esta sesión
+    sessionStorage.setItem('pwa-dismissed', '1');
+  });
+
+  // No mostrar si ya fue descartado en esta sesión
+  if (sessionStorage.getItem('pwa-dismissed')) {
+    installBanner.style.display = 'none';
+  }
+
+  // Ocultar si ya está instalada
+  window.addEventListener('appinstalled', () => {
+    installBanner.style.display = 'none';
+  });
+
   // ── Service Worker: registro con actualización automática ──
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
         const registration = await navigator.serviceWorker.register('./sw.js', {
-          updateViaCache: 'none'  // nunca usa caché HTTP para sw.js
+          updateViaCache: 'none'
         });
-
-        // Fuerza verificación de nueva versión en cada carga
         registration.update();
-
-        // Cuando el SW nuevo toma control, recarga la página una sola vez
         let refreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
           if (!refreshing) {
@@ -264,7 +359,6 @@
             window.location.reload();
           }
         });
-
       } catch (error) {
         console.error('[SW] Error al registrar:', error);
       }

@@ -1,6 +1,6 @@
 {
-  "name": "Campus Informativo – 2° Semestre CP UNA",
-  "short_name": "2do Semestre",
+  "name": "Info 2do",
+  "short_name": "Info 2do",
   "description": "Información académica del Segundo Semestre – Ciencias Políticas UNA",
   "start_url": "./index.html",
   "scope": "./",
