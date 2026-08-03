@@ -46,6 +46,7 @@ body {
   background: var(--una-azul);
   box-shadow: 0 2px 16px rgba(0,0,0,0.32);
   height: var(--topbar-h);
+  overflow: visible;        /* ← FIX: permite que el nav desplegable salga del topbar */
 }
 
 /* Contenedor flex de la barra */
@@ -53,6 +54,7 @@ body {
   display: flex;
   align-items: stretch;
   height: 100%;
+  position: relative;       /* ← FIX: ancla el position:absolute del topbar-nav */
 }
 
 /* ---- Logo blanco a la izquierda ---- */
