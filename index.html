@@ -50,16 +50,12 @@
   </div>
 </div>
 
-<!-- TOPBAR: una sola fila -->
+<!-- TOPBAR -->
 <header class="topbar" id="topbar">
   <div class="topbar-inner">
-
-    <!-- Logo lateral blanco -->
     <a href="#" class="topbar-logo-lateral" aria-label="Inicio">
       <img src="img/logo-cecp.png" alt="CECP" />
     </a>
-
-    <!-- Nav links (desktop: inline | mobile: colapsable) -->
     <nav class="topbar-nav" id="topbarNav">
       <ul class="topbar-links">
         <li><a href="#horario"><i class="bi bi-clock"></i><span>Horario</span></a></li>
@@ -73,8 +69,6 @@
         <li><a href="https://www.cnc.una.py/ealu/#/pages/login?returnUrl=%2Fdashboard" target="_blank" rel="noopener" class="link-ealu"><i class="bi bi-box-arrow-up-right"></i><span>EALU</span></a></li>
       </ul>
     </nav>
-
-    <!-- Controles derecha -->
     <div class="topbar-controls">
       <span class="topbar-semestre-badge">2do Semestre</span>
       <button class="btn btn-sm btn-topbar-outline" id="themeToggle" title="Cambiar modo">
@@ -84,15 +78,12 @@
         <i class="bi bi-list"></i>
       </button>
     </div>
-
   </div>
 </header>
 
-<!-- HORARIO (primero) -->
+<!-- HORARIO -->
 <section id="horario" class="seccion" style="padding-top:36px">
   <div class="container">
-
-    <!-- CLASE ACTIVA BANNER -->
     <div id="claseActivaBanner" class="clase-activa-banner d-none">
       <div class="clase-activa-inner">
         <div class="clase-activa-encabezado">
@@ -107,24 +98,19 @@
         </div>
       </div>
     </div>
-
     <div class="seccion-header">
       <h2><i class="bi bi-clock-fill me-2 text-una"></i>Horario de Clases</h2>
     </div>
-
     <div class="table-responsive d-none d-md-block">
       <table class="table table-horario" id="tablaHorario">
-        <colgroup>
-          <col style="width:70px" />
-          <col /><col /><col /><col /><col />
-        </colgroup>
+        <colgroup><col style="width:70px" /><col /><col /><col /><col /><col /></colgroup>
       </table>
     </div>
     <div class="d-block d-md-none" id="horarioCards"></div>
   </div>
 </section>
 
-<!-- NOTICIAS / AVISOS -->
+<!-- NOTICIAS -->
 <section id="noticias" class="seccion bg-light-custom">
   <div class="container">
     <div class="seccion-header">
@@ -144,7 +130,7 @@
   </div>
 </section>
 
-<!-- PARCIALES / CALENDARIO -->
+<!-- PARCIALES -->
 <section id="parciales" class="seccion bg-light-custom">
   <div class="container">
     <div class="seccion-header">
@@ -174,7 +160,7 @@
   </div>
 </section>
 
-<!-- DRIVE / CLASSROOM -->
+<!-- DRIVE -->
 <section id="drive" class="seccion">
   <div class="container">
     <div class="seccion-header">
@@ -184,7 +170,7 @@
   </div>
 </section>
 
-<!-- INFO RÁPIDA POR CI -->
+<!-- INFO CI -->
 <section id="infoci" class="seccion bg-light-custom">
   <div class="container">
     <div class="seccion-header">
@@ -201,20 +187,50 @@
             </p>
             <div class="input-group">
               <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
-              <input
-                type="number"
-                class="form-control"
-                id="ciInput"
-                placeholder="Ej: 12345678"
-                maxlength="8"
-                min="0"
-                style="font-size:1.05rem;letter-spacing:.05em"
-              />
-              <button class="btn btn-primary fw-semibold" onclick="consultarCI()">
-                <i class="bi bi-search me-1"></i>Consultar
-              </button>
+              <input type="number" class="form-control" id="ciInput" placeholder="Ej: 12345678" maxlength="8" min="0" style="font-size:1.05rem;letter-spacing:.05em" />
+              <button class="btn btn-primary fw-semibold" onclick="consultarCI()"><i class="bi bi-search me-1"></i>Consultar</button>
             </div>
             <div id="ciResultadoInline" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN NOTIFICACIONES PUSH -->
+<section id="notificaciones" class="seccion">
+  <div class="container">
+    <div class="seccion-header">
+      <h2><i class="bi bi-bell-fill me-2 text-una"></i>Notificaciones</h2>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+        <div class="card-campus">
+          <div class="card-franja" style="background:var(--una-azul)"></div>
+          <div class="card-body">
+            <p class="small text-muted mb-3">
+              <i class="bi bi-info-circle me-1"></i>
+              Activá las notificaciones para recibir avisos y novedades del campus directamente en tu dispositivo.
+            </p>
+            <button class="btn btn-primary w-100 mb-3" id="btnActivarPush">
+              <i class="bi bi-bell me-2"></i>Activar notificaciones
+            </button>
+            <div id="pushEstado" class="text-center mb-3"></div>
+            <!-- Token: visible solo en modo debug (oculto por defecto) -->
+            <div id="pushTokenWrap" style="display:none">
+              <label class="form-label small text-muted">Token FCM (para el admin)</label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control font-monospace" id="pushTokenDisplay" readonly placeholder="Activá el push para ver el token" style="font-size:.7rem" />
+                <button class="btn btn-outline-secondary" id="btnCopiarToken" title="Copiar token">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+              <p class="small text-muted mt-1 mb-0">Copiá este token y pegalo en el gestor → Notificaciones → Token de dispositivo.</p>
+            </div>
+            <button class="btn btn-link btn-sm text-muted p-0 mt-2" id="btnMostrarToken">
+              <i class="bi bi-code-slash me-1"></i>Mostrar token FCM
+            </button>
           </div>
         </div>
       </div>
@@ -227,9 +243,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="border-radius:16px;border:none;overflow:hidden">
       <div class="modal-header" style="background:var(--una-azul);color:#fff;border:none">
-        <h5 class="modal-title fw-bold" id="ciModalLabel">
-          <i class="bi bi-person-check-fill me-2"></i>Tu Información
-        </h5>
+        <h5 class="modal-title fw-bold" id="ciModalLabel"><i class="bi bi-person-check-fill me-2"></i>Tu Información</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body p-4" id="ciModalBody"></div>
@@ -246,17 +260,9 @@
     <div class="delegados-card">
       <p class="delegados-titulo">DELEGADOS PERÍODO 2026 - 2027</p>
       <div class="delegados-row">
-        <div class="delegado-item">
-          <img src="img/delegado1.png" alt="Saul" class="delegado-foto" />
-          <span class="delegado-nombre">Saul</span>
-        </div>
-        <div class="delegado-item delegado-centro">
-          <img src="img/movimiento.png" alt="Movimiento estudiantil" class="delegado-logo-centro" />
-        </div>
-        <div class="delegado-item">
-          <img src="img/delegado2.png" alt="Mirtha" class="delegado-foto" />
-          <span class="delegado-nombre">Mirtha</span>
-        </div>
+        <div class="delegado-item"><img src="img/delegado1.png" alt="Saul" class="delegado-foto" /><span class="delegado-nombre">Saul</span></div>
+        <div class="delegado-item delegado-centro"><img src="img/movimiento.png" alt="Movimiento estudiantil" class="delegado-logo-centro" /></div>
+        <div class="delegado-item"><img src="img/delegado2.png" alt="Mirtha" class="delegado-foto" /><span class="delegado-nombre">Mirtha</span></div>
       </div>
     </div>
   </div>
@@ -281,13 +287,11 @@
     });
   });
 
-  // ── Detección de plataforma ──
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   const isMobile = window.innerWidth <= 991;
   const yaInstalada = isInStandaloneMode;
 
-  // ── Banner Android/Chrome ──
   let deferredPrompt = null;
   const installBanner = document.getElementById('pwa-install-banner');
   const installBtn    = document.getElementById('pwa-install-btn');
@@ -296,11 +300,8 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (isMobile && !yaInstalada) {
-      installBanner.style.display = 'flex';
-    }
+    if (isMobile && !yaInstalada) installBanner.style.display = 'flex';
   });
-
   installBtn?.addEventListener('click', async () => {
     if (!deferredPrompt) return;
     installBanner.style.display = 'none';
@@ -308,34 +309,33 @@
     await deferredPrompt.userChoice;
     deferredPrompt = null;
   });
+  dismissBtn?.addEventListener('click', () => { installBanner.style.display = 'none'; });
+  window.addEventListener('appinstalled', () => { installBanner.style.display = 'none'; });
 
-  dismissBtn?.addEventListener('click', () => {
-    installBanner.style.display = 'none';
-  });
-
-  window.addEventListener('appinstalled', () => {
-    installBanner.style.display = 'none';
-  });
-
-  // ── Banner iOS/Safari ──
   const iosBanner  = document.getElementById('ios-install-banner');
   const iosDismiss = document.getElementById('ios-dismiss-btn');
+  if (isIos && !yaInstalada) setTimeout(() => { iosBanner.style.display = 'flex'; }, 2000);
+  iosDismiss?.addEventListener('click', () => { iosBanner.style.display = 'none'; });
 
-  if (isIos && !yaInstalada) {
-    setTimeout(() => { iosBanner.style.display = 'flex'; }, 2000);
-  }
-
-  iosDismiss?.addEventListener('click', () => {
-    iosBanner.style.display = 'none';
+  // Token UI
+  document.getElementById('btnMostrarToken')?.addEventListener('click', () => {
+    const wrap = document.getElementById('pushTokenWrap');
+    if (wrap) wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+  });
+  document.getElementById('btnCopiarToken')?.addEventListener('click', () => {
+    const val = document.getElementById('pushTokenDisplay')?.value;
+    if (!val) return;
+    navigator.clipboard?.writeText(val).then(() => {
+      const btn = document.getElementById('btnCopiarToken');
+      btn.innerHTML = '<i class="bi bi-check"></i>';
+      setTimeout(() => { btn.innerHTML = '<i class="bi bi-clipboard"></i>'; }, 1800);
+    });
   });
 
-  // ── Service Worker ──
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
-        const registration = await navigator.serviceWorker.register('./sw.js', {
-          updateViaCache: 'none'
-        });
+        const registration = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
         registration.update();
         let refreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {

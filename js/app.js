@@ -292,15 +292,12 @@ function consultarCI() {
   const input = document.getElementById('ciInput');
   const inline = document.getElementById('ciResultadoInline');
   const ci = input ? input.value.trim() : '';
-
   if (!ci) {
     if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingresá tu número de C.I.</div>';
     return;
   }
-
   const lista = DATA?.infoci || [];
   const registro = lista.find(r => String(r.ci).trim() === ci);
-
   if (registro) {
     const modalBody = document.getElementById('ciModalBody');
     if (modalBody) {
@@ -319,9 +316,7 @@ function consultarCI() {
     modal.show();
     if (inline) inline.innerHTML = '';
   } else {
-    if (inline) {
-      inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontró información para ese número de C.I.</div>';
-    }
+    if (inline) inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontró información para ese número de C.I.</div>';
   }
 }
 
@@ -343,6 +338,31 @@ function initTema() {
 
 async function initFCM() {
   if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+
+  const btn        = document.getElementById('btnActivarPush');
+  const estado     = document.getElementById('pushEstado');
+  const tokenWrap  = document.getElementById('pushTokenWrap');
+  const tokenInput = document.getElementById('pushTokenDisplay');
+
+  const renderEstado = (txt, tipo = 'secondary') => {
+    if (!estado) return;
+    estado.innerHTML = `<span class="badge bg-${tipo}">${txt}</span>`;
+  };
+
+  const mostrarToken = (token) => {
+    if (!tokenInput || !tokenWrap) return;
+    tokenInput.value = token;
+    localStorage.setItem(LS_FCM_TOKEN, token);
+  };
+
+  const savedToken = localStorage.getItem(LS_FCM_TOKEN);
+  if (savedToken) {
+    renderEstado('Push activado ✅', 'success');
+    mostrarToken(savedToken);
+  } else {
+    renderEstado('Push no activado', 'secondary');
+  }
+
   try {
     const [{ initializeApp }, { getMessaging, getToken, onMessage }] = await Promise.all([
       import('https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js'),
@@ -352,18 +372,6 @@ async function initFCM() {
     const app = initializeApp(FCM_CONFIG);
     const messaging = getMessaging(app);
 
-    const btn = document.getElementById('btnActivarPush');
-    const estado = document.getElementById('pushEstado');
-
-    const renderEstado = (txt, tipo = 'secondary') => {
-      if (!estado) return;
-      estado.innerHTML = `<span class="badge bg-${tipo}">${txt}</span>`;
-    };
-
-    const savedToken = localStorage.getItem(LS_FCM_TOKEN);
-    if (savedToken) renderEstado('Push activado en este dispositivo', 'success');
-    else renderEstado('Push no activado', 'secondary');
-
     if (btn) {
       btn.addEventListener('click', async () => {
         try {
@@ -372,22 +380,27 @@ async function initFCM() {
             renderEstado('Permiso denegado', 'warning');
             return;
           }
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activando...';
           const registration = await navigator.serviceWorker.ready;
           const token = await getToken(messaging, {
             vapidKey: FCM_VAPID_KEY,
             serviceWorkerRegistration: registration
           });
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-bell me-2"></i>Activar notificaciones';
           if (!token) {
             renderEstado('No se pudo generar token', 'danger');
             return;
           }
-          localStorage.setItem(LS_FCM_TOKEN, token);
-          renderEstado('Push activado en este dispositivo', 'success');
+          mostrarToken(token);
+          renderEstado('Push activado ✅', 'success');
           toastFront('Notificaciones activadas correctamente');
           console.log('FCM token:', token);
         } catch (err) {
           console.error('FCM error:', err);
           renderEstado('Error al activar push', 'danger');
+          if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-bell me-2"></i>Activar notificaciones'; }
         }
       });
     }
@@ -445,7 +458,7 @@ function datosDemo() {
     ],
     calendario: [
       { mes:'Agosto', nombre:'Inicio de Clases', tipo:'normal' },
-      { mes:'Septiembre', nombre:'1er Parcial', type:'parcial', fecha:'15–24 Sep' },
+      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'15–24 Sep' },
       { mes:'Octubre', nombre:'Cursada', tipo:'normal' },
       { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'10–21 Nov' },
       { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1–15 Dic' }
