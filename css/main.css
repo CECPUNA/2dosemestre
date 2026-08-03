@@ -1,16 +1,16 @@
 /* ===== VARIABLES ===== */
 :root {
-  --una-azul: #1a237e;
-  --una-azul-medio: #283593;
-  --una-azul-claro: #3949ab;
-  --una-rojo: #c62828;
+  --una-azul: #990301;
+  --una-azul-medio: #7a0201;
+  --una-azul-claro: #b71c1c;
+  --una-rojo: #b71c1c;
   --una-dorado: #f9a825;
   --bg-suave: #f5f6fa;
   --bg-card: #ffffff;
   --texto-principal: #1c2340;
-  --texto-secundario: #5c6bc0;
-  --sombra: 0 4px 20px rgba(26,35,126,0.10);
-  --sombra-hover: 0 8px 30px rgba(26,35,126,0.18);
+  --texto-secundario: #c62828;
+  --sombra: 0 4px 20px rgba(153,3,1,0.10);
+  --sombra-hover: 0 8px 30px rgba(153,3,1,0.18);
   --radio: 14px;
   --transicion: all 0.3s ease;
   --logo-w: 220px;
@@ -20,7 +20,7 @@
   --bg-suave: #0f1320;
   --bg-card: #1a1f35;
   --texto-principal: #e8eaf6;
-  --texto-secundario: #9fa8da;
+  --texto-secundario: #ef9a9a;
   --sombra: 0 4px 20px rgba(0,0,0,0.4);
 }
 
@@ -34,7 +34,7 @@ body {
 }
 .bg-una { background: var(--una-azul) !important; }
 .text-una { color: var(--una-azul) !important; }
-[data-theme="dark"] .text-una { color: #7986cb !important; }
+[data-theme="dark"] .text-una { color: #ef9a9a !important; }
 
 /* =============================================
    TOPBAR — UNA SOLA FILA
@@ -250,7 +250,7 @@ body {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   z-index: 9999;
-  background: #1a237e;
+  background: #990301;
   color: #fff;
   padding: 14px 16px;
   flex-direction: row;
@@ -269,7 +269,7 @@ body {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   z-index: 9999;
-  background: #1a237e;
+  background: #990301;
   color: #fff;
   padding: 16px 16px 20px;
   flex-direction: column;
@@ -305,7 +305,7 @@ body {
 }
 #ios-install-banner .ios-step-num {
   background: #fff;
-  color: #1a237e;
+  color: #990301;
   font-weight: 800;
   font-size: 0.8rem;
   border-radius: 50%;
@@ -321,7 +321,7 @@ body {
   width: 0; height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-top: 12px solid #1a237e;
+  border-top: 12px solid #990301;
 }
 @keyframes slideUp {
   from { transform: translateY(100%); }
@@ -330,7 +330,7 @@ body {
 #pwa-install-banner .pwa-text { flex: 1; font-size: 0.92rem; line-height: 1.35; }
 #pwa-install-banner .pwa-text strong { font-size: 1rem; display: block; margin-bottom: 2px; }
 #pwa-install-btn {
-  background: #fff; color: #1a237e;
+  background: #fff; color: #990301;
   border: none; border-radius: 8px;
   padding: 8px 16px; font-weight: 700;
   font-size: 0.9rem; cursor: pointer; white-space: nowrap;
@@ -372,7 +372,7 @@ body {
 .clase-activa-banner {
   background: var(--una-azul);
   border-radius: var(--radio);
-  box-shadow: 0 6px 24px rgba(26,35,126,0.30);
+  box-shadow: 0 6px 24px rgba(153,3,1,0.30);
   overflow: hidden;
   margin-bottom: 24px;
 }
@@ -418,7 +418,7 @@ body {
 .card-campus .card-body { padding: 20px; }
 
 /* ===== NOTICIAS ===== */
-.noticia-urgente { border-left: 4px solid var(--una-rojo) !important; }
+.noticia-urgente { border-left: 4px solid #c62828 !important; }
 .badge-tipo { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
 
 /* ===== TABLA HORARIO DESKTOP ===== */
@@ -448,7 +448,7 @@ body {
   text-align: center;
   font-size: .78rem;
   vertical-align: middle;
-  box-shadow: 0 1px 6px rgba(26,35,126,0.07);
+  box-shadow: 0 1px 6px rgba(153,3,1,0.07);
   font-weight: 500;
   height: 72px;
 }
@@ -499,7 +499,7 @@ body {
 .periodos-timeline { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; padding-bottom: 8px; }
 .periodo-item { flex: 0 0 auto; min-width: 150px; background: var(--bg-card); border-radius: var(--radio); box-shadow: var(--sombra); padding: 20px 16px; text-align: center; border-top: 5px solid var(--una-azul-claro); transition: var(--transicion); }
 .periodo-item:hover { transform: translateY(-3px); }
-.periodo-item.parcial { border-top-color: var(--una-rojo); }
+.periodo-item.parcial { border-top-color: #c62828; }
 .periodo-item.final   { border-top-color: var(--una-dorado); }
 .periodo-mes    { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--texto-secundario); }
 .periodo-nombre { font-size: .95rem; font-weight: 700; margin: 6px 0 4px; color: var(--texto-principal); }
@@ -515,7 +515,7 @@ body {
 .libro-card:hover { transform: translateY(-4px); box-shadow: var(--sombra-hover); }
 .libro-cover { height: 160px; background: linear-gradient(135deg, var(--una-azul) 0%, var(--una-azul-claro) 100%); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; position: relative; overflow: hidden; }
 .libro-cover img { width: 100%; height: 100%; object-fit: cover; }
-.libro-cover .libro-overlay { position: absolute; inset: 0; background: rgba(26,35,126,0.55); display: flex; align-items: center; justify-content: center; opacity: 0; transition: var(--transicion); }
+.libro-cover .libro-overlay { position: absolute; inset: 0; background: rgba(153,3,1,0.55); display: flex; align-items: center; justify-content: center; opacity: 0; transition: var(--transicion); }
 .libro-card:hover .libro-overlay { opacity: 1; }
 .libro-body { padding: 16px; }
 .libro-materia { font-size: .72rem; text-transform: uppercase; font-weight: 700; letter-spacing: .5px; margin-bottom: 4px; }
@@ -563,10 +563,10 @@ body {
 
 /* ===== DELEGADOS FOOTER ===== */
 .delegados-card { background: #ffffff; border-radius: 20px; padding: 28px 20px 20px; max-width: 480px; margin: 0 auto; box-shadow: 0 2px 12px rgba(0,0,0,0.10); text-align: center; }
-.delegados-titulo { font-weight: 800; font-size: 1rem; letter-spacing: .04em; color: #1a237e; margin-bottom: 20px; text-transform: uppercase; }
+.delegados-titulo { font-weight: 800; font-size: 1rem; letter-spacing: .04em; color: #990301; margin-bottom: 20px; text-transform: uppercase; }
 .delegados-row { display: flex; justify-content: center; align-items: center; gap: 16px; }
 .delegado-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.delegado-foto { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #1a237e; }
-.delegado-nombre { font-weight: 700; font-size: 1.1rem; color: #1a237e; }
+.delegado-foto { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #990301; }
+.delegado-nombre { font-weight: 700; font-size: 1.1rem; color: #990301; }
 .delegado-logo-centro { width: 72px; height: 72px; }
 .delegado-logo-centro img { width: 72px; height: 72px; border-radius: 50%; object-fit: contain; }
