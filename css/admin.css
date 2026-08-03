@@ -58,32 +58,22 @@ body {
   border-left-color: #fff;
   font-weight: 600;
 }
+/* Botón Publicar en GitHub dentro del sidebar */
+.sb-link-publish {
+  color: #69f0ae !important;
+  font-weight: 700 !important;
+}
+.sb-link-publish:hover {
+  background: rgba(105,240,174,.15) !important;
+  color: #fff !important;
+}
 .sb-footer { padding: 14px 20px; border-top: 1px solid rgba(255,255,255,.1); }
 
 /* ── Layout ── */
-/*
-  El sidebar usa position:fixed, por lo que está fuera del flujo normal.
-  El wrapper flex:1 (pub-bar + main) debe compensar ese ancho con margin-left.
-*/
 .main { margin-left: 240px; padding: 28px 32px; min-height: 100vh; }
-
-/* FIX: el wrapper que contiene pub-bar + main necesita margin-left igual al
-   ancho del sidebar fijo, para que pub-bar arranque desde el borde correcto
-   y el btn#btnPublicar sea visible en desktop. */
-.d-flex > div:last-child {
-  margin-left: 240px;
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
 @media (max-width: 860px) {
   .sidebar { position: static; width: 100%; min-height: auto; }
   .main { margin-left: 0; padding: 20px 16px; }
-  /* En mobile el sidebar vuelve al flujo, no se necesita compensar */
-  .d-flex > div:last-child { margin-left: 0; }
-  .d-flex { flex-direction: column; }
 }
 
 /* ── Panels ── */
@@ -286,22 +276,6 @@ body {
 .hg-cell .hg-prof { font-size: .62rem; color: #5c6bc0; }
 .hg-cell .hg-del { color: #c62828; font-size: .65rem; display: none; }
 .hg-cell.ocupada:hover .hg-del { display: inline; }
-
-/* ── Publish bar ── */
-.pub-bar {
-  background: #fff;
-  border-bottom: 1px solid #e8eaf6;
-  padding: 10px 32px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  flex-wrap: wrap;
-}
-@media (max-width: 860px) { .pub-bar { padding: 10px 16px; } }
 
 /* ── Dashboard tables ── */
 .dash-tbl { width: 100%; border-collapse: collapse; font-size: .8rem; }
