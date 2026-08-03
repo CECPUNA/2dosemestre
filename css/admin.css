@@ -67,6 +67,13 @@ body {
   .main { margin-left: 0; padding: 20px 16px; }
 }
 
+/* ── Flex wrapper (contenedor de pub-bar + main) ── */
+/* FIX: evita que el hijo flex desborde y oculte el btn-pub en desktop */
+.d-flex > div[style*="flex:1"] {
+  min-width: 0;
+  overflow: visible;
+}
+
 /* ── Panels ── */
 .panel { display: none; }
 .panel.active { display: block; }
@@ -124,6 +131,8 @@ body {
   align-items: center;
   gap: 8px;
   transition: all .2s;
+  /* FIX: impide que flex comprima el botón en desktop */
+  flex-shrink: 0;
 }
 .btn-pub:hover { background: #1b5e20; color: #fff; }
 .btn-pub:disabled { opacity: .6; cursor: not-allowed; }
@@ -279,6 +288,8 @@ body {
   top: 0;
   z-index: 100;
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  /* FIX: permite que los items bajen de línea si no hay espacio */
+  flex-wrap: wrap;
 }
 @media (max-width: 860px) { .pub-bar { padding: 10px 16px; } }
 
