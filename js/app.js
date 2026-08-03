@@ -43,11 +43,17 @@ function renderAll() {
   initTema();
 }
 
+// ── NOTICIAS ── con botón WhatsApp en urgentes
 function renderNoticias() {
   const c = document.getElementById('noticiasContainer');
   if (!c) return;
   if (!DATA.noticias?.length) { c.innerHTML = '<p class="text-muted">Sin avisos por el momento.</p>'; return; }
-  c.innerHTML = DATA.noticias.map(n => `
+  c.innerHTML = DATA.noticias.map(n => {
+    const waText = encodeURIComponent(`📣 *${n.titulo}*\n${n.descripcion || ''}\n\n_Campus 2do Semestre · Cs. Políticas UNA_`);
+    const waBtn = n.urgente
+      ? `<a href="https://wa.me/?text=${waText}" target="_blank" class="btn btn-sm btn-success mt-2 w-100"><i class="bi bi-whatsapp me-1"></i>Compartir por WhatsApp</a>`
+      : '';
+    return `
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card-campus ${n.urgente ? 'noticia-urgente' : ''}">
         <div class="card-franja" style="background:${n.urgente ? '#c62828' : '#3949ab'}"></div>
@@ -58,9 +64,11 @@ function renderNoticias() {
           </div>
           <h6 class="fw-bold mb-1">${n.titulo}</h6>
           <p class="mb-0 small text-muted">${n.descripcion || ''}</p>
+          ${waBtn}
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 const DIAS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
@@ -86,6 +94,28 @@ function getClaseActual() {
     const inicio = h * 100 + m;
     return horaActual >= inicio && horaActual < inicio + 100;
   }) || null;
+}
+
+// Devuelve la próxima clase del día actual que aún no empezó
+function getProximaClaseHoy() {
+  if (!DATA.horario?.length) return null;
+  const ahora = new Date();
+  const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const diaHoy = diasSemana[ahora.getDay()];
+  const horaActual = ahora.getHours() * 100 + ahora.getMinutes();
+  const clasesHoy = DATA.horario
+    .filter(c => c.dia === diaHoy)
+    .map(c => { const [h, m] = c.hora.split(':').map(Number); return { ...c, min: h * 100 + m }; })
+    .sort((a, b) => a.min - b.min);
+  // Evitar duplicados de misma materia+hora (bloques multi-fila)
+  const seen = new Set();
+  for (const c of clasesHoy) {
+    const key = `${c.hora}_${c.materia}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (c.min > horaActual) return c;
+  }
+  return null;
 }
 
 function renderHorario() {
@@ -136,22 +166,35 @@ function renderHorario() {
 }
 
 function verificarClaseActiva() {
-  const clase = getClaseActual();
-  const banner = document.getElementById('claseActivaBanner');
-  const elMat  = document.getElementById('claseActivaMateria');
-  const elHora = document.getElementById('claseActivaHora');
-  const elProf = document.getElementById('claseActivaProf');
+  const clase    = getClaseActual();
+  const proxima  = getProximaClaseHoy();
+  const banner   = document.getElementById('claseActivaBanner');
+  const elMat    = document.getElementById('claseActivaMateria');
+  const elHora   = document.getElementById('claseActivaHora');
+  const elProf   = document.getElementById('claseActivaProf');
+  const elLabel  = banner?.querySelector('.clase-activa-label');
+  const elPunto  = banner?.querySelector('.punto-verde');
   if (!banner) return;
   if (clase) {
+    if (elLabel)  elLabel.textContent  = 'Clase activa';
+    if (elPunto)  elPunto.style.background = '#22c55e';
     elMat.textContent  = clase.materia;
     elHora.textContent = `${clase.dia} · ${clase.hora} hs`;
     elProf.textContent = clase.profesor || 'Docente';
+    banner.classList.remove('d-none');
+  } else if (proxima) {
+    if (elLabel)  elLabel.textContent  = 'Próxima clase hoy';
+    if (elPunto)  elPunto.style.background = '#f59e0b';
+    elMat.textContent  = proxima.materia;
+    elHora.textContent = `${proxima.dia} · ${proxima.hora} hs`;
+    elProf.textContent = proxima.profesor || 'Docente';
     banner.classList.remove('d-none');
   } else {
     banner.classList.add('d-none');
   }
 }
 
+// ── EXÁMENES ── con botón WhatsApp
 function renderExamenes() {
   const c = document.getElementById('examenesContainer');
   if (!c) return;
@@ -159,6 +202,7 @@ function renderExamenes() {
   const colores = { 'Primer Parcial':'#1a237e', 'Segundo Parcial':'#c62828', 'Final':'#e65100' };
   c.innerHTML = DATA.examenes.map(e => {
     const col = colores[e.tipo] || '#3949ab';
+    const waText = encodeURIComponent(`📚 *${e.tipo} — ${e.materia}*\n📅 Fecha: ${e.fecha}\n⏰ Hora: ${e.hora}${e.aula ? `\n🗒️ Aula: ${e.aula}` : ''}${e.profesor ? `\n👨‍🏫 Prof: ${e.profesor}` : ''}\n\n_Campus 2do Semestre · Cs. Políticas UNA_`);
     return `
     <div class="col-12 col-sm-6 col-lg-4">
       <div class="examen-card">
@@ -173,7 +217,10 @@ function renderExamenes() {
             <i class="bi bi-clock ms-2" style="color:${col}"></i><span>${e.hora}</span>
           </div>
         </div>
-        <div class="examen-bottom"><span><i class="bi bi-person-fill me-1"></i>${e.profesor || 'Docente'}</span></div>
+        <div class="examen-bottom d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-person-fill me-1"></i>${e.profesor || 'Docente'}</span>
+          <a href="https://wa.me/?text=${waText}" target="_blank" class="btn btn-sm btn-success"><i class="bi bi-whatsapp me-1"></i>Compartir</a>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -208,11 +255,35 @@ function renderProgramas() {
     </div>`).join('');
 }
 
-function renderLibros() {
+// ── LIBROS ── con filtro por materia
+function renderLibros(filtro) {
   const c = document.getElementById('librosContainer');
   if (!c) return;
   if (!DATA.libros?.length) { c.innerHTML = '<p class="text-muted">Sin libros cargados.</p>'; return; }
-  c.innerHTML = DATA.libros.map(l => `
+
+  // Selector de materia (solo se inserta la primera vez)
+  const wrapperId = 'libros-filtro-wrap';
+  if (!document.getElementById(wrapperId)) {
+    const materiasLibros = [...new Set(DATA.libros.map(l => l.materia))].sort();
+    const sel = document.createElement('div');
+    sel.id = wrapperId;
+    sel.className = 'mb-3';
+    sel.innerHTML = `
+      <select id="libros-filtro" class="form-select form-select-sm" style="max-width:340px">
+        <option value="">Todas las materias</option>
+        ${materiasLibros.map(m => `<option value="${m}">${m}</option>`).join('')}
+      </select>`;
+    c.parentElement.insertBefore(sel, c);
+    document.getElementById('libros-filtro').addEventListener('change', e => renderLibros(e.target.value));
+  }
+
+  const selEl = document.getElementById('libros-filtro');
+  const activo = filtro !== undefined ? filtro : (selEl ? selEl.value : '');
+  const lista  = activo ? DATA.libros.filter(l => l.materia === activo) : DATA.libros;
+
+  if (!lista.length) { c.innerHTML = '<p class="text-muted">Sin libros para esta materia.</p>'; return; }
+
+  c.innerHTML = lista.map(l => `
     <div class="col-6 col-md-4 col-lg-3">
       <div class="libro-card">
         <div class="libro-cover">
@@ -231,11 +302,35 @@ function renderLibros() {
     </div>`).join('');
 }
 
-function renderDrive() {
+// ── DRIVE ── con filtro por materia
+function renderDrive(filtro) {
   const c = document.getElementById('driveContainer');
   if (!c) return;
   if (!DATA.drive?.length) { c.innerHTML = '<p class="text-muted">Sin carpetas configuradas.</p>'; return; }
-  c.innerHTML = DATA.drive.map(d => {
+
+  // Selector de materia (solo se inserta la primera vez)
+  const wrapperId = 'drive-filtro-wrap';
+  if (!document.getElementById(wrapperId)) {
+    const materiasDrive = [...new Set(DATA.drive.map(d => d.materia))].sort();
+    const sel = document.createElement('div');
+    sel.id = wrapperId;
+    sel.className = 'mb-3';
+    sel.innerHTML = `
+      <select id="drive-filtro" class="form-select form-select-sm" style="max-width:340px">
+        <option value="">Todas las materias</option>
+        ${materiasDrive.map(m => `<option value="${m}">${m}</option>`).join('')}
+      </select>`;
+    c.parentElement.insertBefore(sel, c);
+    document.getElementById('drive-filtro').addEventListener('change', e => renderDrive(e.target.value));
+  }
+
+  const selEl  = document.getElementById('drive-filtro');
+  const activo = filtro !== undefined ? filtro : (selEl ? selEl.value : '');
+  const lista  = activo ? DATA.drive.filter(d => d.materia === activo) : DATA.drive;
+
+  if (!lista.length) { c.innerHTML = '<p class="text-muted">Sin carpetas para esta materia.</p>'; return; }
+
+  c.innerHTML = lista.map(d => {
     const tieneDrive = d.url, tieneClassroom = d.urlClassroom;
     return `
     <div class="col-12 col-md-6 col-lg-4">
@@ -282,7 +377,7 @@ function consultarCI() {
 }
 
 function initTema() {
-  const btn     = document.getElementById('themeToggle');
+  const btn      = document.getElementById('themeToggle');
   const guardado = localStorage.getItem('tema') || 'light';
   document.documentElement.setAttribute('data-theme', guardado);
   if (btn) {
