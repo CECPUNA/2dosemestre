@@ -150,7 +150,16 @@
       "profesor": "Cecilia Garcete"
     }
   ],
-  "examenes": [],
+  "examenes": [
+    {
+      "materia": "Economía Política",
+      "tipo": "Primer Parcial",
+      "fecha": "12 de Octubre",
+      "hora": "19:00",
+      "aula": "",
+      "profesor": "Urquiza"
+    }
+  ],
   "calendario": [
     {
       "mes": "Agosto",
