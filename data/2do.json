@@ -39,13 +39,13 @@
       "dia": "Lunes",
       "hora": "18:00",
       "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Maria Mercedez ibarra"
+      "profesor": "Maria Mercedes Ibarra"
     },
     {
       "dia": "Lunes",
       "hora": "18:45",
       "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Maria Mercedez Ibarra"
+      "profesor": "Maria Mercedes Ibarra"
     },
     {
       "dia": "Martes",
@@ -202,7 +202,7 @@
   ],
   "libros": [
     {
-      "materia": "Introduccion a las Ciencias Politicas",
+      "materia": "Introducción a las Ciencias Políticas",
       "titulo": "Manual de derecho politico",
       "autor": "Mario Justo",
       "pdf": "https://drive.google.com/file/d/1TGd7_gglaGeDnZigil7An9Qt1SdbDk3L/view",
@@ -223,70 +223,70 @@
       "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHJvi7D8h6SUtlXFyZeuZ9Q4QUqo9Z1UALEEPNEgbqkYTEuOsKOCl03xg&s=10"
     },
     {
-      "materia": "Economia Politica",
+      "materia": "Economía Política",
       "titulo": "ECONOMÍA POLÍTICA - Por JUAN BAUTISTA RIVAROLA",
       "autor": "JUAN BAUTISTA RIVAROLA PAOLI",
       "pdf": "https://www.portalguarani.com/1067_juan_bautista_rivarola_paoli__/20616_economia_politica__por_juan_bautista_rivarola_paoli__ano_2010.html",
       "imagen": "https://www.portalguarani.com/literatura_obras/economia-politica-de-juan-bautista-rivarola-paoli-2010-portalguarani.jpg"
     },
     {
-      "materia": "Economia Politica",
+      "materia": "Economía Política",
       "titulo": "ECONOMÍA con aplicaciones a Latinoamérica",
-      "autor": "PAULA. SAMUELSON  WILLIAM D. NORDHAUS",
+      "autor": "PAUL A. SAMUELSON / WILLIAM D. NORDHAUS",
       "pdf": "https://drive.google.com/file/d/1Zkl3sLHZ0DBl-Tx0028YcUMVhHi4dY2e/view?usp=drive_link",
       "imagen": "https://0.academia-photos.com/attachment_thumbnails/64852765/mini_magick20201104-15653-1dioqbp.png?1604511678"
     },
     {
-      "materia": "Seminario II",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
       "titulo": "Los movimientos sociales en el contexto actual del Paraguay",
-      "autor": "Por Dania Pilz*, Quintín Riquelme** y Verónica Villalba",
+      "autor": "Dania Pilz, Quintín Riquelme y Verónica Villalba",
       "pdf": "https://biblioteca.clacso.edu.ar/clacso/osal/20110214040925/5pilzetal.pdf",
       "imagen": "https://biblioteca-repositorio.clacso.edu.ar/assets/custom/images/logo-clacso-esp.png"
     },
     {
-      "materia": "Historia Politica Paraguaya",
-      "titulo": "LOS PRESIDENTES DEL PARAGUAY. CRÓNICA POLÍTICA (1844-1954),",
+      "materia": "Historia Política Paraguaya",
+      "titulo": "LOS PRESIDENTES DEL PARAGUAY. CRÓNICA POLÍTICA (1844-1954)",
       "autor": "RAÚL AMARAL",
       "pdf": "https://www.portalguarani.com/311_raul_amaral__/8325_los_presidentes_del_paraguay_cronica_politica_1844_1954__1994__por_raul_amaral.html",
       "imagen": "https://www.portalguarani.com/literatura_obras/amaral-raul-presiq.jpg"
     },
     {
-      "materia": "Historia Politica Paraguaya",
+      "materia": "Historia Política Paraguaya",
       "titulo": "HISTORIA ECONÓMICA DEL PARAGUAY",
-      "autor": "r WASHINGTON ASHWELL",
+      "autor": "WASHINGTON ASHWELL",
       "pdf": "https://www.portalguarani.com/617_washington_ashwell__/15273_historia_economica_del_paraguay_1870__1925__por_washington_ashwell.html",
       "imagen": "https://www.portalguarani.com/literatura_obras/washington-ashwell-historia-economica-de-paraguay-I-portalguarani.jpg"
     },
     {
-      "materia": "Historia Politica Paraguaya",
+      "materia": "Historia Política Paraguaya",
       "titulo": "EL PARAGUAY ACTUAL 1ª PARTE",
       "autor": "DIEGO ABENTE BRUN",
       "pdf": "https://www.portalguarani.com/1699_diego_abente_brun/13704_el_paraguay_actual_1_parte_1989_1998__por_diego_abente_brun.html",
       "imagen": "https://www.portalguarani.com/literatura_obras/diego-abente-brun-paraguay-actual-1989-1998.jpg"
     },
     {
-      "materia": "Historia Politica Paraguaya",
+      "materia": "Historia Política Paraguaya",
       "titulo": "HISTORIA DEL PARAGUAY CONTEMPORANEO",
       "autor": "OSVALDO KALLSEN",
       "pdf": "https://www.portalguarani.com/1235_osvaldo_kallsen__/11898_historia_del_paraguay_contemporaneo_1869_1983__autor_osvaldo_kallsen__ano_1983.html",
       "imagen": "https://www.portalguarani.com/literatura_obras/osvaldo-kallsen-historia-tapa.jpg"
     },
     {
-      "materia": "Historia Politica Paraguaya",
+      "materia": "Historia Política Paraguaya",
       "titulo": "COMPENDIO DE HISTORIA PARAGUAYA",
       "autor": "JULIO CÉSAR CHAVES",
       "pdf": "https://portalguarani.com/381_julio_cesar_chaves__/28830_compendio_de_historia_paraguaya__autor_julio_cesar_chaves__ano_2014.html",
       "imagen": "https://portalguarani.com/literatura_obras/COMPRENDIO%20DE%20HISTORIA%20PARAGUAYA%20-%20JULIO%20CESAR%20CHAVES%20-%20ANO%202014%20-%20PORTALGUARANI.jpg"
     },
     {
-      "materia": "Historia Politica Paraguaya",
+      "materia": "Historia Política Paraguaya",
       "titulo": "PARAGUAY INDEPENDIENTE",
       "autor": "EFRAÍM CARDOZO",
       "pdf": "https://www.portalguarani.com/586_efraim_cardozo/13969_paraguay_independiente__la_revolucion_de_la_independencia_obra_de_efraim_cardozo_.html",
       "imagen": "https://www.portalguarani.com/literatura_obras/efraim-cardozo-paraguay-independiente-tp-luis-toranzos.jpg"
     },
     {
-      "materia": "Historia Politica Paraguaya",
+      "materia": "Historia Política Paraguaya",
       "titulo": "APUNTES DE HISTORIA CULTURAL DEL PARAGUAY",
       "autor": "EFRAÍM CARDOZO",
       "pdf": "https://www.portalguarani.com/586_efraim_cardozo__/1058_apuntes_de_historia_cultural_del_paraguay__las_raices_de_la_cultura_paraguaya_2007__por_efraim_cardozo.html",
