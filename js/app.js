@@ -127,11 +127,7 @@ function renderHorario() {
       html += '</tr>';
     });
     html += '</tbody>';
-    const thead = tabla.querySelector('thead');
-    const tbody = tabla.querySelector('tbody');
-    if (thead) thead.remove();
-    if (tbody) tbody.remove();
-    tabla.insertAdjacentHTML('beforeend', html);
+    tabla.innerHTML = html;
   }
 
   if (cards) {
@@ -312,7 +308,6 @@ function consultarCI() {
   const registro = lista.find(r => String(r.ci).trim() === ci);
 
   if (registro) {
-    // Mostrar popup modal
     const modalBody = document.getElementById('ciModalBody');
     if (modalBody) {
       modalBody.innerHTML = `
@@ -334,19 +329,7 @@ function consultarCI() {
       inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontró información para ese número de C.I.</div>';
     }
   }
-
-  // Permitir consultar con Enter
 }
-
-// Tecla Enter en el input de CI
-document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('ciInput');
-  if (input) {
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') consultarCI();
-    });
-  }
-});
 
 // ===== MODO OSCURO =====
 function initTema() {
@@ -364,10 +347,6 @@ function initTema() {
     });
   }
 }
-
-// ===== INSTALAR PWA =====
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
 
 // ===== DATOS DEMO =====
 function datosDemo() {
@@ -427,4 +406,12 @@ function datosDemo() {
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', cargarDatos);
+document.addEventListener('DOMContentLoaded', () => {
+  cargarDatos();
+  const input = document.getElementById('ciInput');
+  if (input) {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') consultarCI();
+    });
+  }
+});
