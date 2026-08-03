@@ -46,15 +46,14 @@ body {
   background: var(--una-azul);
   box-shadow: 0 2px 16px rgba(0,0,0,0.32);
   height: var(--topbar-h);
-  overflow: visible;        /* ← FIX: permite que el nav desplegable salga del topbar */
+  overflow: visible;
 }
 
-/* Contenedor flex de la barra */
 .topbar-inner {
   display: flex;
   align-items: stretch;
   height: 100%;
-  position: relative;       /* ← FIX: ancla el position:absolute del topbar-nav */
+  position: relative;
 }
 
 /* ---- Logo blanco a la izquierda ---- */
@@ -69,7 +68,6 @@ body {
   text-decoration: none;
   position: relative;
 }
-/* Fade blanco -> azul hacia la derecha */
 .topbar-logo-lateral::after {
   content: '';
   position: absolute;
@@ -87,13 +85,13 @@ body {
   display: block;
 }
 
-/* ---- Nav links (ocupa el espacio restante) ---- */
+/* ---- Nav links ---- */
 .topbar-nav {
   flex: 1;
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-left: 52px; /* espacio para no quedar bajo el fade */
+  padding-left: 52px;
 }
 .topbar-links {
   list-style: none;
@@ -240,6 +238,134 @@ body {
 @media (min-width: 992px) {
   .topbar-links li a i { display: none; }
   .link-ealu i { display: inline !important; }
+}
+
+/* =============================================
+   BANNERS PWA (movidos desde index.html)
+   ============================================= */
+
+/* ── Banner Android/Chrome ── */
+#pwa-install-banner {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: #1a237e;
+  color: #fff;
+  padding: 14px 16px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  animation: slideUp 0.35s ease;
+}
+
+/* ── Banner iOS/Safari ── */
+#ios-install-banner {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: #1a237e;
+  color: #fff;
+  padding: 16px 16px 20px;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  animation: slideUp 0.35s ease;
+}
+#ios-install-banner .ios-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#ios-install-banner .ios-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+#ios-install-banner .ios-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+#ios-install-banner .ios-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+#ios-install-banner .ios-step-num {
+  background: #fff;
+  color: #1a237e;
+  font-weight: 800;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+#ios-install-banner .ios-arrow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid #1a237e;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+#pwa-install-banner .pwa-text { flex: 1; font-size: 0.92rem; line-height: 1.35; }
+#pwa-install-banner .pwa-text strong { font-size: 1rem; display: block; margin-bottom: 2px; }
+#pwa-install-btn {
+  background: #fff; color: #1a237e;
+  border: none; border-radius: 8px;
+  padding: 8px 16px; font-weight: 700;
+  font-size: 0.9rem; cursor: pointer; white-space: nowrap;
+}
+#pwa-dismiss-btn, #ios-dismiss-btn {
+  background: transparent; border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 1.3rem; cursor: pointer;
+  padding: 4px 6px; line-height: 1;
+}
+
+/* =============================================
+   FOOTER STATS (movido desde index.html)
+   ============================================= */
+.footer-stats {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.footer-stat {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+}
+.footer-stat i { font-size: 1rem; color: rgba(255,255,255,0.5); }
+.footer-stat strong {
+  color: #fff;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
+  display: inline-block;
 }
 
 /* ===== CLASE ACTIVA BANNER ===== */
