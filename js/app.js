@@ -5,20 +5,6 @@
 const DATA_URL = `data/2do.json?_v=${Date.now()}`;
 let DATA = null;
 
-const FCM_CONFIG = {
-  apiKey: 'AIzaSyDss4D0hkjpisn2b5E0sVRKcEef-1WV9gU',
-  authDomain: 'cecpuna.firebaseapp.com',
-  projectId: 'cecpuna',
-  storageBucket: 'cecpuna.firebasestorage.app',
-  messagingSenderId: '1046581012780',
-  appId: '1:1046581012780:web:c0491abc8365ede0f9a489'
-};
-
-const FCM_VAPID_KEY = 'BM-rL4HUVrCpgws1HbWKSfi7DMQ5_vr2MBkjYBZ3DSfJc9uT1H9geyIu6nlfTrO4pRWS5-jQAz6-2qpPy6X0dMg';
-const FCM_SENDER_ID = '1046581012780';
-const LS_FCM_TOKEN  = 'fcm_token_2do';
-const LS_FCM_TOPIC_OK = 'fcm_topic_ok_2do';
-
 const COLORES_MATERIAS = {
   'Economía Política': 'color-econopolitica',
   'Introducción a las Ciencias Políticas': 'color-introccp',
@@ -311,112 +297,6 @@ function initTema() {
   }
 }
 
-/* ── FCM: activar push + suscribir a topic automáticamente ── */
-async function suscribirATopic(token, serverKey) {
-  try {
-    await fetch(`https://iid.googleapis.com/iid/v1/${token}/rel/topics/all`, {
-      method: 'POST',
-      headers: {
-        Authorization: `key=${serverKey}`,
-        'Content-Type': 'application/json'
-      }
-    });
-  } catch (e) {
-    console.warn('No se pudo suscribir al topic (sin server key guardada):', e);
-  }
-}
-
-async function initFCM() {
-  if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
-
-  const btn    = document.getElementById('btnActivarPush');
-  const estado = document.getElementById('pushEstado');
-
-  const renderEstado = (txt, tipo = 'secondary') => {
-    if (!estado) return;
-    estado.innerHTML = `<span class="badge bg-${tipo}">${txt}</span>`;
-  };
-
-  const savedToken = localStorage.getItem(LS_FCM_TOKEN);
-  if (savedToken) renderEstado('Notificaciones activadas ✅', 'success');
-  else renderEstado('Notificaciones desactivadas', 'secondary');
-
-  try {
-    const [{ initializeApp }, { getMessaging, getToken, onMessage }] = await Promise.all([
-      import('https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js'),
-      import('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js')
-    ]);
-
-    const app       = initializeApp(FCM_CONFIG);
-    const messaging = getMessaging(app);
-
-    if (btn) {
-      btn.addEventListener('click', async () => {
-        try {
-          const permission = await Notification.requestPermission();
-          if (permission !== 'granted') { renderEstado('Permiso denegado', 'warning'); return; }
-
-          btn.disabled = true;
-          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activando...';
-
-          const registration = await navigator.serviceWorker.ready;
-          const token = await getToken(messaging, {
-            vapidKey: FCM_VAPID_KEY,
-            serviceWorkerRegistration: registration
-          });
-
-          btn.disabled = false;
-          btn.innerHTML = '<i class="bi bi-bell me-2"></i>Activar notificaciones';
-
-          if (!token) { renderEstado('No se pudo activar', 'danger'); return; }
-
-          localStorage.setItem(LS_FCM_TOKEN, token);
-
-          // Suscribir automáticamente al topic /topics/all
-          // Necesita la server key guardada en el admin; si no está disponible
-          // la suscripción se reintentará en silencio la próxima vez.
-          const serverKey = localStorage.getItem('fcm_server_key_cms');
-          if (serverKey) {
-            await suscribirATopic(token, serverKey);
-            localStorage.setItem(LS_FCM_TOPIC_OK, '1');
-          }
-
-          renderEstado('Notificaciones activadas ✅', 'success');
-          toastFront('¡Notificaciones activadas! Vas a recibir los avisos del campus.');
-        } catch (err) {
-          console.error('FCM error:', err);
-          renderEstado('Error al activar', 'danger');
-          if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-bell me-2"></i>Activar notificaciones'; }
-        }
-      });
-    }
-
-    onMessage(messaging, (payload) => {
-      const title = payload?.notification?.title || '2do Semestre';
-      const body  = payload?.notification?.body  || 'Nuevo aviso disponible.';
-      toastFront(`${title}: ${body}`);
-    });
-
-  } catch (err) {
-    console.error('No se pudo iniciar FCM:', err);
-  }
-}
-
-function toastFront(msg) {
-  const div = document.createElement('div');
-  div.className = 'position-fixed bottom-0 end-0 p-3';
-  div.style.zIndex = 1080;
-  div.innerHTML = `
-    <div class="toast show align-items-center text-bg-dark border-0" role="alert">
-      <div class="d-flex">
-        <div class="toast-body">${msg}</div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="this.closest('.position-fixed').remove()"></button>
-      </div>
-    </div>`;
-  document.body.appendChild(div);
-  setTimeout(() => div.remove(), 5000);
-}
-
 function datosDemo() {
   return {
     noticias: [{ titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }],
@@ -471,7 +351,6 @@ function datosDemo() {
 
 document.addEventListener('DOMContentLoaded', () => {
   cargarDatos();
-  initFCM();
   const input = document.getElementById('ciInput');
   if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') consultarCI(); });
 });
