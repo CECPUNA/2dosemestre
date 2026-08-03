@@ -3,20 +3,6 @@
   "anio": 2026,
   "noticias": [
     {
-      "titulo": "Test de noticias urgente",
-      "descripcion": "test urgente",
-      "tipo": "aviso",
-      "fecha": "urgente",
-      "urgente": true
-    },
-    {
-      "titulo": "test de noticias para mañana",
-      "descripcion": "test",
-      "tipo": "Mañana es",
-      "fecha": "04 08 2026",
-      "urgente": false
-    },
-    {
       "titulo": "Bienvenidos a esta herramienta!",
       "descripcion": "Esta aplicación que da una mano a nuestros delegados, los mismos también merecen una mano!\nSe desarrollo con cariño para los compañeros de Ciencias Politicas",
       "tipo": "Bienvenida",
