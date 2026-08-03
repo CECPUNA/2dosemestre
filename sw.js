@@ -1,5 +1,5 @@
 // ============================================================
-// HorarioCentro — Service Worker
+// Campus Informativo — Service Worker
 // Versión: portal-v2026-08-02-2
 // Estrategia: network-first para HTML, cache-first para assets
 // ============================================================
@@ -62,41 +62,4 @@ self.addEventListener('fetch', event => {
       })
     );
   }
-});
-
-// ── PUSH: recibir notificaciones de OneSignal ──
-self.addEventListener('push', event => {
-  let data = { title: 'Info 2do', body: 'Tenés un nuevo aviso.' };
-  try {
-    const parsed = event.data?.json();
-    if (parsed?.headings?.es) data.title = parsed.headings.es;
-    else if (parsed?.title) data.title = parsed.title;
-    if (parsed?.contents?.es) data.body = parsed.contents.es;
-    else if (parsed?.body) data.body = parsed.body;
-    if (parsed?.url) data.url = parsed.url;
-  } catch(e) {
-    data.body = event.data?.text() || data.body;
-  }
-  const options = {
-    body: data.body,
-    icon: './img/icon-192.png',
-    badge: './img/icon-192.png',
-    vibrate: [200, 100, 200],
-    data: { url: data.url || 'https://cecpuna.github.io/2dosemestre/' }
-  };
-  event.waitUntil(self.registration.showNotification(data.title, options));
-});
-
-// ── NOTIFICATION CLICK: abrir/enfocar la app ──
-self.addEventListener('notificationclick', event => {
-  event.notification.close();
-  const target = event.notification.data?.url || 'https://cecpuna.github.io/2dosemestre/';
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-      for (const client of clientList) {
-        if (client.url === target && 'focus' in client) return client.focus();
-      }
-      if (clients.openWindow) return clients.openWindow(target);
-    })
-  );
 });
