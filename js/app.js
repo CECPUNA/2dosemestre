@@ -2,10 +2,20 @@
    Campus Informativo · 2do Semestre · app.js
    =================================================== */
 
-// Cache-busting: agrega ?_v=timestamp para que el navegador
-// y el Service Worker nunca sirvan el JSON desactualizado
 const DATA_URL = `data/2do.json?_v=${Date.now()}`;
 let DATA = null;
+
+const FCM_CONFIG = {
+  apiKey: 'AIzaSyDss4D0hkjpisn2b5E0sVRKcEef-1WV9gU',
+  authDomain: 'cecpuna.firebaseapp.com',
+  projectId: 'cecpuna',
+  storageBucket: 'cecpuna.firebasestorage.app',
+  messagingSenderId: '1046581012780',
+  appId: '1:1046581012780:web:c0491abc8365ede0f9a489'
+};
+
+const FCM_VAPID_KEY = 'BM-rL4HUVrCpgws1HbWKSfi7DMQ5_vr2MBkjYBZ3DSfJc9uT1H9geyIu6nlfTrO4pRWS5-jQAz6-2qpPy6X0dMg';
+const LS_FCM_TOKEN = 'fcm_token_2do';
 
 const COLORES_MATERIAS = {
   'Economía Política': 'color-econopolitica',
@@ -23,7 +33,6 @@ function colorMateria(nombre) {
   return 'color-econopolitica';
 }
 
-// ===== FETCH DATA =====
 async function cargarDatos() {
   try {
     const resp = await fetch(DATA_URL, { cache: 'no-store' });
@@ -44,10 +53,8 @@ function renderAll() {
   renderLibros();
   renderDrive();
   initTema();
-  // El módulo InfoCI no necesita render inicial — es bajo demanda
 }
 
-// ===== NOTICIAS =====
 function renderNoticias() {
   const c = document.getElementById('noticiasContainer');
   if (!c) return;
@@ -68,7 +75,6 @@ function renderNoticias() {
     </div>`).join('');
 }
 
-// ===== HORARIO =====
 const DIAS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
 
 function buildHorarioGrid() {
@@ -111,10 +117,7 @@ function renderHorario() {
       html += `<tr><td class="td-hora">${h}</td>`;
       DIAS.forEach(d => {
         const cls = grid[h][d];
-        const esActiva = claseActual &&
-          cls?.materia === claseActual.materia &&
-          cls?.hora    === claseActual.hora &&
-          cls?.dia     === claseActual.dia;
+        const esActiva = claseActual && cls?.materia === claseActual.materia && cls?.hora === claseActual.hora && cls?.dia === claseActual.dia;
         if (cls) {
           const cc = colorMateria(cls.materia);
           html += `<td class="${esActiva ? 'td-activa' : ''}">
@@ -151,16 +154,15 @@ function renderHorario() {
   }
 }
 
-// ===== CLASE ACTIVA BANNER =====
 function verificarClaseActiva() {
-  const clase  = getClaseActual();
+  const clase = getClaseActual();
   const banner = document.getElementById('claseActivaBanner');
-  const elMat  = document.getElementById('claseActivaMateria');
+  const elMat = document.getElementById('claseActivaMateria');
   const elHora = document.getElementById('claseActivaHora');
   const elProf = document.getElementById('claseActivaProf');
   if (!banner) return;
   if (clase) {
-    elMat.textContent  = clase.materia;
+    elMat.textContent = clase.materia;
     elHora.textContent = `${clase.dia} · ${clase.hora} hs`;
     elProf.textContent = clase.profesor || 'Docente';
     banner.classList.remove('d-none');
@@ -169,7 +171,6 @@ function verificarClaseActiva() {
   }
 }
 
-// ===== EXÁMENES =====
 function renderExamenes() {
   const c = document.getElementById('examenesContainer');
   if (!c) return;
@@ -201,7 +202,6 @@ function renderExamenes() {
   }).join('');
 }
 
-// ===== PARCIALES / TIMELINE =====
 function renderParciales() {
   const c = document.getElementById('parcialesTimeline');
   if (!c) return;
@@ -215,7 +215,6 @@ function renderParciales() {
     </div>`).join('');
 }
 
-// ===== PROGRAMAS =====
 function renderProgramas() {
   const c = document.getElementById('programasContainer');
   if (!c) return;
@@ -233,7 +232,6 @@ function renderProgramas() {
     </div>`).join('');
 }
 
-// ===== LIBROS =====
 function renderLibros() {
   const c = document.getElementById('librosContainer');
   if (!c) return;
@@ -252,29 +250,26 @@ function renderLibros() {
           <div class="libro-titulo">${l.titulo}</div>
           <div class="libro-autor">${l.autor || ''}</div>
           <div class="mt-2">
-            ${l.pdf
-              ? `<a href="${l.pdf}" target="_blank" class="btn btn-sm btn-primary w-100"><i class="bi bi-eye me-1"></i>Leer</a>`
-              : `<button class="btn btn-sm btn-outline-secondary w-100" disabled>Solo referencia</button>`}
+            ${l.pdf ? `<a href="${l.pdf}" target="_blank" class="btn btn-sm btn-primary w-100"><i class="bi bi-eye me-1"></i>Leer</a>` : `<button class="btn btn-sm btn-outline-secondary w-100" disabled>Solo referencia</button>`}
           </div>
         </div>
       </div>
     </div>`).join('');
 }
 
-// ===== DRIVE / CLASSROOM =====
 function renderDrive() {
   const c = document.getElementById('driveContainer');
   if (!c) return;
   if (!DATA.drive?.length) { c.innerHTML = '<p class="text-muted">Sin carpetas configuradas.</p>'; return; }
   c.innerHTML = DATA.drive.map(d => {
-    const tieneDrive     = d.url;
+    const tieneDrive = d.url;
     const tieneClassroom = d.urlClassroom;
     return `
     <div class="col-12 col-md-6 col-lg-4">
       <div class="drive-card">
         <div class="d-flex align-items-center gap-3 flex-grow-1">
           <div class="drive-icon-wrap">
-            ${tieneDrive     ? '<i class="bi bi-folder-fill drive-icon drive"></i>'        : ''}
+            ${tieneDrive ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
             ${tieneClassroom ? '<i class="bi bi-mortarboard-fill drive-icon classroom"></i>' : ''}
             ${!tieneDrive && !tieneClassroom ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
           </div>
@@ -284,7 +279,7 @@ function renderDrive() {
           </div>
         </div>
         <div class="d-flex flex-column gap-2">
-          ${tieneDrive     ? `<a href="${d.url}"          target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>`      : ''}
+          ${tieneDrive ? `<a href="${d.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : ''}
           ${tieneClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : ''}
           ${!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Próximamente</span>' : ''}
         </div>
@@ -293,7 +288,6 @@ function renderDrive() {
   }).join('');
 }
 
-// ===== INFO RÁPIDA POR CI =====
 function consultarCI() {
   const input = document.getElementById('ciInput');
   const inline = document.getElementById('ciResultadoInline');
@@ -331,16 +325,15 @@ function consultarCI() {
   }
 }
 
-// ===== MODO OSCURO =====
 function initTema() {
-  const btn      = document.getElementById('themeToggle');
+  const btn = document.getElementById('themeToggle');
   const guardado = localStorage.getItem('tema') || 'light';
   document.documentElement.setAttribute('data-theme', guardado);
   if (btn) {
     btn.innerHTML = guardado === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
     btn.addEventListener('click', () => {
       const actual = document.documentElement.getAttribute('data-theme');
-      const nuevo  = actual === 'dark' ? 'light' : 'dark';
+      const nuevo = actual === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', nuevo);
       localStorage.setItem('tema', nuevo);
       btn.innerHTML = nuevo === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
@@ -348,39 +341,114 @@ function initTema() {
   }
 }
 
-// ===== DATOS DEMO =====
+async function initFCM() {
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+  try {
+    const [{ initializeApp }, { getMessaging, getToken, onMessage }] = await Promise.all([
+      import('https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js')
+    ]);
+
+    const app = initializeApp(FCM_CONFIG);
+    const messaging = getMessaging(app);
+
+    const btn = document.getElementById('btnActivarPush');
+    const estado = document.getElementById('pushEstado');
+
+    const renderEstado = (txt, tipo = 'secondary') => {
+      if (!estado) return;
+      estado.innerHTML = `<span class="badge bg-${tipo}">${txt}</span>`;
+    };
+
+    const savedToken = localStorage.getItem(LS_FCM_TOKEN);
+    if (savedToken) renderEstado('Push activado en este dispositivo', 'success');
+    else renderEstado('Push no activado', 'secondary');
+
+    if (btn) {
+      btn.addEventListener('click', async () => {
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission !== 'granted') {
+            renderEstado('Permiso denegado', 'warning');
+            return;
+          }
+          const registration = await navigator.serviceWorker.ready;
+          const token = await getToken(messaging, {
+            vapidKey: FCM_VAPID_KEY,
+            serviceWorkerRegistration: registration
+          });
+          if (!token) {
+            renderEstado('No se pudo generar token', 'danger');
+            return;
+          }
+          localStorage.setItem(LS_FCM_TOKEN, token);
+          renderEstado('Push activado en este dispositivo', 'success');
+          toastFront('Notificaciones activadas correctamente');
+          console.log('FCM token:', token);
+        } catch (err) {
+          console.error('FCM error:', err);
+          renderEstado('Error al activar push', 'danger');
+        }
+      });
+    }
+
+    onMessage(messaging, (payload) => {
+      const title = payload?.notification?.title || '2do Semestre';
+      const body = payload?.notification?.body || 'Nuevo aviso disponible.';
+      toastFront(`${title}: ${body}`);
+    });
+  } catch (err) {
+    console.error('No se pudo iniciar FCM:', err);
+  }
+}
+
+function toastFront(msg) {
+  const div = document.createElement('div');
+  div.className = 'position-fixed bottom-0 end-0 p-3';
+  div.style.zIndex = 1080;
+  div.innerHTML = `
+    <div class="toast show align-items-center text-bg-dark border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body">${msg}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="this.closest('.position-fixed').remove()"></button>
+      </div>
+    </div>`;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 5000);
+}
+
 function datosDemo() {
   return {
     noticias: [
       { titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }
     ],
     horario: [
-      { dia:'Lunes',     hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Lunes',     hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Lunes',     hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
-      { dia:'Martes',    hora:'18:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes',    hora:'19:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes',    hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
-      { dia:'Martes',    hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Lunes', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Lunes', hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Lunes', hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
+      { dia:'Martes', hora:'18:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes', hora:'19:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes', hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
+      { dia:'Martes', hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
       { dia:'Miércoles', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
       { dia:'Miércoles', hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
       { dia:'Miércoles', hora:'20:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Jueves',    hora:'18:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Jueves',    hora:'19:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Jueves',    hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Viernes',   hora:'18:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
-      { dia:'Viernes',   hora:'19:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
-      { dia:'Viernes',   hora:'20:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' }
+      { dia:'Jueves', hora:'18:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Jueves', hora:'19:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Jueves', hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Viernes', hora:'18:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
+      { dia:'Viernes', hora:'19:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
+      { dia:'Viernes', hora:'20:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' }
     ],
     examenes: [
       { materia:'Economía Política', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. García' }
     ],
     calendario: [
-      { mes:'Agosto',     nombre:'Inicio de Clases', tipo:'normal' },
-      { mes:'Septiembre', nombre:'1er Parcial',      tipo:'parcial', fecha:'15–24 Sep' },
-      { mes:'Octubre',    nombre:'Cursada',          tipo:'normal' },
-      { mes:'Noviembre',  nombre:'2do Parcial',      tipo:'parcial', fecha:'10–21 Nov' },
-      { mes:'Diciembre',  nombre:'Finales',          tipo:'final',   fecha:'1–15 Dic' }
+      { mes:'Agosto', nombre:'Inicio de Clases', tipo:'normal' },
+      { mes:'Septiembre', nombre:'1er Parcial', type:'parcial', fecha:'15–24 Sep' },
+      { mes:'Octubre', nombre:'Cursada', tipo:'normal' },
+      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'10–21 Nov' },
+      { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1–15 Dic' }
     ],
     programas: [
       { materia:'Economía Política', descripcion:'Programa oficial · 2026', pdf:'' },
@@ -405,9 +473,9 @@ function datosDemo() {
   };
 }
 
-// ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   cargarDatos();
+  initFCM();
   const input = document.getElementById('ciInput');
   if (input) {
     input.addEventListener('keydown', e => {
