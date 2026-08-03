@@ -77,6 +77,10 @@
     <!-- Controles derecha -->
     <div class="topbar-controls">
       <span class="topbar-semestre-badge">2do Semestre</span>
+      <!-- Botón instalar app (solo visible en mobile, se oculta si ya está instalada) -->
+      <button class="btn btn-sm btn-topbar-outline d-none" id="btnInstalarApp" title="Instalar app" aria-label="Instalar aplicación">
+        <i class="bi bi-download"></i>
+      </button>
       <button class="btn btn-sm btn-topbar-outline" id="themeToggle" title="Cambiar modo">
         <i class="bi bi-moon-stars"></i>
       </button>
@@ -284,8 +288,13 @@
   // ── Detección de plataforma ──
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  const isMobile = window.innerWidth <= 768;
-  const dismissed = sessionStorage.getItem('pwa-dismissed');
+  const isMobile = window.innerWidth <= 991;
+
+  // No mostrar nada si ya está instalada como app
+  const yaInstalada = isInStandaloneMode;
+
+  // ── Botón instalar en topbar ──
+  const btnInstalar = document.getElementById('btnInstalarApp');
 
   // ── Banner Android/Chrome ──
   let deferredPrompt = null;
@@ -296,39 +305,70 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (isMobile && !dismissed) {
-      installBanner.style.display = 'flex';
+    if (!yaInstalada) {
+      // Mostrar botón en topbar (todos los tamaños mobile)
+      if (isMobile && btnInstalar) {
+        btnInstalar.classList.remove('d-none');
+      }
+      // También mostrar el banner flotante
+      if (isMobile) {
+        installBanner.style.display = 'flex';
+      }
     }
   });
 
-  installBtn.addEventListener('click', async () => {
+  // Botón topbar → lanza el prompt de instalación
+  btnInstalar?.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      // Android/Chrome: usa el prompt nativo
+      installBanner.style.display = 'none';
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === 'accepted') {
+        btnInstalar.classList.add('d-none');
+      }
+    } else if (isIos) {
+      // iOS: muestra el banner con instrucciones
+      iosBanner.style.display = 'flex';
+    }
+  });
+
+  installBtn?.addEventListener('click', async () => {
     if (!deferredPrompt) return;
     installBanner.style.display = 'none';
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     deferredPrompt = null;
+    btnInstalar?.classList.add('d-none');
   });
 
-  dismissBtn.addEventListener('click', () => {
+  dismissBtn?.addEventListener('click', () => {
     installBanner.style.display = 'none';
-    sessionStorage.setItem('pwa-dismissed', '1');
+    // El botón topbar se mantiene visible para que puedan volver a intentar
   });
 
   window.addEventListener('appinstalled', () => {
     installBanner.style.display = 'none';
+    btnInstalar?.classList.add('d-none');
   });
 
   // ── Banner iOS/Safari ──
   const iosBanner  = document.getElementById('ios-install-banner');
   const iosDismiss = document.getElementById('ios-dismiss-btn');
 
-  if (isIos && !isInStandaloneMode && !dismissed) {
-    setTimeout(() => { iosBanner.style.display = 'flex'; }, 1500);
+  if (isIos && !yaInstalada) {
+    // Mostrar botón topbar en iOS siempre (no hay beforeinstallprompt)
+    if (isMobile && btnInstalar) {
+      btnInstalar.classList.remove('d-none');
+    }
+    // Banner automático con delay
+    setTimeout(() => { iosBanner.style.display = 'flex'; }, 2000);
   }
 
-  iosDismiss.addEventListener('click', () => {
+  iosDismiss?.addEventListener('click', () => {
     iosBanner.style.display = 'none';
-    sessionStorage.setItem('pwa-dismissed', '1');
+    // El botón topbar se mantiene visible
   });
 
   // ── Service Worker ──
