@@ -11,91 +11,7 @@
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  <style>
-    :root{--una:#1a237e;--una2:#3949ab;--una3:#5c6bc0;--bg:#f0f2f8;--card:#fff;--radius:14px;}
-    body{background:var(--bg);font-family:'Segoe UI',system-ui,sans-serif;}
-    .sidebar{width:240px;min-height:100vh;background:var(--una);color:#fff;position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:200;box-shadow:4px 0 20px rgba(0,0,0,.2);}
-    .sb-brand{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1);}
-    .sb-brand h6{font-weight:800;margin:0;font-size:.9rem;}
-    .sb-brand small{opacity:.55;font-size:.73rem;}
-    .sb-nav{padding:12px 0;flex:1;overflow-y:auto;}
-    .sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;color:rgba(255,255,255,.72);cursor:pointer;font-size:.88rem;text-decoration:none;transition:all .18s;border-left:3px solid transparent;}
-    .sb-link i{font-size:1rem;}
-    .sb-link:hover{background:rgba(255,255,255,.1);color:#fff;}
-    .sb-link.active{background:rgba(255,255,255,.15);color:#fff;border-left-color:#fff;font-weight:600;}
-    .sb-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.1);}
-    .main{margin-left:240px;padding:28px 32px;min-height:100vh;}
-    @media(max-width:860px){.sidebar{position:static;width:100%;min-height:auto;}.main{margin-left:0;padding:20px 16px;}}
-    .panel{display:none;} .panel.active{display:block;}
-    .panel-title{font-size:1.25rem;font-weight:800;color:var(--una);margin-bottom:4px;}
-    .panel-sub{color:#7986cb;font-size:.83rem;margin-bottom:24px;}
-    .g-card{background:var(--card);border-radius:var(--radius);box-shadow:0 3px 16px rgba(26,35,126,.08);padding:20px;height:100%;}
-    .stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
-    .tbl th{background:var(--una);color:#fff;font-size:.8rem;font-weight:700;padding:10px 12px;}
-    .tbl td{font-size:.82rem;padding:9px 12px;vertical-align:middle;}
-    .tbl tbody tr:hover{background:#eef0fb;}
-    .form-label{font-weight:600;font-size:.82rem;color:#374151;margin-bottom:4px;}
-    .form-control,.form-select{font-size:.85rem;border-radius:8px;border:1.5px solid #d1d5db;}
-    .form-control:focus,.form-select:focus{border-color:var(--una2);box-shadow:0 0 0 3px rgba(57,73,171,.15);}
-    .btn-una{background:var(--una);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:.85rem;}
-    .btn-una:hover{background:var(--una2);color:#fff;}
-    .btn-pub{background:#2e7d32;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.9rem;padding:10px 22px;display:flex;align-items:center;gap:8px;transition:all .2s;}
-    .btn-pub:hover{background:#1b5e20;color:#fff;}
-    .btn-pub:disabled{opacity:.6;cursor:not-allowed;}
-    .btn-peligro{background:#c62828;color:#fff;border:none;border-radius:6px;font-size:.75rem;padding:3px 10px;}
-    .btn-peligro:hover{background:#b71c1c;color:#fff;}
-    .btn-edit{background:#e3f2fd;color:#1565c0;border:none;border-radius:6px;font-size:.75rem;padding:3px 10px;}
-    .btn-edit:hover{background:#bbdefb;color:#0d47a1;}
-    .sbox{background:var(--card);border-radius:var(--radius);box-shadow:0 3px 16px rgba(26,35,126,.07);padding:24px;margin-bottom:24px;}
-    .sbox-title{font-size:.95rem;font-weight:700;color:var(--una);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8eaf6;display:flex;align-items:center;justify-content:space-between;}
-    .bt{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:6px;}
-    .toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
-    .toast-item{background:#1a237e;color:#fff;padding:12px 18px;border-radius:10px;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.25);animation:slideIn .3s ease;}
-    .toast-item.error{background:#c62828;}
-    .toast-item.success{background:#2e7d32;}
-    @keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-    #jsonOutput{background:#0f1320;color:#a5d6a7;border-radius:10px;padding:18px;font-family:monospace;font-size:.78rem;overflow:auto;max-height:420px;white-space:pre;}
-    .token-input{font-family:monospace;letter-spacing:.5px;}
-    .spin{animation:spin .8s linear infinite;display:inline-block;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .horario-grid{display:grid;grid-template-columns:60px repeat(5,1fr);gap:4px;font-size:.75rem;}
-    .hg-head{background:var(--una);color:#fff;padding:6px 4px;border-radius:6px;text-align:center;font-weight:700;}
-    .hg-hora{background:#283593;color:#fff;padding:6px 4px;border-radius:6px;text-align:center;font-weight:700;}
-    .hg-cell{background:#fff;border-radius:6px;padding:5px 4px;text-align:center;min-height:44px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;border:1.5px solid #e8eaf6;cursor:pointer;transition:all .15s;}
-    .hg-cell:hover{border-color:var(--una2);}
-    .hg-cell.ocupada{background:#e8eaf6;border-color:#9fa8da;}
-    .hg-cell .hg-mat{font-weight:700;font-size:.7rem;color:var(--una);line-height:1.2;}
-    .hg-cell .hg-prof{font-size:.62rem;color:#5c6bc0;}
-    .hg-cell .hg-del{color:#c62828;font-size:.65rem;display:none;}
-    .hg-cell.ocupada:hover .hg-del{display:inline;}
-    .pub-bar{background:#fff;border-bottom:1px solid #e8eaf6;padding:10px 32px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
-    @media(max-width:860px){.pub-bar{padding:10px 16px;}}
-    .dash-tbl{width:100%;border-collapse:collapse;font-size:.8rem;}
-    .dash-tbl th{background:#e8eaf6;color:#3949ab;font-weight:700;padding:7px 10px;text-align:left;}
-    .dash-tbl td{padding:7px 10px;border-bottom:1px solid #f0f2f8;vertical-align:middle;}
-    .dash-tbl tr:last-child td{border-bottom:none;}
-    .dash-tbl tbody tr:hover{background:#f5f6fd;}
-    .dash-link{color:var(--una2);font-weight:600;font-size:.8rem;cursor:pointer;text-decoration:none;border:none;background:none;padding:0;}
-    .dash-link:hover{text-decoration:underline;}
-    .ci-badge{background:#e8eaf6;color:#1a237e;border-radius:6px;padding:2px 8px;font-family:monospace;font-weight:700;font-size:.82rem;letter-spacing:.03em;}
-    .ci-msg-preview{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#555;font-size:.8rem;}
-    /* ── OneSignal panel ── */
-    .notif-preview{background:#1a237e;color:#fff;border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;margin-bottom:0;}
-    .notif-preview-icon{width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
-    .notif-preview-body .notif-app{font-size:.7rem;opacity:.6;margin-bottom:2px;}
-    .notif-preview-body .notif-title{font-weight:700;font-size:.92rem;margin-bottom:2px;}
-    .notif-preview-body .notif-msg{font-size:.8rem;opacity:.85;line-height:1.35;}
-    .notif-hist-item{border-left:3px solid var(--una2);padding:8px 14px;background:#f5f6fd;border-radius:0 8px 8px 0;margin-bottom:8px;}
-    .notif-hist-item .nh-titulo{font-weight:700;font-size:.85rem;color:var(--una);}
-    .notif-hist-item .nh-meta{font-size:.75rem;color:#888;}
-    .btn-notif-send{background:#ff6d00;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.95rem;padding:11px 28px;display:flex;align-items:center;gap:8px;transition:all .2s;}
-    .btn-notif-send:hover{background:#e65100;color:#fff;}
-    .btn-notif-send:disabled{opacity:.55;cursor:not-allowed;}
-    .os-setup-step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f2f8;}
-    .os-setup-step:last-child{border-bottom:none;}
-    .os-step-num{background:var(--una);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;flex-shrink:0;margin-top:1px;}
-    .os-step-text{font-size:.83rem;color:#374151;line-height:1.5;}
-  </style>
+  <link rel="stylesheet" href="../css/admin.css" />
 </head>
 <body>
 <div class="toast-wrap" id="toastWrap"></div>
@@ -228,12 +144,7 @@
         <div class="col-md-2"><label class="form-label">Día</label>
           <select class="form-select" id="hDia"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option></select></div>
         <div class="col-md-2"><label class="form-label">Hora</label><input class="form-control" id="hHora" placeholder="18:00" /></div>
-        <div class="col-md-5"><label class="form-label">Materia</label>
-          <select class="form-select" id="hMateria">
-            <option>Economía Política</option><option>Introducción a las Ciencias Políticas</option>
-            <option>Historia Política Paraguaya</option><option>Idioma Guaraní II</option>
-            <option>Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)</option>
-          </select></div>
+        <div class="col-md-5"><label class="form-label">Materia</label><select class="form-select" id="hMateria"></select></div>
         <div class="col-md-3"><label class="form-label">Profesor</label><input class="form-control" id="hProf" /></div>
         <div class="col-12"><button class="btn btn-una px-4" onclick="A.agregarHorario()"><i class="bi bi-plus-circle me-2"></i>Agregar clase</button></div>
       </div>
@@ -250,12 +161,7 @@
     <div class="sbox">
       <div class="sbox-title"><i class="bi bi-plus-circle me-2"></i>Nuevo exámen</div>
       <div class="row g-3">
-        <div class="col-md-4"><label class="form-label">Materia</label>
-          <select class="form-select" id="exMat">
-            <option>Economía Política</option><option>Introducción a las Ciencias Políticas</option>
-            <option>Historia Política Paraguaya</option><option>Idioma Guaraní II</option>
-            <option>Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)</option>
-          </select></div>
+        <div class="col-md-4"><label class="form-label">Materia</label><select class="form-select" id="exMat"></select></div>
         <div class="col-md-3"><label class="form-label">Tipo</label>
           <select class="form-select" id="exTipo"><option>Primer Parcial</option><option>Segundo Parcial</option><option>Final</option></select></div>
         <div class="col-md-3"><label class="form-label">Fecha</label><input class="form-control" id="exFecha" placeholder="15 Septiembre" /></div>
@@ -297,12 +203,7 @@
     <div class="sbox">
       <div class="sbox-title"><i class="bi bi-link-45deg me-2"></i>Editar PDF</div>
       <div class="row g-3">
-        <div class="col-md-4"><label class="form-label">Materia</label>
-          <select class="form-select" id="pgMat">
-            <option>Economía Política</option><option>Introducción a las Ciencias Políticas</option>
-            <option>Historia Política Paraguaya</option><option>Idioma Guaraní II</option>
-            <option>Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)</option>
-          </select></div>
+        <div class="col-md-4"><label class="form-label">Materia</label><select class="form-select" id="pgMat"></select></div>
         <div class="col-md-4"><label class="form-label">Descripción</label><input class="form-control" id="pgDesc" placeholder="Programa oficial · 2026" /></div>
         <div class="col-md-4"><label class="form-label">URL PDF</label><input class="form-control" id="pgUrl" placeholder="https://..." /></div>
         <div class="col-12"><button class="btn btn-una px-4" onclick="A.guardarPrograma()"><i class="bi bi-save me-2"></i>Guardar</button></div>
@@ -340,12 +241,7 @@
     <div class="sbox">
       <div class="sbox-title"><i class="bi bi-link-45deg me-2"></i>Actualizar links</div>
       <div class="row g-3">
-        <div class="col-12"><label class="form-label">Materia</label>
-          <select class="form-select" id="drMat">
-            <option>Economía Política</option><option>Introducción a las Ciencias Políticas</option>
-            <option>Historia Política Paraguaya</option><option>Idioma Guaraní II</option>
-            <option>Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)</option>
-          </select></div>
+        <div class="col-12"><label class="form-label">Materia</label><select class="form-select" id="drMat"></select></div>
         <div class="col-md-6"><label class="form-label"><i class="bi bi-folder-fill text-primary me-1"></i>Google Drive</label><input class="form-control" id="drUrl" placeholder="https://drive.google.com/drive/folders/..." /></div>
         <div class="col-md-6"><label class="form-label"><i class="bi bi-mortarboard-fill text-success me-1"></i>Google Classroom</label><input class="form-control" id="drClassroom" placeholder="https://classroom.google.com/c/..." /></div>
         <div class="col-md-6"><label class="form-label">Descripción</label><input class="form-control" id="drDesc" placeholder="Material del docente" /></div>
@@ -386,354 +282,21 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       NOTIFICACIONES — Panel OneSignal
-  ══════════════════════════════════════════ -->
+  <!-- NOTIFICACIONES -->
   <div id="panel-notificaciones" class="panel">
     <div class="panel-title"><i class="bi bi-bell-fill me-2"></i>Notificaciones Push</div>
     <div class="panel-sub">Enviá mensajes instantáneos a todos los estudiantes que instalaron la app</div>
-
-    <!-- Configuración OneSignal -->
     <div class="sbox">
       <div class="sbox-title"><i class="bi bi-gear me-2"></i>Configuración OneSignal
         <span id="osStatusBadge" class="badge bg-secondary ms-2" style="font-size:.7rem">Sin configurar</span>
       </div>
-
       <div class="mb-3 p-3" style="background:#fff3e0;border-radius:10px;border-left:4px solid #ff6d00;">
         <p class="fw-bold mb-1" style="font-size:.85rem;color:#e65100;"><i class="bi bi-info-circle me-1"></i>¿Aún no tenés cuenta en OneSignal?</p>
-        <div class="os-setup-step">
-          <span class="os-step-num">1</span>
-          <span class="os-step-text">Entrá a <a href="https://onesignal.com" target="_blank" rel="noopener">onesignal.com</a> y creá una cuenta gratis</span>
-        </div>
-        <div class="os-setup-step">
-          <span class="os-step-num">2</span>
-          <span class="os-step-text">Creá una nueva App → elegí plataforma <strong>Web Push</strong> → ingresá la URL: <code>https://cecpuna.github.io/2dosemestre/</code></span>
-        </div>
-        <div class="os-setup-step">
-          <span class="os-step-num">3</span>
-          <span class="os-step-text">En <strong>Settings → Keys &amp; IDs</strong> copiá el <strong>App ID</strong> y la <strong>REST API Key</strong></span>
-        </div>
-        <div class="os-setup-step">
-          <span class="os-step-num">4</span>
-          <span class="os-step-text">Pegálos abajo y guardá — los datos se guardan solo en este navegador</span>
-        </div>
+        <div class="os-setup-step"><span class="os-step-num">1</span><span class="os-step-text">Entrá a <a href="https://onesignal.com" target="_blank" rel="noopener">onesignal.com</a> y creá una cuenta gratis</span></div>
+        <div class="os-setup-step"><span class="os-step-num">2</span><span class="os-step-text">Creá una nueva App → elegí plataforma <strong>Web Push</strong> → ingresá la URL: <code>https://cecpuna.github.io/2dosemestre/</code></span></div>
+        <div class="os-setup-step"><span class="os-step-num">3</span><span class="os-step-text">En <strong>Settings → Keys &amp; IDs</strong> copiá el <strong>App ID</strong> y la <strong>REST API Key</strong></span></div>
+        <div class="os-setup-step"><span class="os-step-num">4</span><span class="os-step-text">Pegálos abajo y guardá — los datos se guardan solo en este navegador</span></div>
       </div>
-
       <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">App ID <span class="text-muted fw-normal">(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)</span></label>
-          <input class="form-control token-input" id="osAppId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">REST API Key</label>
-          <input class="form-control token-input" id="osApiKey" type="password" placeholder="os_v2_..." autocomplete="off" />
-        </div>
-        <div class="col-12 d-flex gap-2">
-          <button class="btn btn-una px-4" onclick="guardarConfigOS()"><i class="bi bi-save me-2"></i>Guardar configuración</button>
-          <button class="btn btn-outline-danger" onclick="borrarConfigOS()" title="Eliminar credenciales"><i class="bi bi-trash"></i></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Enviar notificación -->
-    <div class="sbox">
-      <div class="sbox-title"><i class="bi bi-send me-2"></i>Enviar notificación a todos</div>
-      <div class="row g-3">
-        <div class="col-12 col-md-8">
-          <div class="row g-3">
-            <div class="col-12">
-              <label class="form-label">Título *</label>
-              <input class="form-control" id="notifTitulo" placeholder="Ej: Cambio de horario — Economía Política" maxlength="100" />
-            </div>
-            <div class="col-12">
-              <label class="form-label">Mensaje *</label>
-              <textarea class="form-control" id="notifMensaje" rows="3" placeholder="Ej: La clase del martes se pasa al jueves a las 18:00. Aula 4." maxlength="300"></textarea>
-              <div class="text-end"><small id="notifCharCount" class="text-muted">0 / 300</small></div>
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label">URL al tocar <span class="text-muted fw-normal">(opcional)</span></label>
-              <input class="form-control" id="notifUrl" placeholder="https://cecpuna.github.io/2dosemestre/" />
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-md-4">
-          <label class="form-label">Vista previa</label>
-          <div class="notif-preview">
-            <div class="notif-preview-icon"><i class="bi bi-bell-fill"></i></div>
-            <div class="notif-preview-body">
-              <div class="notif-app">Info 2do · ahora</div>
-              <div class="notif-title" id="prevTitulo">Título de la notificación</div>
-              <div class="notif-msg" id="prevMensaje">El mensaje aparecerá aquí...</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 d-flex align-items-center gap-3 flex-wrap">
-          <button class="btn-notif-send" id="btnEnviarNotif" onclick="enviarNotificacion()">
-            <i class="bi bi-send-fill"></i> Enviar a todos
-          </button>
-          <div id="notifEstado"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Historial -->
-    <div class="sbox">
-      <div class="sbox-title"><i class="bi bi-clock-history me-2"></i>Historial de envíos
-        <button class="btn btn-outline-secondary btn-sm" onclick="limpiarHistorialNotif()"><i class="bi bi-trash me-1"></i>Limpiar</button>
-      </div>
-      <div id="notifHistorial"><p class="text-muted small">Aún no enviaste ninguna notificación en esta sesión.</p></div>
-    </div>
-  </div>
-
-  <!-- PUBLICAR -->
-  <div id="panel-publicar" class="panel">
-    <div class="panel-title"><i class="bi bi-cloud-upload me-2"></i>Publicar en GitHub</div>
-    <div class="panel-sub">Configurá el token una vez y publicá los cambios directamente al repositorio</div>
-    <div class="sbox">
-      <div class="sbox-title"><i class="bi bi-key me-2"></i>Personal Access Token de GitHub</div>
-      <p class="small text-muted mb-3">El token se guarda <strong>solo en este navegador</strong> (localStorage). Nunca se envía a ningún servidor externo.</p>
-      <ol class="small text-muted lh-lg mb-4">
-        <li>Andá a <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a></li>
-        <li>Nombre: <code>gestor-2dosemestre</code></li>
-        <li>Expiración: 90 días recomendado</li>
-        <li>Permiso: tildá solo <strong><code>repo</code></strong></li>
-        <li>Copiá el token y pegálo abajo</li>
-      </ol>
-      <div class="row g-3">
-        <div class="col-md-8"><label class="form-label">Token (ghp_...)</label>
-          <input class="form-control token-input" id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" /></div>
-        <div class="col-md-4 d-flex align-items-end gap-2">
-          <button class="btn btn-una flex-grow-1" onclick="guardarToken()"><i class="bi bi-save me-2"></i>Guardar token</button>
-          <button class="btn btn-outline-danger" onclick="borrarToken()" title="Eliminar token"><i class="bi bi-trash"></i></button>
-        </div>
-      </div>
-    </div>
-    <div class="sbox">
-      <div class="sbox-title"><i class="bi bi-cloud-upload me-2"></i>Publicar ahora</div>
-      <p class="small text-muted mb-3">Actualiza <code>data/2do.json</code> directamente en el repositorio.</p>
-      <div class="d-flex align-items-center gap-3 flex-wrap">
-        <button class="btn-pub" id="btnPublicar2" onclick="publicarEnGitHub()">
-          <i class="bi bi-cloud-upload-fill"></i> Publicar en GitHub
-        </button>
-        <div id="estadoPublicacion2"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EXPORTAR -->
-  <div id="panel-exportar" class="panel">
-    <div class="panel-title"><i class="bi bi-download me-2"></i>Exportar JSON</div>
-    <div class="panel-sub">Alternativa manual: descargá el archivo y reemplazálo en el repositorio</div>
-    <div class="sbox">
-      <div class="d-flex gap-2 mb-3 flex-wrap">
-        <button class="btn btn-una px-4" onclick="A.exportarJSON()"><i class="bi bi-clipboard me-2"></i>Copiar al portapapeles</button>
-        <button class="btn btn-outline-secondary" onclick="A.descargarJSON()"><i class="bi bi-file-earmark-arrow-down me-2"></i>Descargar archivo</button>
-        <button class="btn btn-outline-danger" onclick="A.resetearDatos()"><i class="bi bi-arrow-counterclockwise me-2"></i>Resetear al último publicado</button>
-      </div>
-      <div id="jsonOutput">Presionná &quot;Copiar&quot; para generar el JSON...</div>
-    </div>
-  </div>
-
-  </div>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/admin.js"></script>
-<script>
-  // ===== INFO CI =====
-  function renderTablaCI() {
-    if (!D.infoci) D.infoci = [];
-    const lista = D.infoci;
-    const tbody = document.querySelector('#tablaCIAdmin tbody');
-    const count = document.getElementById('ciCount');
-    if (count) count.textContent = lista.length;
-    if (!tbody) return;
-    if (!lista.length) {
-      tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-3">Sin registros.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = lista.map((r, i) => `
-      <tr>
-        <td><span class="ci-badge">${r.ci}</span></td>
-        <td><span class="ci-msg-preview" title="${r.mensaje.replace(/"/g,'&quot;')}">${r.mensaje}</span></td>
-        <td><button class="btn-peligro" onclick="eliminarCI(${i})"><i class="bi bi-trash"></i></button></td>
-      </tr>`).join('');
-  }
-  A.agregarRegistroCI = function() {
-    const ci  = document.getElementById('ciNuevoCI')?.value.trim();
-    const msg = document.getElementById('ciNuevoMsg')?.value.trim();
-    if (!ci || !msg) { toast('Completá el C.I. y el mensaje.', 'error'); return; }
-    if (!D.infoci) D.infoci = [];
-    const idx = D.infoci.findIndex(r => String(r.ci) === ci);
-    if (idx >= 0) { D.infoci[idx].mensaje = msg; } else { D.infoci.push({ ci, mensaje: msg }); }
-    guardarLocalYMarcar(); renderTablaCI();
-    document.getElementById('ciNuevoCI').value = '';
-    document.getElementById('ciNuevoMsg').value = '';
-    toast('Registro guardado.');
-  };
-  function eliminarCI(idx) {
-    if (!confirm('¿Eliminar este registro?')) return;
-    D.infoci.splice(idx, 1); guardarLocalYMarcar(); renderTablaCI(); toast('Registro eliminado.');
-  }
-  A.limpiarInfoCI = function() {
-    if (!confirm('¿Borrar TODA la lista de Info por CI?')) return;
-    D.infoci = []; guardarLocalYMarcar(); renderTablaCI(); toast('Lista vaciada.');
-  };
-  A.importarCsvCI = function() {
-    const raw = document.getElementById('ciCsvInput')?.value.trim();
-    if (!raw) { toast('Pegá datos en el área de texto.', 'error'); return; }
-    if (!D.infoci) D.infoci = [];
-    let importados = 0, errores = 0;
-    raw.split('\n').forEach(linea => {
-      linea = linea.trim(); if (!linea) return;
-      const sep = linea.indexOf(','); if (sep < 1) { errores++; return; }
-      const ci = linea.slice(0, sep).trim(); const msg = linea.slice(sep + 1).trim();
-      if (!ci || !msg) { errores++; return; }
-      const idx = D.infoci.findIndex(r => String(r.ci) === ci);
-      if (idx >= 0) { D.infoci[idx].mensaje = msg; } else { D.infoci.push({ ci, mensaje: msg }); }
-      importados++;
-    });
-    guardarLocalYMarcar(); renderTablaCI();
-    document.getElementById('ciCsvInput').value = '';
-    toast(`${importados} registro/s importado/s${errores ? ` · ${errores} con error` : ''}.`, errores > 0 ? 'error' : 'ok');
-  };
-  document.querySelectorAll('.sb-link').forEach(link => {
-    link.addEventListener('click', () => {
-      if (link.dataset.panel === 'infoci') setTimeout(() => renderTablaCI(), 50);
-      if (link.dataset.panel === 'notificaciones') setTimeout(() => initPanelNotif(), 50);
-    });
-  });
-
-  // ===== ONESIGNAL — Configuración =====
-  function guardarConfigOS() {
-    const appId = document.getElementById('osAppId').value.trim();
-    const apiKey = document.getElementById('osApiKey').value.trim();
-    if (!appId || !apiKey) { toast('Completá el App ID y la REST API Key.', 'error'); return; }
-    localStorage.setItem('os_app_id', appId);
-    localStorage.setItem('os_api_key', apiKey);
-    actualizarBadgeOS();
-    toast('Configuración de OneSignal guardada.');
-  }
-  function borrarConfigOS() {
-    if (!confirm('¿Eliminar las credenciales de OneSignal?')) return;
-    localStorage.removeItem('os_app_id');
-    localStorage.removeItem('os_api_key');
-    document.getElementById('osAppId').value = '';
-    document.getElementById('osApiKey').value = '';
-    actualizarBadgeOS();
-    toast('Credenciales eliminadas.');
-  }
-  function actualizarBadgeOS() {
-    const badge = document.getElementById('osStatusBadge');
-    if (!badge) return;
-    if (localStorage.getItem('os_app_id') && localStorage.getItem('os_api_key')) {
-      badge.className = 'badge bg-success ms-2';
-      badge.textContent = '✓ Configurado';
-    } else {
-      badge.className = 'badge bg-secondary ms-2';
-      badge.textContent = 'Sin configurar';
-    }
-  }
-  function initPanelNotif() {
-    const appId = localStorage.getItem('os_app_id') || '';
-    const apiKey = localStorage.getItem('os_api_key') || '';
-    if (appId) document.getElementById('osAppId').value = appId;
-    if (apiKey) document.getElementById('osApiKey').value = apiKey;
-    actualizarBadgeOS();
-    renderHistorialNotif();
-  }
-
-  // ===== ONESIGNAL — Vista previa en tiempo real =====
-  document.getElementById('notifTitulo')?.addEventListener('input', function() {
-    document.getElementById('prevTitulo').textContent = this.value || 'Título de la notificación';
-  });
-  document.getElementById('notifMensaje')?.addEventListener('input', function() {
-    document.getElementById('prevMensaje').textContent = this.value || 'El mensaje aparecerá aquí...';
-    document.getElementById('notifCharCount').textContent = `${this.value.length} / 300`;
-  });
-
-  // ===== ONESIGNAL — Enviar notificación =====
-  async function enviarNotificacion() {
-    const appId  = localStorage.getItem('os_app_id');
-    const apiKey = localStorage.getItem('os_api_key');
-    if (!appId || !apiKey) {
-      toast('Configurá el App ID y la REST API Key primero.', 'error'); return;
-    }
-    const titulo  = document.getElementById('notifTitulo').value.trim();
-    const mensaje = document.getElementById('notifMensaje').value.trim();
-    const url     = document.getElementById('notifUrl').value.trim() || 'https://cecpuna.github.io/2dosemestre/';
-    if (!titulo || !mensaje) { toast('Completá el título y el mensaje.', 'error'); return; }
-
-    const btn = document.getElementById('btnEnviarNotif');
-    const estado = document.getElementById('notifEstado');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spin"><i class="bi bi-arrow-repeat"></i></span> Enviando...';
-    estado.innerHTML = '';
-
-    try {
-      const payload = {
-        app_id: appId,
-        included_segments: ['All'],
-        headings:  { es: titulo,  en: titulo  },
-        contents:  { es: mensaje, en: mensaje },
-        url: url
-      };
-      const resp = await fetch('https://onesignal.com/api/v1/notifications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${apiKey}`
-        },
-        body: JSON.stringify(payload)
-      });
-      const data = await resp.json();
-      if (data.id) {
-        toast(`✓ Notificación enviada a ${data.recipients ?? 'todos'} dispositivos.`, 'success');
-        estado.innerHTML = `<span class="text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>${data.recipients ?? '?'} destinatarios</span>`;
-        guardarEnHistorial(titulo, mensaje, data.recipients ?? '?');
-        document.getElementById('notifTitulo').value = '';
-        document.getElementById('notifMensaje').value = '';
-        document.getElementById('prevTitulo').textContent = 'Título de la notificación';
-        document.getElementById('prevMensaje').textContent = 'El mensaje aparecerá aquí...';
-        document.getElementById('notifCharCount').textContent = '0 / 300';
-      } else {
-        const errMsg = data.errors ? data.errors.join(', ') : JSON.stringify(data);
-        toast(`Error: ${errMsg}`, 'error');
-        estado.innerHTML = `<span class="text-danger small">${errMsg}</span>`;
-      }
-    } catch(e) {
-      toast('Error de red al contactar OneSignal.', 'error');
-      estado.innerHTML = `<span class="text-danger small">${e.message}</span>`;
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="bi bi-send-fill"></i> Enviar a todos';
-    }
-  }
-
-  // ===== ONESIGNAL — Historial (sessionStorage) =====
-  function guardarEnHistorial(titulo, mensaje, dest) {
-    const hist = JSON.parse(sessionStorage.getItem('notif_hist') || '[]');
-    hist.unshift({ titulo, mensaje, dest, fecha: new Date().toLocaleString('es-PY') });
-    if (hist.length > 20) hist.pop();
-    sessionStorage.setItem('notif_hist', JSON.stringify(hist));
-    renderHistorialNotif();
-  }
-  function renderHistorialNotif() {
-    const hist = JSON.parse(sessionStorage.getItem('notif_hist') || '[]');
-    const el = document.getElementById('notifHistorial');
-    if (!el) return;
-    if (!hist.length) { el.innerHTML = '<p class="text-muted small">Aún no enviaste ninguna notificación en esta sesión.</p>'; return; }
-    el.innerHTML = hist.map(h => `
-      <div class="notif-hist-item">
-        <div class="nh-titulo">${h.titulo}</div>
-        <div class="nh-meta">${h.mensaje} &middot; <strong>${h.dest}</strong> destinatarios &middot; ${h.fecha}</div>
-      </div>`).join('');
-  }
-  function limpiarHistorialNotif() {
-    sessionStorage.removeItem('notif_hist');
-    renderHistorialNotif();
-  }
-</script>
-</body>
-</html>
+        <div class="col-md-6"><label class="form-label">App ID <span class="text-muted fw-normal">(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)</span></label><input class="form-control token-input" id="osAppId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" /></div>
+        <div class="col-md-6"><label class="form-label">REST API Key</label><input class="form-control token-input
