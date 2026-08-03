@@ -64,6 +64,7 @@ async function cargarDatos() {
   }
   obtenerSHA();
   if (!D) D = datosVacios();
+  if (!D.infoci) D.infoci = [];
 }
 
 async function obtenerSHA() {
@@ -90,7 +91,8 @@ function datosVacios() {
     noticias:[], horario:[], examenes:[], calendario:[],
     programas: MATERIAS.map(m => ({ materia: m, descripcion: 'Programa oficial · 2026', pdf: '' })),
     libros:[],
-    drive: MATERIAS.map(m => ({ materia: m, descripcion: 'Carpeta del docente', url: '', urlClassroom: '' }))
+    drive: MATERIAS.map(m => ({ materia: m, descripcion: 'Carpeta del docente', url: '', urlClassroom: '' })),
+    infoci: []
   };
 }
 
@@ -184,6 +186,38 @@ function borrarToken() {
 }
 
 // =====================
+// ONESIGNAL
+// =====================
+function guardarOneSignal() {
+  const appId = document.getElementById('osAppId')?.value.trim();
+  const apiKey = document.getElementById('osApiKey')?.value.trim();
+  if (!appId || !apiKey) { toast('Completá ambos campos','error'); return; }
+  localStorage.setItem('os_app_id', appId);
+  localStorage.setItem('os_api_key', apiKey);
+  const badge = document.getElementById('osStatusBadge');
+  if (badge) { badge.textContent = 'Configurado'; badge.className = 'badge bg-success ms-2'; }
+  toast('Configuración OneSignal guardada');
+}
+
+async function enviarNotificacion() {
+  const appId  = localStorage.getItem('os_app_id');
+  const apiKey = localStorage.getItem('os_api_key');
+  if (!appId || !apiKey) { toast('Configurá OneSignal primero','error'); abrirPanel('notificaciones'); return; }
+  const tit = document.getElementById('notiTit')?.value.trim();
+  const msg = document.getElementById('notiMsg')?.value.trim();
+  if (!tit || !msg) { toast('Completá título y mensaje','error'); return; }
+  try {
+    const r = await fetch('https://onesignal.com/api/v1/notifications', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', Authorization:`Basic ${apiKey}` },
+      body: JSON.stringify({ app_id: appId, included_segments: ['All'], headings:{ es:tit }, contents:{ es:msg } })
+    });
+    if (r.ok) { toast('Notificación enviada ✅'); document.getElementById('notiTit').value=''; document.getElementById('notiMsg').value=''; }
+    else { const e=await r.json(); toast(`Error: ${e.errors?.[0]||'desconocido'}`,'error'); }
+  } catch(e) { toast('Error de red','error'); }
+}
+
+// =====================
 // NAV
 // =====================
 function initNav() {
@@ -223,6 +257,7 @@ function renderAll() {
   renderProgramas();
   renderLibros();
   renderDrive();
+  renderInfoCI();
 }
 
 function guardarLocalYMarcar() {
@@ -442,7 +477,7 @@ const A = {
     const mat  = v('pgMat');
     const pdf  = v('pgUrl');
     const desc = v('pgDesc');
-    if (!mat) { toast('Seleccioná una materia','error'); return; }
+    if (!mat) { toast('Seleccióná una materia','error'); return; }
     const idx = D.programas.findIndex(p => p.materia === mat);
     if (idx >= 0) {
       D.programas[idx].pdf = pdf;
@@ -478,7 +513,7 @@ const A = {
     const url  = v('drUrl');
     const cls  = v('drClassroom');
     const desc = v('drDesc');
-    if (!mat) { toast('Seleccioná una materia','error'); return; }
+    if (!mat) { toast('Seleccióná una materia','error'); return; }
     const idx = D.drive.findIndex(d => d.materia === mat);
     if (idx >= 0) {
       D.drive[idx].url          = url;
@@ -496,6 +531,50 @@ const A = {
     if (!confirm('¿Eliminar los links de Drive/Classroom de esta materia?')) return;
     D.drive.splice(i, 1);
     guardarLocalYMarcar(); renderDrive(); renderDashboard(); toast('Entrada de Drive eliminada');
+  },
+
+  // ===== INFO CI =====
+  importarCsvCI() {
+    const raw = document.getElementById('ciCsvInput')?.value.trim();
+    if (!raw) { toast('Pegá filas en formato CI,mensaje','error'); return; }
+    let agregados = 0;
+    raw.split('\n').forEach(line => {
+      const comma = line.indexOf(',');
+      if (comma === -1) return;
+      const ci  = line.slice(0, comma).trim();
+      const msg = line.slice(comma + 1).trim();
+      if (!ci || !msg) return;
+      const idx = D.infoci.findIndex(r => String(r.ci) === ci);
+      if (idx >= 0) { D.infoci[idx].mensaje = msg; }
+      else { D.infoci.push({ ci, mensaje: msg }); }
+      agregados++;
+    });
+    if (!agregados) { toast('No se encontraron filas válidas','error'); return; }
+    document.getElementById('ciCsvInput').value = '';
+    guardarLocalYMarcar(); renderInfoCI(); toast(`${agregados} registro(s) importado(s)`);
+  },
+
+  agregarRegistroCI() {
+    const ci  = document.getElementById('ciNuevoCI')?.value.trim();
+    const msg = document.getElementById('ciNuevoMsg')?.value.trim();
+    if (!ci || !msg) { toast('Completá CI y mensaje','error'); return; }
+    const idx = D.infoci.findIndex(r => String(r.ci) === ci);
+    if (idx >= 0) { D.infoci[idx].mensaje = msg; toast('Registro actualizado'); }
+    else { D.infoci.push({ ci, mensaje: msg }); toast('Registro agregado'); }
+    clear('ciNuevoCI','ciNuevoMsg');
+    guardarLocalYMarcar(); renderInfoCI();
+  },
+
+  eliminarRegistroCI(i) {
+    if (!confirm('¿Eliminar este registro?')) return;
+    D.infoci.splice(i, 1);
+    guardarLocalYMarcar(); renderInfoCI(); toast('Registro eliminado');
+  },
+
+  limpiarInfoCI() {
+    if (!confirm('¿Eliminar TODOS los registros de CI?')) return;
+    D.infoci = [];
+    guardarLocalYMarcar(); renderInfoCI(); toast('Lista de CI limpiada');
   },
 
   mostrarJSON() {
@@ -628,6 +707,21 @@ function editarDrive(i) {
   document.getElementById('drDesc').value      = d.descripcion || '';
   document.getElementById('drUrl').scrollIntoView({ behavior:'smooth', block:'center' });
   document.getElementById('drUrl').focus();
+}
+
+function renderInfoCI() {
+  const tb = document.querySelector('#tablaCIAdmin tbody');
+  const count = document.getElementById('ciCount');
+  if (!tb) return;
+  const lista = D.infoci || [];
+  if (count) count.textContent = lista.length;
+  tb.innerHTML = lista.length
+    ? lista.map((r,i) => `<tr>
+        <td class="font-monospace">${r.ci}</td>
+        <td class="small">${r.mensaje}</td>
+        <td><button class="btn-peligro" onclick="A.eliminarRegistroCI(${i})"><i class="bi bi-trash"></i></button></td>
+      </tr>`).join('')
+    : '<tr><td colspan="3" class="text-muted text-center small">Sin registros cargados.</td></tr>';
 }
 
 // ===== HELPERS =====

@@ -294,9 +294,64 @@
         <p class="fw-bold mb-1" style="font-size:.85rem;color:#e65100;"><i class="bi bi-info-circle me-1"></i>¿Aún no tenés cuenta en OneSignal?</p>
         <div class="os-setup-step"><span class="os-step-num">1</span><span class="os-step-text">Entrá a <a href="https://onesignal.com" target="_blank" rel="noopener">onesignal.com</a> y creá una cuenta gratis</span></div>
         <div class="os-setup-step"><span class="os-step-num">2</span><span class="os-step-text">Creá una nueva App → elegí plataforma <strong>Web Push</strong> → ingresá la URL: <code>https://cecpuna.github.io/2dosemestre/</code></span></div>
-        <div class="os-setup-step"><span class="os-step-num">3</span><span class="os-step-text">En <strong>Settings → Keys &amp; IDs</strong> copiá el <strong>App ID</strong> y la <strong>REST API Key</strong></span></div>
+        <div class="os-setup-step"><span class="os-step-num">3</span><span class="os-step-text">En <strong>Settings &rarr; Keys &amp; IDs</strong> copiá el <strong>App ID</strong> y la <strong>REST API Key</strong></span></div>
         <div class="os-setup-step"><span class="os-step-num">4</span><span class="os-step-text">Pegálos abajo y guardá — los datos se guardan solo en este navegador</span></div>
       </div>
       <div class="row g-3">
         <div class="col-md-6"><label class="form-label">App ID <span class="text-muted fw-normal">(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)</span></label><input class="form-control token-input" id="osAppId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" /></div>
-        <div class="col-md-6"><label class="form-label">REST API Key</label><input class="form-control token-input
+        <div class="col-md-6"><label class="form-label">REST API Key</label><input class="form-control token-input" id="osApiKey" placeholder="REST API Key" autocomplete="off" /></div>
+        <div class="col-12"><button class="btn btn-una px-4" onclick="guardarOneSignal()"><i class="bi bi-save me-2"></i>Guardar configuración</button></div>
+      </div>
+    </div>
+    <div class="sbox">
+      <div class="sbox-title"><i class="bi bi-send me-2"></i>Enviar notificación</div>
+      <div class="row g-3">
+        <div class="col-12"><label class="form-label">Título</label><input class="form-control" id="notiTit" placeholder="Aviso importante" /></div>
+        <div class="col-12"><label class="form-label">Mensaje</label><textarea class="form-control" id="notiMsg" rows="3" placeholder="Texto del aviso push..."></textarea></div>
+        <div class="col-12"><button class="btn btn-una px-4" onclick="enviarNotificacion()"><i class="bi bi-send me-2"></i>Enviar a todos</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUBLICAR -->
+  <div id="panel-publicar" class="panel">
+    <div class="panel-title"><i class="bi bi-cloud-upload me-2"></i>Publicar en GitHub</div>
+    <div class="panel-sub">Configurá el token para poder publicar desde el gestor</div>
+    <div class="sbox">
+      <div class="mb-3 p-3" style="background:#e8eaf6;border-radius:10px;border-left:4px solid #3949ab;">
+        <p class="fw-bold mb-1" style="font-size:.85rem;color:#1a237e;"><i class="bi bi-info-circle me-1"></i>Cómo generar el token</p>
+        <div class="os-setup-step"><span class="os-step-num">1</span><span class="os-step-text">Ir a <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a></span></div>
+        <div class="os-setup-step"><span class="os-step-num">2</span><span class="os-step-text">Clic en <strong>Generate new token (classic)</strong></span></div>
+        <div class="os-setup-step"><span class="os-step-num">3</span><span class="os-step-text">Marcar el permiso <strong>repo</strong> y generar</span></div>
+        <div class="os-setup-step"><span class="os-step-num">4</span><span class="os-step-text">Pegar el token abajo y guardar</span></div>
+      </div>
+      <div class="row g-3">
+        <div class="col-12"><label class="form-label">Token de GitHub</label><input class="form-control token-input" id="ghToken" placeholder="ghp_..." autocomplete="off" /></div>
+        <div class="col-auto"><button class="btn btn-una px-4" onclick="guardarToken()"><i class="bi bi-save me-2"></i>Guardar token</button></div>
+        <div class="col-auto"><button class="btn btn-outline-danger px-4" onclick="borrarToken()"><i class="bi bi-trash me-2"></i>Eliminar token</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORTAR JSON -->
+  <div id="panel-exportar" class="panel">
+    <div class="panel-title"><i class="bi bi-download me-2"></i>Exportar JSON</div>
+    <div class="panel-sub">El contenido actual del campus en formato JSON</div>
+    <div class="sbox">
+      <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-una" onclick="A.exportarJSON()"><i class="bi bi-clipboard me-2"></i>Copiar al portapapeles</button>
+        <button class="btn btn-outline-secondary" onclick="A.descargarJSON()"><i class="bi bi-download me-2"></i>Descargar archivo</button>
+        <button class="btn btn-outline-warning" onclick="A.resetearDatos()"><i class="bi bi-arrow-counterclockwise me-2"></i>Resetear al publicado</button>
+      </div>
+      <pre id="jsonOutput" style="background:#f8f9fa;padding:16px;border-radius:10px;font-size:.78rem;max-height:500px;overflow:auto;"></pre>
+    </div>
+  </div>
+
+  </div><!-- /main -->
+</div><!-- /flex:1 -->
+</div><!-- /d-flex -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
