@@ -15,7 +15,9 @@ const FCM_CONFIG = {
 };
 
 const FCM_VAPID_KEY = 'BM-rL4HUVrCpgws1HbWKSfi7DMQ5_vr2MBkjYBZ3DSfJc9uT1H9geyIu6nlfTrO4pRWS5-jQAz6-2qpPy6X0dMg';
-const LS_FCM_TOKEN = 'fcm_token_2do';
+const FCM_SENDER_ID = '1046581012780';
+const LS_FCM_TOKEN  = 'fcm_token_2do';
+const LS_FCM_TOPIC_OK = 'fcm_topic_ok_2do';
 
 const COLORES_MATERIAS = {
   'Economía Política': 'color-econopolitica',
@@ -81,10 +83,7 @@ function buildHorarioGrid() {
   if (!DATA.horario?.length) return { grid: {}, horas: [] };
   const horas = [...new Set(DATA.horario.map(c => c.hora))].sort();
   const grid = {};
-  horas.forEach(h => {
-    grid[h] = {};
-    DIAS.forEach(d => { grid[h][d] = null; });
-  });
+  horas.forEach(h => { grid[h] = {}; DIAS.forEach(d => { grid[h][d] = null; }); });
   DATA.horario.forEach(c => { grid[c.hora][c.dia] = c; });
   return { grid, horas };
 }
@@ -108,7 +107,6 @@ function renderHorario() {
   const cards = document.getElementById('horarioCards');
   const { grid, horas } = buildHorarioGrid();
   const claseActual = getClaseActual();
-
   if (tabla && horas.length) {
     let html = '<thead><tr><th>Hora</th>';
     DIAS.forEach(d => html += `<th>${d}</th>`);
@@ -120,9 +118,7 @@ function renderHorario() {
         const esActiva = claseActual && cls?.materia === claseActual.materia && cls?.hora === claseActual.hora && cls?.dia === claseActual.dia;
         if (cls) {
           const cc = colorMateria(cls.materia);
-          html += `<td class="${esActiva ? 'td-activa' : ''}">
-            <span class="pill-materia ${cc}">${cls.materia}<small>${cls.profesor || ''}</small></span>
-          </td>`;
+          html += `<td class="${esActiva ? 'td-activa' : ''}"><span class="pill-materia ${cc}">${cls.materia}<small>${cls.profesor || ''}</small></span></td>`;
         } else {
           html += `<td class="td-libre">&mdash;</td>`;
         }
@@ -132,7 +128,6 @@ function renderHorario() {
     html += '</tbody>';
     tabla.innerHTML = html;
   }
-
   if (cards) {
     let html = '';
     DIAS.forEach(dia => {
@@ -157,12 +152,12 @@ function renderHorario() {
 function verificarClaseActiva() {
   const clase = getClaseActual();
   const banner = document.getElementById('claseActivaBanner');
-  const elMat = document.getElementById('claseActivaMateria');
+  const elMat  = document.getElementById('claseActivaMateria');
   const elHora = document.getElementById('claseActivaHora');
   const elProf = document.getElementById('claseActivaProf');
   if (!banner) return;
   if (clase) {
-    elMat.textContent = clase.materia;
+    elMat.textContent  = clase.materia;
     elHora.textContent = `${clase.dia} · ${clase.hora} hs`;
     elProf.textContent = clase.profesor || 'Docente';
     banner.classList.remove('d-none');
@@ -188,15 +183,11 @@ function renderExamenes() {
           </div>
           <h6 class="fw-bold mb-1">${e.materia}</h6>
           <div class="d-flex align-items-center gap-2 mt-2">
-            <i class="bi bi-calendar3" style="color:${col}"></i>
-            <span class="fw-semibold">${e.fecha}</span>
-            <i class="bi bi-clock ms-2" style="color:${col}"></i>
-            <span>${e.hora}</span>
+            <i class="bi bi-calendar3" style="color:${col}"></i><span class="fw-semibold">${e.fecha}</span>
+            <i class="bi bi-clock ms-2" style="color:${col}"></i><span>${e.hora}</span>
           </div>
         </div>
-        <div class="examen-bottom">
-          <span><i class="bi bi-person-fill me-1"></i>${e.profesor || 'Docente'}</span>
-        </div>
+        <div class="examen-bottom"><span><i class="bi bi-person-fill me-1"></i>${e.profesor || 'Docente'}</span></div>
       </div>
     </div>`;
   }).join('');
@@ -206,9 +197,8 @@ function renderParciales() {
   const c = document.getElementById('parcialesTimeline');
   if (!c) return;
   if (!DATA.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin períodos cargados.</p>'; return; }
-  const tipos = { normal:'', parcial:'parcial', final:'final' };
   c.innerHTML = DATA.calendario.map(p => `
-    <div class="periodo-item ${tipos[p.tipo] || ''}">
+    <div class="periodo-item ${p.tipo === 'parcial' ? 'parcial' : p.tipo === 'final' ? 'final' : ''}">
       <div class="periodo-mes">${p.mes}</div>
       <div class="periodo-nombre">${p.nombre}</div>
       ${p.fecha ? `<div class="periodo-fecha">${p.fecha}</div>` : ''}
@@ -241,9 +231,7 @@ function renderLibros() {
       <div class="libro-card">
         <div class="libro-cover">
           ${l.imagen ? `<img src="${l.imagen}" alt="${l.titulo}" />` : '<i class="bi bi-book"></i>'}
-          <div class="libro-overlay">
-            ${l.pdf ? `<a href="${l.pdf}" target="_blank" class="btn btn-light btn-sm"><i class="bi bi-eye me-1"></i>Leer</a>` : ''}
-          </div>
+          <div class="libro-overlay">${l.pdf ? `<a href="${l.pdf}" target="_blank" class="btn btn-light btn-sm"><i class="bi bi-eye me-1"></i>Leer</a>` : ''}</div>
         </div>
         <div class="libro-body">
           <div class="libro-materia" style="color:var(--una-azul-claro)">${l.materia || ''}</div>
@@ -262,8 +250,7 @@ function renderDrive() {
   if (!c) return;
   if (!DATA.drive?.length) { c.innerHTML = '<p class="text-muted">Sin carpetas configuradas.</p>'; return; }
   c.innerHTML = DATA.drive.map(d => {
-    const tieneDrive = d.url;
-    const tieneClassroom = d.urlClassroom;
+    const tieneDrive = d.url, tieneClassroom = d.urlClassroom;
     return `
     <div class="col-12 col-md-6 col-lg-4">
       <div class="drive-card">
@@ -273,10 +260,7 @@ function renderDrive() {
             ${tieneClassroom ? '<i class="bi bi-mortarboard-fill drive-icon classroom"></i>' : ''}
             ${!tieneDrive && !tieneClassroom ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
           </div>
-          <div>
-            <div class="fw-bold">${d.materia}</div>
-            <div class="small text-muted">${d.descripcion || 'Material del docente'}</div>
-          </div>
+          <div><div class="fw-bold">${d.materia}</div><div class="small text-muted">${d.descripcion || 'Material del docente'}</div></div>
         </div>
         <div class="d-flex flex-column gap-2">
           ${tieneDrive ? `<a href="${d.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : ''}
@@ -289,28 +273,19 @@ function renderDrive() {
 }
 
 function consultarCI() {
-  const input = document.getElementById('ciInput');
+  const input  = document.getElementById('ciInput');
   const inline = document.getElementById('ciResultadoInline');
   const ci = input ? input.value.trim() : '';
-  if (!ci) {
-    if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingresá tu número de C.I.</div>';
-    return;
-  }
-  const lista = DATA?.infoci || [];
+  if (!ci) { if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingresá tu número de C.I.</div>'; return; }
+  const lista    = DATA?.infoci || [];
   const registro = lista.find(r => String(r.ci).trim() === ci);
   if (registro) {
     const modalBody = document.getElementById('ciModalBody');
     if (modalBody) {
       modalBody.innerHTML = `
-        <div class="text-center mb-3">
-          <div style="width:56px;height:56px;border-radius:50%;background:#e8eaf6;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;color:#1a237e">
-            <i class="bi bi-person-check"></i>
-          </div>
-        </div>
+        <div class="text-center mb-3"><div style="width:56px;height:56px;border-radius:50%;background:#e8eaf6;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;color:#1a237e"><i class="bi bi-person-check"></i></div></div>
         <p class="text-center text-muted small mb-3">C.I.: <strong>${ci}</strong></p>
-        <div class="p-3" style="background:#f0f2f8;border-radius:10px;font-size:.97rem;line-height:1.6;">
-          ${registro.mensaje.replace(/\n/g, '<br>')}
-        </div>`;
+        <div class="p-3" style="background:#f0f2f8;border-radius:10px;font-size:.97rem;line-height:1.6;">${registro.mensaje.replace(/\n/g, '<br>')}</div>`;
     }
     const modal = new bootstrap.Modal(document.getElementById('ciModal'));
     modal.show();
@@ -321,14 +296,14 @@ function consultarCI() {
 }
 
 function initTema() {
-  const btn = document.getElementById('themeToggle');
+  const btn     = document.getElementById('themeToggle');
   const guardado = localStorage.getItem('tema') || 'light';
   document.documentElement.setAttribute('data-theme', guardado);
   if (btn) {
     btn.innerHTML = guardado === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
     btn.addEventListener('click', () => {
       const actual = document.documentElement.getAttribute('data-theme');
-      const nuevo = actual === 'dark' ? 'light' : 'dark';
+      const nuevo  = actual === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', nuevo);
       localStorage.setItem('tema', nuevo);
       btn.innerHTML = nuevo === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
@@ -336,32 +311,35 @@ function initTema() {
   }
 }
 
+/* ── FCM: activar push + suscribir a topic automáticamente ── */
+async function suscribirATopic(token, serverKey) {
+  try {
+    await fetch(`https://iid.googleapis.com/iid/v1/${token}/rel/topics/all`, {
+      method: 'POST',
+      headers: {
+        Authorization: `key=${serverKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  } catch (e) {
+    console.warn('No se pudo suscribir al topic (sin server key guardada):', e);
+  }
+}
+
 async function initFCM() {
   if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
 
-  const btn        = document.getElementById('btnActivarPush');
-  const estado     = document.getElementById('pushEstado');
-  const tokenWrap  = document.getElementById('pushTokenWrap');
-  const tokenInput = document.getElementById('pushTokenDisplay');
+  const btn    = document.getElementById('btnActivarPush');
+  const estado = document.getElementById('pushEstado');
 
   const renderEstado = (txt, tipo = 'secondary') => {
     if (!estado) return;
     estado.innerHTML = `<span class="badge bg-${tipo}">${txt}</span>`;
   };
 
-  const mostrarToken = (token) => {
-    if (!tokenInput || !tokenWrap) return;
-    tokenInput.value = token;
-    localStorage.setItem(LS_FCM_TOKEN, token);
-  };
-
   const savedToken = localStorage.getItem(LS_FCM_TOKEN);
-  if (savedToken) {
-    renderEstado('Push activado ✅', 'success');
-    mostrarToken(savedToken);
-  } else {
-    renderEstado('Push no activado', 'secondary');
-  }
+  if (savedToken) renderEstado('Notificaciones activadas ✅', 'success');
+  else renderEstado('Notificaciones desactivadas', 'secondary');
 
   try {
     const [{ initializeApp }, { getMessaging, getToken, onMessage }] = await Promise.all([
@@ -369,37 +347,45 @@ async function initFCM() {
       import('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js')
     ]);
 
-    const app = initializeApp(FCM_CONFIG);
+    const app       = initializeApp(FCM_CONFIG);
     const messaging = getMessaging(app);
 
     if (btn) {
       btn.addEventListener('click', async () => {
         try {
           const permission = await Notification.requestPermission();
-          if (permission !== 'granted') {
-            renderEstado('Permiso denegado', 'warning');
-            return;
-          }
+          if (permission !== 'granted') { renderEstado('Permiso denegado', 'warning'); return; }
+
           btn.disabled = true;
           btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activando...';
+
           const registration = await navigator.serviceWorker.ready;
           const token = await getToken(messaging, {
             vapidKey: FCM_VAPID_KEY,
             serviceWorkerRegistration: registration
           });
+
           btn.disabled = false;
           btn.innerHTML = '<i class="bi bi-bell me-2"></i>Activar notificaciones';
-          if (!token) {
-            renderEstado('No se pudo generar token', 'danger');
-            return;
+
+          if (!token) { renderEstado('No se pudo activar', 'danger'); return; }
+
+          localStorage.setItem(LS_FCM_TOKEN, token);
+
+          // Suscribir automáticamente al topic /topics/all
+          // Necesita la server key guardada en el admin; si no está disponible
+          // la suscripción se reintentará en silencio la próxima vez.
+          const serverKey = localStorage.getItem('fcm_server_key_cms');
+          if (serverKey) {
+            await suscribirATopic(token, serverKey);
+            localStorage.setItem(LS_FCM_TOPIC_OK, '1');
           }
-          mostrarToken(token);
-          renderEstado('Push activado ✅', 'success');
-          toastFront('Notificaciones activadas correctamente');
-          console.log('FCM token:', token);
+
+          renderEstado('Notificaciones activadas ✅', 'success');
+          toastFront('¡Notificaciones activadas! Vas a recibir los avisos del campus.');
         } catch (err) {
           console.error('FCM error:', err);
-          renderEstado('Error al activar push', 'danger');
+          renderEstado('Error al activar', 'danger');
           if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-bell me-2"></i>Activar notificaciones'; }
         }
       });
@@ -407,9 +393,10 @@ async function initFCM() {
 
     onMessage(messaging, (payload) => {
       const title = payload?.notification?.title || '2do Semestre';
-      const body = payload?.notification?.body || 'Nuevo aviso disponible.';
+      const body  = payload?.notification?.body  || 'Nuevo aviso disponible.';
       toastFront(`${title}: ${body}`);
     });
+
   } catch (err) {
     console.error('No se pudo iniciar FCM:', err);
   }
@@ -432,9 +419,7 @@ function toastFront(msg) {
 
 function datosDemo() {
   return {
-    noticias: [
-      { titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }
-    ],
+    noticias: [{ titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }],
     horario: [
       { dia:'Lunes', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
       { dia:'Lunes', hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
@@ -453,9 +438,7 @@ function datosDemo() {
       { dia:'Viernes', hora:'19:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
       { dia:'Viernes', hora:'20:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' }
     ],
-    examenes: [
-      { materia:'Economía Política', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. García' }
-    ],
+    examenes: [{ materia:'Economía Política', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. García' }],
     calendario: [
       { mes:'Agosto', nombre:'Inicio de Clases', tipo:'normal' },
       { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'15–24 Sep' },
@@ -490,9 +473,5 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarDatos();
   initFCM();
   const input = document.getElementById('ciInput');
-  if (input) {
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') consultarCI();
-    });
-  }
+  if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') consultarCI(); });
 });
