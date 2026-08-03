@@ -407,11 +407,11 @@
         </div>
         <div class="os-setup-step">
           <span class="os-step-num">2</span>
-          <span class="os-step-text">Creá una nueva App → elegí plataforma <strong>Web Push</strong> → ingresá la URL: <code>https://sentiege.github.io/horariocentro/</code></span>
+          <span class="os-step-text">Creá una nueva App → elegí plataforma <strong>Web Push</strong> → ingresá la URL: <code>https://cecpuna.github.io/2dosemestre/</code></span>
         </div>
         <div class="os-setup-step">
           <span class="os-step-num">3</span>
-          <span class="os-step-text">En <strong>Settings → Keys & IDs</strong> copiá el <strong>App ID</strong> y la <strong>REST API Key</strong></span>
+          <span class="os-step-text">En <strong>Settings → Keys &amp; IDs</strong> copiá el <strong>App ID</strong> y la <strong>REST API Key</strong></span>
         </div>
         <div class="os-setup-step">
           <span class="os-step-num">4</span>
@@ -452,7 +452,7 @@
             </div>
             <div class="col-12 col-md-6">
               <label class="form-label">URL al tocar <span class="text-muted fw-normal">(opcional)</span></label>
-              <input class="form-control" id="notifUrl" placeholder="https://sentiege.github.io/horariocentro/" />
+              <input class="form-control" id="notifUrl" placeholder="https://cecpuna.github.io/2dosemestre/" />
             </div>
           </div>
         </div>
@@ -494,7 +494,7 @@
       <p class="small text-muted mb-3">El token se guarda <strong>solo en este navegador</strong> (localStorage). Nunca se envía a ningún servidor externo.</p>
       <ol class="small text-muted lh-lg mb-4">
         <li>Andá a <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a></li>
-        <li>Nombre: <code>gestor-horariocentro</code></li>
+        <li>Nombre: <code>gestor-2dosemestre</code></li>
         <li>Expiración: 90 días recomendado</li>
         <li>Permiso: tildá solo <strong><code>repo</code></strong></li>
         <li>Copiá el token y pegálo abajo</li>
@@ -662,7 +662,7 @@
     }
     const titulo  = document.getElementById('notifTitulo').value.trim();
     const mensaje = document.getElementById('notifMensaje').value.trim();
-    const url     = document.getElementById('notifUrl').value.trim() || 'https://sentiege.github.io/horariocentro/';
+    const url     = document.getElementById('notifUrl').value.trim() || 'https://cecpuna.github.io/2dosemestre/';
     if (!titulo || !mensaje) { toast('Completá el título y el mensaje.', 'error'); return; }
 
     const btn = document.getElementById('btnEnviarNotif');

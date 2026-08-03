@@ -4,7 +4,7 @@
    =================================================== */
 
 const LS_KEY    = 'cms_2do_2026';
-const GH_REPO   = 'sentiege/horariocentro';
+const GH_REPO   = 'CECPUNA/2dosemestre';
 const GH_PATH   = 'data/2do.json';
 const GH_BRANCH = 'main';
 const LS_TOKEN  = 'gh_token_cms';
@@ -455,7 +455,6 @@ const A = {
     toast('Programa guardado');
   },
 
-  // *** NUEVO ***
   eliminarPrograma(i) {
     if (!confirm('¿Eliminar el programa de esta materia?')) return;
     D.programas.splice(i, 1);
@@ -493,7 +492,6 @@ const A = {
     toast('Links guardados');
   },
 
-  // *** NUEVO ***
   eliminarDrive(i) {
     if (!confirm('¿Eliminar los links de Drive/Classroom de esta materia?')) return;
     D.drive.splice(i, 1);
@@ -580,7 +578,6 @@ function renderCalendario() {
   </tr>`).join('') : '<tr><td colspan="5" class="text-muted text-center small">Sin períodos</td></tr>';
 }
 
-// renderProgramas: 5 columnas — Materia | Descripción | PDF | Editar | Borrar
 function renderProgramas() {
   const tb=document.querySelector('#tablaProgramasAdmin tbody'); if(!tb) return;
   tb.innerHTML = D.programas?.map((p,i)=>`<tr>
@@ -612,7 +609,6 @@ function renderLibros() {
   </tr>`).join('') : '<tr><td colspan="5" class="text-muted text-center small">Sin libros</td></tr>';
 }
 
-// renderDrive: 5 columnas — Materia | Drive | Classroom | Editar | Borrar
 function renderDrive() {
   const tb=document.querySelector('#tablaDriveAdmin tbody'); if(!tb) return;
   tb.innerHTML = D.drive?.map((d,i)=>`<tr>
