@@ -34,8 +34,7 @@
     <a class="sb-link" data-panel="libros"><i class="bi bi-book"></i>Libros</a>
     <a class="sb-link" data-panel="drive"><i class="bi bi-folder2-open"></i>Drive / Classroom</a>
     <a class="sb-link" data-panel="infoci"><i class="bi bi-person-badge"></i>Info por CI</a>
-    <a class="sb-link" data-panel="notificaciones" style="border-top:1px solid rgba(255,255,255,.12);margin-top:6px;padding-top:12px;"><i class="bi bi-bell-fill"></i>Notificaciones</a>
-    <a class="sb-link" data-panel="publicar"><i class="bi bi-cloud-upload"></i>Publicar</a>
+    <a class="sb-link" data-panel="publicar" style="border-top:1px solid rgba(255,255,255,.12);margin-top:6px;padding-top:12px;"><i class="bi bi-cloud-upload"></i>Publicar</a>
     <a class="sb-link" data-panel="exportar"><i class="bi bi-download"></i>Exportar JSON</a>
     <a class="sb-link sb-link-publish" id="btnPublicar" onclick="publicarEnGitHub()" style="border-top:1px solid rgba(255,255,255,.12);margin-top:6px;padding-top:12px;"><i class="bi bi-cloud-upload-fill"></i>Publicar en GitHub</a>
     <div id="estadoPublicacion" class="sb-estado"></div>
@@ -270,37 +269,6 @@
         <div class="col-md-3"><label class="form-label">C.I.</label><input class="form-control font-monospace" id="ciNuevoCI" placeholder="12345678" type="number" min="0" /></div>
         <div class="col-md-9"><label class="form-label">Mensaje personalizado</label><input class="form-control" id="ciNuevoMsg" placeholder="Tu puntaje fue 14 en el último examen." /></div>
         <div class="col-12"><button class="btn btn-una px-4" onclick="A.agregarRegistroCI()"><i class="bi bi-plus-circle me-2"></i>Agregar / actualizar</button></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NOTIFICACIONES -->
-  <div id="panel-notificaciones" class="panel">
-    <div class="panel-title"><i class="bi bi-bell-fill me-2"></i>Notificaciones Push</div>
-    <div class="panel-sub">Enviá mensajes instantáneos a todos los estudiantes que instalaron la app</div>
-    <div class="sbox">
-      <div class="sbox-title"><i class="bi bi-gear me-2"></i>Configuración OneSignal
-        <span id="osStatusBadge" class="badge bg-secondary ms-2" style="font-size:.7rem">Sin configurar</span>
-      </div>
-      <div class="mb-3 p-3" style="background:#fff3e0;border-radius:10px;border-left:4px solid #ff6d00;">
-        <p class="fw-bold mb-1" style="font-size:.85rem;color:#e65100;"><i class="bi bi-info-circle me-1"></i>¿Aún no tenés cuenta en OneSignal?</p>
-        <div class="os-setup-step"><span class="os-step-num">1</span><span class="os-step-text">Entrá a <a href="https://onesignal.com" target="_blank" rel="noopener">onesignal.com</a> y creá una cuenta gratis</span></div>
-        <div class="os-setup-step"><span class="os-step-num">2</span><span class="os-step-text">Creá una nueva App → elegí plataforma <strong>Web Push</strong> → ingresá la URL: <code>https://cecpuna.github.io/2dosemestre/</code></span></div>
-        <div class="os-setup-step"><span class="os-step-num">3</span><span class="os-step-text">En <strong>Settings &rarr; Keys &amp; IDs</strong> copiá el <strong>App ID</strong> y la <strong>REST API Key</strong></span></div>
-        <div class="os-setup-step"><span class="os-step-num">4</span><span class="os-step-text">Pegálos abajo y guardá — los datos se guardan solo en este navegador</span></div>
-      </div>
-      <div class="row g-3">
-        <div class="col-md-6"><label class="form-label">App ID <span class="text-muted fw-normal">(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)</span></label><input class="form-control token-input" id="osAppId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" /></div>
-        <div class="col-md-6"><label class="form-label">REST API Key</label><input class="form-control token-input" id="osApiKey" placeholder="REST API Key" autocomplete="off" /></div>
-        <div class="col-12"><button class="btn btn-una px-4" onclick="guardarOneSignal()"><i class="bi bi-save me-2"></i>Guardar configuración</button></div>
-      </div>
-    </div>
-    <div class="sbox">
-      <div class="sbox-title"><i class="bi bi-send me-2"></i>Enviar notificación</div>
-      <div class="row g-3">
-        <div class="col-12"><label class="form-label">Título</label><input class="form-control" id="notiTit" placeholder="Aviso importante" /></div>
-        <div class="col-12"><label class="form-label">Mensaje</label><textarea class="form-control" id="notiMsg" rows="3" placeholder="Texto del aviso push..."></textarea></div>
-        <div class="col-12"><button class="btn btn-una px-4" onclick="enviarNotificacion()"><i class="bi bi-send me-2"></i>Enviar a todos</button></div>
       </div>
     </div>
   </div>

@@ -186,38 +186,6 @@ function borrarToken() {
 }
 
 // =====================
-// ONESIGNAL
-// =====================
-function guardarOneSignal() {
-  const appId = document.getElementById('osAppId')?.value.trim();
-  const apiKey = document.getElementById('osApiKey')?.value.trim();
-  if (!appId || !apiKey) { toast('Completá ambos campos','error'); return; }
-  localStorage.setItem('os_app_id', appId);
-  localStorage.setItem('os_api_key', apiKey);
-  const badge = document.getElementById('osStatusBadge');
-  if (badge) { badge.textContent = 'Configurado'; badge.className = 'badge bg-success ms-2'; }
-  toast('Configuración OneSignal guardada');
-}
-
-async function enviarNotificacion() {
-  const appId  = localStorage.getItem('os_app_id');
-  const apiKey = localStorage.getItem('os_api_key');
-  if (!appId || !apiKey) { toast('Configurá OneSignal primero','error'); abrirPanel('notificaciones'); return; }
-  const tit = document.getElementById('notiTit')?.value.trim();
-  const msg = document.getElementById('notiMsg')?.value.trim();
-  if (!tit || !msg) { toast('Completá título y mensaje','error'); return; }
-  try {
-    const r = await fetch('https://onesignal.com/api/v1/notifications', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', Authorization:`Basic ${apiKey}` },
-      body: JSON.stringify({ app_id: appId, included_segments: ['All'], headings:{ es:tit }, contents:{ es:msg } })
-    });
-    if (r.ok) { toast('Notificación enviada ✅'); document.getElementById('notiTit').value=''; document.getElementById('notiMsg').value=''; }
-    else { const e=await r.json(); toast(`Error: ${e.errors?.[0]||'desconocido'}`,'error'); }
-  } catch(e) { toast('Error de red','error'); }
-}
-
-// =====================
 // NAV
 // =====================
 function initNav() {
