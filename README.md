@@ -1,4 +1,5 @@
-# App Informativa CENTRO DE ESTUDIANTES ESCUELA DE CIENCIAS SOCIALES Y POLITICAS UNA· 2° Semestre
+# App Informativa - 2° Semestre #
+CENTRO DE ESTUDIANTES ESCUELA DE CIENCIAS SOCIALES Y POLITICAS UNA· 
 **Escuela de Ciencias Políticas · Universidad Nacional de Asunción**
 
 > PWA instalable — Ciencias Políticas UNA · v1.0
