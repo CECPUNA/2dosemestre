@@ -3,6 +3,13 @@
   "anio": 2026,
   "noticias": [
     {
+      "titulo": "Aranceles · Matriculación 2do Semestre",
+      "descripcion": "Al contado: 240.000 gs. Financiado en hasta 3 cuotas: 1ª cuota 100.000 gs · 2ª cuota 70.000 gs · 3ª cuota 70.000 gs.\\n⚠ Arancel 0: pago único de 30.000 gs.\\n⚠ Matriculación tardía: se suma un adicional de 70.000 gs al costo normal.",
+      "tipo": "Arancel",
+      "fecha": "2do Semestre 2026",
+      "urgente": true
+    },
+    {
       "titulo": "Bienvenidos a esta herramienta!",
       "descripcion": "Esta aplicación que da una mano a nuestros delegados, los mismos también merecen una mano!\nSe desarrollo con cariño para los compañeros de Ciencias Politicas",
       "tipo": "Bienvenida",
