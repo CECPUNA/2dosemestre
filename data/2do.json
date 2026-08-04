@@ -18,29 +18,144 @@
     }
   ],
   "horario": [
-    { "dia": "Lunes",     "hora": "18:00", "materia": "Introducción a las Ciencias Políticas",              "profesor": "Maria Mercedes Ibarra" },
-    { "dia": "Lunes",     "hora": "18:45", "materia": "Introducción a las Ciencias Políticas",              "profesor": "Maria Mercedes Ibarra" },
-    { "dia": "Lunes",     "hora": "19:45", "materia": "Historia Política Paraguaya",                        "profesor": "Francisco Llamas" },
-    { "dia": "Lunes",     "hora": "20:30", "materia": "Historia Política Paraguaya",                        "profesor": "Francisco Llamas" },
-    { "dia": "Lunes",     "hora": "21:15", "materia": "Historia Política Paraguaya",                        "profesor": "Francisco Llamas" },
-    { "dia": "Martes",    "hora": "18:00", "materia": "Seminario II: Movimientos Sociales y Políticos en Latam", "profesor": "Sonia Guerreño" },
-    { "dia": "Martes",    "hora": "18:45", "materia": "Seminario II: Movimientos Sociales y Políticos en Latam", "profesor": "Sonia Guerreño" },
-    { "dia": "Martes",    "hora": "19:45", "materia": "Seminario II: Movimientos Sociales y Políticos en Latam", "profesor": "Sonia Guerreño" },
-    { "dia": "Miércoles", "hora": "18:00", "materia": "Introducción a las Ciencias Políticas",              "profesor": "Maria Mercedes Ibarra" },
-    { "dia": "Miércoles", "hora": "18:45", "materia": "Introducción a las Ciencias Políticas",              "profesor": "Maria Mercedes Ibarra" },
-    { "dia": "Miércoles", "hora": "19:45", "materia": "Introducción a las Ciencias Políticas",              "profesor": "Maria Mercedes Ibarra" },
-    { "dia": "Miércoles", "hora": "20:30", "materia": "Seminario II: Movimientos Sociales y Políticos en Latam", "profesor": "Sonia Guerreño" },
-    { "dia": "Miércoles", "hora": "21:15", "materia": "Seminario II: Movimientos Sociales y Políticos en Latam", "profesor": "Sonia Guerreño" },
-    { "dia": "Jueves",    "hora": "18:00", "materia": "Historia Política Paraguaya",                        "profesor": "Francisco Llamas" },
-    { "dia": "Jueves",    "hora": "18:45", "materia": "Historia Política Paraguaya",                        "profesor": "Francisco Llamas" },
-    { "dia": "Jueves",    "hora": "19:45", "materia": "Idioma Guaraní II",                                  "profesor": "Cecilia Garcete" },
-    { "dia": "Jueves",    "hora": "20:30", "materia": "Idioma Guaraní II",                                  "profesor": "Cecilia Garcete" },
-    { "dia": "Jueves",    "hora": "21:15", "materia": "Idioma Guaraní II",                                  "profesor": "Cecilia Garcete" },
-    { "dia": "Viernes",   "hora": "18:00", "materia": "Economía Política",                                  "profesor": "Felipe Huerta" },
-    { "dia": "Viernes",   "hora": "18:45", "materia": "Economía Política",                                  "profesor": "Felipe Huerta" },
-    { "dia": "Viernes",   "hora": "19:45", "materia": "Economía Política",                                  "profesor": "Felipe Huerta" },
-    { "dia": "Viernes",   "hora": "20:30", "materia": "Idioma Guaraní II",                                  "profesor": "Cecilia Garcete" },
-    { "dia": "Viernes",   "hora": "21:15", "materia": "Idioma Guaraní II",                                  "profesor": "Cecilia Garcete" }
+    {
+      "dia": "Lunes",
+      "hora": "18:00",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "18:45",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "19:45",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "20:30",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "21:15",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Martes",
+      "hora": "18:00",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
+      "dia": "Martes",
+      "hora": "18:45",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
+      "dia": "Martes",
+      "hora": "19:45",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "18:00",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "18:45",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "19:45",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "20:30",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "21:15",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
+      "dia": "Jueves",
+      "hora": "18:00",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Jueves",
+      "hora": "18:45",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Jueves",
+      "hora": "19:45",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Cecilia Garcete"
+    },
+    {
+      "dia": "Jueves",
+      "hora": "20:30",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Cecilia Garcete"
+    },
+    {
+      "dia": "Jueves",
+      "hora": "21:15",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Cecilia Garcete"
+    },
+    {
+      "dia": "Viernes",
+      "hora": "18:00",
+      "materia": "Economía Política",
+      "profesor": "Felipe Huerta"
+    },
+    {
+      "dia": "Viernes",
+      "hora": "18:45",
+      "materia": "Economía Política",
+      "profesor": "Felipe Huerta"
+    },
+    {
+      "dia": "Viernes",
+      "hora": "19:45",
+      "materia": "Economía Política",
+      "profesor": "Felipe Huerta"
+    },
+    {
+      "dia": "Viernes",
+      "hora": "20:30",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Cecilia Garcete"
+    },
+    {
+      "dia": "Viernes",
+      "hora": "21:15",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Cecilia Garcete"
+    }
   ],
   "examenes": [
     {
@@ -53,11 +168,36 @@
     }
   ],
   "calendario": [
-    { "mes": "Agosto",     "nombre": "Inicio de Clases", "fecha": "4 al 30",           "tipo": "normal"  },
-    { "mes": "Septiembre", "nombre": "1era Parcial",     "fecha": "14 Sept - 25 sept", "tipo": "parcial" },
-    { "mes": "Octubre",    "nombre": "Clases",           "fecha": "1 al 30 octubre",   "tipo": "normal"  },
-    { "mes": "Noviembre",  "nombre": "2da Parcial",      "fecha": "20 - 30 Noviembre", "tipo": "parcial" },
-    { "mes": "Diciembre",  "nombre": "Finales",          "fecha": "1 al 15 Dic",       "tipo": "final"   }
+    {
+      "mes": "Agosto",
+      "nombre": "Inicio de Clases",
+      "fecha": "4 al 30",
+      "tipo": "normal"
+    },
+    {
+      "mes": "Septiembre",
+      "nombre": "1era Parcial",
+      "fecha": "14 Sept - 25 sept",
+      "tipo": "parcial"
+    },
+    {
+      "mes": "Octubre",
+      "nombre": "Clases",
+      "fecha": "1 al 30 octubre",
+      "tipo": "normal"
+    },
+    {
+      "mes": "Noviembre",
+      "nombre": "2da Parcial",
+      "fecha": "20 - 30 Noviembre",
+      "tipo": "parcial"
+    },
+    {
+      "mes": "Diciembre",
+      "nombre": "Finales",
+      "fecha": "1 al 15 Dic",
+      "tipo": "final"
+    }
   ],
   "programas": [
     {
@@ -74,6 +214,16 @@
       "materia": "Historia Política Paraguaya",
       "descripcion": "Programa 2012 Carrera: Sociología y Ciencias Políticas",
       "pdf": "https://drive.google.com/file/d/1DOJVF2HXXrpAhDCoCCGx7PJQpa-ap5dD/view?usp=sharing"
+    },
+    {
+      "materia": "Idioma Guaraní II",
+      "descripcion": "Programa Oficial 2026",
+      "pdf": "https://drive.google.com/file/d/1mcSsPz5rbWk5C3AyBPNZtLGnWrXoqW5C/edit"
+    },
+    {
+      "materia": "Introducción a las Ciencias Políticas",
+      "descripcion": "Programa Oficial 2026",
+      "pdf": "https://drive.google.com/file/d/15ioHRyvmHDHtKF25d7fwytpWtWPuqw4J/edit"
     }
   ],
   "libros": [
@@ -202,8 +352,17 @@
     }
   ],
   "infoci": [
-    { "ci": "5000000", "mensaje": "Tu calificación fue 11/20" },
-    { "ci": "1234567", "mensaje": "excelente 20/20 en tu examen" },
-    { "ci": "7654321", "mensaje": "Calificacion 11/20" }
+    {
+      "ci": "5000000",
+      "mensaje": "Tu calificación fue 11/20"
+    },
+    {
+      "ci": "1234567",
+      "mensaje": "excelente 20/20 en tu examen"
+    },
+    {
+      "ci": "7654321",
+      "mensaje": "Calificacion 11/20"
+    }
   ]
 }
