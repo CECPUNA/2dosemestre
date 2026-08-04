@@ -1,4 +1,4 @@
-# Campus Informativo · 2° Semestre
+# App Informativa · 2° Semestre
 **Escuela de Ciencias Políticas · Universidad Nacional de Asunción**
 
 > PWA instalable — Ciencias Políticas UNA · v1.0
