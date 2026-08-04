@@ -6,10 +6,10 @@ const DATA_URL = `data/2do.json?_v=${Date.now()}`;
 let DATA = null;
 
 const COLORES_MATERIAS = {
-  'Economía Política': 'color-econopolitica',
-  'Introducción a las Ciencias Políticas': 'color-introccp',
-  'Historia Política Paraguaya': 'color-historiapolit',
-  'Idioma Guaraní II': 'color-guarani',
+  'Econom\u00eda Pol\u00edtica': 'color-econopolitica',
+  'Introducci\u00f3n a las Ciencias Pol\u00edticas': 'color-introccp',
+  'Historia Pol\u00edtica Paraguaya': 'color-historiapolit',
+  'Idioma Guaran\u00ed II': 'color-guarani',
   'Seminario II': 'color-seminario'
 };
 
@@ -43,35 +43,33 @@ function renderAll() {
   initTema();
 }
 
-// ── NOTICIAS ── con botón WhatsApp en urgentes
+// -- NOTICIAS -- con boton WhatsApp en urgentes
 function renderNoticias() {
   const c = document.getElementById('noticiasContainer');
   if (!c) return;
   if (!DATA.noticias?.length) { c.innerHTML = '<p class="text-muted">Sin avisos por el momento.</p>'; return; }
   c.innerHTML = DATA.noticias.map(n => {
-    const waText = encodeURIComponent(`📣 *${n.titulo}*\n${n.descripcion || ''}\n\n_Campus 2do Semestre · Cs. Políticas UNA_`);
+    const msg = '*' + n.titulo + '*\n' + (n.descripcion || '') + '\n\n_Campus 2do Semestre \u00b7 Cs. Pol\u00edticas UNA_';
+    const waText = encodeURIComponent(msg);
     const waBtn = n.urgente
-      ? `<a href="https://wa.me/?text=${waText}" target="_blank" class="btn btn-sm btn-success mt-2 w-100"><i class="bi bi-whatsapp me-1"></i>Compartir por WhatsApp</a>`
+      ? '<a href="https://wa.me/?text=' + waText + '" target="_blank" class="btn btn-sm btn-success mt-2 w-100"><i class="bi bi-whatsapp me-1"></i>Compartir por WhatsApp</a>'
       : '';
-    return `
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="card-campus ${n.urgente ? 'noticia-urgente' : ''}">
-        <div class="card-franja" style="background:${n.urgente ? '#c62828' : '#3949ab'}"></div>
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <span class="badge badge-tipo" style="background:${n.urgente ? '#c62828' : '#3949ab'}">${n.tipo || 'Aviso'}</span>
-            <small class="text-muted">${n.fecha || ''}</small>
-          </div>
-          <h6 class="fw-bold mb-1">${n.titulo}</h6>
-          <p class="mb-0 small text-muted">${n.descripcion || ''}</p>
-          ${waBtn}
-        </div>
-      </div>
-    </div>`;
+    return '<div class="col-12 col-md-6 col-lg-4">'
+      + '<div class="card-campus ' + (n.urgente ? 'noticia-urgente' : '') + '">'
+      + '<div class="card-franja" style="background:' + (n.urgente ? '#c62828' : '#3949ab') + '"></div>'
+      + '<div class="card-body">'
+      + '<div class="d-flex justify-content-between align-items-start mb-2">'
+      + '<span class="badge badge-tipo" style="background:' + (n.urgente ? '#c62828' : '#3949ab') + '">' + (n.tipo || 'Aviso') + '</span>'
+      + '<small class="text-muted">' + (n.fecha || '') + '</small>'
+      + '</div>'
+      + '<h6 class="fw-bold mb-1">' + n.titulo + '</h6>'
+      + '<p class="mb-0 small text-muted">' + (n.descripcion || '') + '</p>'
+      + waBtn
+      + '</div></div></div>';
   }).join('');
 }
 
-const DIAS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+const DIAS = ['Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes'];
 
 function buildHorarioGrid() {
   if (!DATA.horario?.length) return { grid: {}, horas: [] };
@@ -85,7 +83,7 @@ function buildHorarioGrid() {
 function getClaseActual() {
   if (!DATA.horario?.length) return null;
   const ahora = new Date();
-  const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const diasSemana = ['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
   const diaHoy = diasSemana[ahora.getDay()];
   const horaActual = ahora.getHours() * 100 + ahora.getMinutes();
   return DATA.horario.find(c => {
@@ -96,21 +94,19 @@ function getClaseActual() {
   }) || null;
 }
 
-// Devuelve la próxima clase del día actual que aún no empezó
 function getProximaClaseHoy() {
   if (!DATA.horario?.length) return null;
   const ahora = new Date();
-  const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const diasSemana = ['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
   const diaHoy = diasSemana[ahora.getDay()];
   const horaActual = ahora.getHours() * 100 + ahora.getMinutes();
   const clasesHoy = DATA.horario
     .filter(c => c.dia === diaHoy)
     .map(c => { const [h, m] = c.hora.split(':').map(Number); return { ...c, min: h * 100 + m }; })
     .sort((a, b) => a.min - b.min);
-  // Evitar duplicados de misma materia+hora (bloques multi-fila)
   const seen = new Set();
   for (const c of clasesHoy) {
-    const key = `${c.hora}_${c.materia}`;
+    const key = c.hora + '_' + c.materia;
     if (seen.has(key)) continue;
     seen.add(key);
     if (c.min > horaActual) return c;
@@ -125,18 +121,18 @@ function renderHorario() {
   const claseActual = getClaseActual();
   if (tabla && horas.length) {
     let html = '<thead><tr><th>Hora</th>';
-    DIAS.forEach(d => html += `<th>${d}</th>`);
+    DIAS.forEach(d => html += '<th>' + d + '</th>');
     html += '</tr></thead><tbody>';
     horas.forEach(h => {
-      html += `<tr><td class="td-hora">${h}</td>`;
+      html += '<tr><td class="td-hora">' + h + '</td>';
       DIAS.forEach(d => {
         const cls = grid[h][d];
         const esActiva = claseActual && cls?.materia === claseActual.materia && cls?.hora === claseActual.hora && cls?.dia === claseActual.dia;
         if (cls) {
           const cc = colorMateria(cls.materia);
-          html += `<td class="${esActiva ? 'td-activa' : ''}"><span class="pill-materia ${cc}">${cls.materia}<small>${cls.profesor || ''}</small></span></td>`;
+          html += '<td class="' + (esActiva ? 'td-activa' : '') + '"><span class="pill-materia ' + cc + '">' + cls.materia + '<small>' + (cls.profesor || '') + '</small></span></td>';
         } else {
-          html += `<td class="td-libre">&mdash;</td>`;
+          html += '<td class="td-libre">&mdash;</td>';
         }
       });
       html += '</tr>';
@@ -149,15 +145,15 @@ function renderHorario() {
     DIAS.forEach(dia => {
       const clasesDia = DATA.horario.filter(c => c.dia === dia).sort((a,b) => a.hora.localeCompare(b.hora));
       if (!clasesDia.length) return;
-      html += `<div class="horario-dia-card"><div class="horario-dia-header"><i class="bi bi-calendar-week me-2"></i>${dia}</div>`;
+      html += '<div class="horario-dia-card"><div class="horario-dia-header"><i class="bi bi-calendar-week me-2"></i>' + dia + '</div>';
       clasesDia.forEach(c => {
         const cc = colorMateria(c.materia);
         const esActiva = claseActual && c.materia === claseActual.materia && c.hora === claseActual.hora && c.dia === claseActual.dia;
-        html += `<div class="horario-dia-item ${esActiva ? 'activa-mobile' : ''}">
-          <span class="hora-badge">${c.hora}</span>
-          <span class="pill-materia ${cc} flex-grow-1" style="display:block">${c.materia}<small>${c.profesor || ''}</small></span>
-          ${esActiva ? '<span class="badge bg-success ms-1" style="font-size:.65rem;flex-shrink:0">Ahora</span>' : ''}
-        </div>`;
+        html += '<div class="horario-dia-item ' + (esActiva ? 'activa-mobile' : '') + '">'
+          + '<span class="hora-badge">' + c.hora + '</span>'
+          + '<span class="pill-materia ' + cc + ' flex-grow-1" style="display:block">' + c.materia + '<small>' + (c.profesor || '') + '</small></span>'
+          + (esActiva ? '<span class="badge bg-success ms-1" style="font-size:.65rem;flex-shrink:0">Ahora</span>' : '')
+          + '</div>';
       });
       html += '</div>';
     });
@@ -166,27 +162,27 @@ function renderHorario() {
 }
 
 function verificarClaseActiva() {
-  const clase    = getClaseActual();
-  const proxima  = getProximaClaseHoy();
-  const banner   = document.getElementById('claseActivaBanner');
-  const elMat    = document.getElementById('claseActivaMateria');
-  const elHora   = document.getElementById('claseActivaHora');
-  const elProf   = document.getElementById('claseActivaProf');
-  const elLabel  = banner?.querySelector('.clase-activa-label');
-  const elPunto  = banner?.querySelector('.punto-verde');
+  const clase   = getClaseActual();
+  const proxima = getProximaClaseHoy();
+  const banner  = document.getElementById('claseActivaBanner');
+  const elMat   = document.getElementById('claseActivaMateria');
+  const elHora  = document.getElementById('claseActivaHora');
+  const elProf  = document.getElementById('claseActivaProf');
+  const elLabel = banner?.querySelector('.clase-activa-label');
+  const elPunto = banner?.querySelector('.punto-verde');
   if (!banner) return;
   if (clase) {
-    if (elLabel)  elLabel.textContent  = 'Clase activa';
-    if (elPunto)  elPunto.style.background = '#22c55e';
+    if (elLabel) elLabel.textContent = 'Clase activa';
+    if (elPunto) elPunto.style.background = '#22c55e';
     elMat.textContent  = clase.materia;
-    elHora.textContent = `${clase.dia} · ${clase.hora} hs`;
+    elHora.textContent = clase.dia + ' \u00b7 ' + clase.hora + ' hs';
     elProf.textContent = clase.profesor || 'Docente';
     banner.classList.remove('d-none');
   } else if (proxima) {
-    if (elLabel)  elLabel.textContent  = 'Próxima clase hoy';
-    if (elPunto)  elPunto.style.background = '#f59e0b';
+    if (elLabel) elLabel.textContent = 'Pr\u00f3xima clase hoy';
+    if (elPunto) elPunto.style.background = '#f59e0b';
     elMat.textContent  = proxima.materia;
-    elHora.textContent = `${proxima.dia} · ${proxima.hora} hs`;
+    elHora.textContent = proxima.dia + ' \u00b7 ' + proxima.hora + ' hs';
     elProf.textContent = proxima.profesor || 'Docente';
     banner.classList.remove('d-none');
   } else {
@@ -194,162 +190,150 @@ function verificarClaseActiva() {
   }
 }
 
-// ── EXÁMENES ── con botón WhatsApp
+// -- EXAMENES -- con boton WhatsApp
 function renderExamenes() {
   const c = document.getElementById('examenesContainer');
   if (!c) return;
-  if (!DATA.examenes?.length) { c.innerHTML = '<p class="text-muted">Sin exámenes programados.</p>'; return; }
+  if (!DATA.examenes?.length) { c.innerHTML = '<p class="text-muted">Sin ex\u00e1menes programados.</p>'; return; }
   const colores = { 'Primer Parcial':'#1a237e', 'Segundo Parcial':'#c62828', 'Final':'#e65100' };
   c.innerHTML = DATA.examenes.map(e => {
     const col = colores[e.tipo] || '#3949ab';
-    const waText = encodeURIComponent(`📚 *${e.tipo} — ${e.materia}*\n📅 Fecha: ${e.fecha}\n⏰ Hora: ${e.hora}${e.aula ? `\n🗒️ Aula: ${e.aula}` : ''}${e.profesor ? `\n👨‍🏫 Prof: ${e.profesor}` : ''}\n\n_Campus 2do Semestre · Cs. Políticas UNA_`);
-    return `
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="examen-card">
-        <div class="examen-top">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="examen-tipo" style="background:${col};color:white">${e.tipo}</span>
-            ${e.aula ? `<span class="badge bg-secondary">Aula ${e.aula}</span>` : ''}
-          </div>
-          <h6 class="fw-bold mb-1">${e.materia}</h6>
-          <div class="d-flex align-items-center gap-2 mt-2">
-            <i class="bi bi-calendar3" style="color:${col}"></i><span class="fw-semibold">${e.fecha}</span>
-            <i class="bi bi-clock ms-2" style="color:${col}"></i><span>${e.hora}</span>
-          </div>
-        </div>
-        <div class="examen-bottom d-flex justify-content-between align-items-center">
-          <span><i class="bi bi-person-fill me-1"></i>${e.profesor || 'Docente'}</span>
-          <a href="https://wa.me/?text=${waText}" target="_blank" class="btn btn-sm btn-success"><i class="bi bi-whatsapp me-1"></i>Compartir</a>
-        </div>
-      </div>
-    </div>`;
+    const lineas = [
+      '*' + e.tipo + ' \u2014 ' + e.materia + '*',
+      'Fecha: ' + e.fecha,
+      'Hora: ' + e.hora,
+      e.aula     ? 'Aula: ' + e.aula     : null,
+      e.profesor ? 'Prof: ' + e.profesor : null,
+      '',
+      '_Campus 2do Semestre \u00b7 Cs. Pol\u00edticas UNA_'
+    ].filter(l => l !== null).join('\n');
+    const waText = encodeURIComponent(lineas);
+    return '<div class="col-12 col-sm-6 col-lg-4">'
+      + '<div class="examen-card">'
+      + '<div class="examen-top">'
+      + '<div class="d-flex justify-content-between align-items-center mb-3">'
+      + '<span class="examen-tipo" style="background:' + col + ';color:white">' + e.tipo + '</span>'
+      + (e.aula ? '<span class="badge bg-secondary">Aula ' + e.aula + '</span>' : '')
+      + '</div>'
+      + '<h6 class="fw-bold mb-1">' + e.materia + '</h6>'
+      + '<div class="d-flex align-items-center gap-2 mt-2">'
+      + '<i class="bi bi-calendar3" style="color:' + col + '"></i><span class="fw-semibold">' + e.fecha + '</span>'
+      + '<i class="bi bi-clock ms-2" style="color:' + col + '"></i><span>' + e.hora + '</span>'
+      + '</div></div>'
+      + '<div class="examen-bottom d-flex justify-content-between align-items-center">'
+      + '<span><i class="bi bi-person-fill me-1"></i>' + (e.profesor || 'Docente') + '</span>'
+      + '<a href="https://wa.me/?text=' + waText + '" target="_blank" class="btn btn-sm btn-success"><i class="bi bi-whatsapp me-1"></i>Compartir</a>'
+      + '</div></div></div>';
   }).join('');
 }
 
 function renderParciales() {
   const c = document.getElementById('parcialesTimeline');
   if (!c) return;
-  if (!DATA.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin períodos cargados.</p>'; return; }
-  c.innerHTML = DATA.calendario.map(p => `
-    <div class="periodo-item ${p.tipo === 'parcial' ? 'parcial' : p.tipo === 'final' ? 'final' : ''}">
-      <div class="periodo-mes">${p.mes}</div>
-      <div class="periodo-nombre">${p.nombre}</div>
-      ${p.fecha ? `<div class="periodo-fecha">${p.fecha}</div>` : ''}
-    </div>`).join('');
+  if (!DATA.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin per\u00edodos cargados.</p>'; return; }
+  c.innerHTML = DATA.calendario.map(p =>
+    '<div class="periodo-item ' + (p.tipo === 'parcial' ? 'parcial' : p.tipo === 'final' ? 'final' : '') + '">'
+    + '<div class="periodo-mes">' + p.mes + '</div>'
+    + '<div class="periodo-nombre">' + p.nombre + '</div>'
+    + (p.fecha ? '<div class="periodo-fecha">' + p.fecha + '</div>' : '')
+    + '</div>'
+  ).join('');
 }
 
 function renderProgramas() {
   const c = document.getElementById('programasContainer');
   if (!c) return;
   if (!DATA.programas?.length) { c.innerHTML = '<p class="text-muted">Sin programas cargados.</p>'; return; }
-  c.innerHTML = DATA.programas.map(p => `
-    <div class="col-12 col-md-6">
-      <div class="programa-card">
-        <div class="programa-icon"><i class="bi bi-file-earmark-pdf-fill"></i></div>
-        <div class="flex-grow-1">
-          <div class="fw-bold">${p.materia}</div>
-          <div class="small text-muted mb-2">${p.descripcion || 'Programa oficial de la materia'}</div>
-          ${p.pdf ? `<a href="${p.pdf}" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Descargar PDF</a>` : '<span class="text-muted small">PDF no disponible aún</span>'}
-        </div>
-      </div>
-    </div>`).join('');
+  c.innerHTML = DATA.programas.map(p =>
+    '<div class="col-12 col-md-6">'
+    + '<div class="programa-card">'
+    + '<div class="programa-icon"><i class="bi bi-file-earmark-pdf-fill"></i></div>'
+    + '<div class="flex-grow-1">'
+    + '<div class="fw-bold">' + p.materia + '</div>'
+    + '<div class="small text-muted mb-2">' + (p.descripcion || 'Programa oficial de la materia') + '</div>'
+    + (p.pdf ? '<a href="' + p.pdf + '" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Descargar PDF</a>' : '<span class="text-muted small">PDF no disponible a\u00fan</span>')
+    + '</div></div></div>'
+  ).join('');
 }
 
-// ── LIBROS ── con filtro por materia
+// -- LIBROS -- con filtro por materia
 function renderLibros(filtro) {
   const c = document.getElementById('librosContainer');
   if (!c) return;
   if (!DATA.libros?.length) { c.innerHTML = '<p class="text-muted">Sin libros cargados.</p>'; return; }
-
-  // Selector de materia (solo se inserta la primera vez)
   const wrapperId = 'libros-filtro-wrap';
   if (!document.getElementById(wrapperId)) {
-    const materiasLibros = [...new Set(DATA.libros.map(l => l.materia))].sort();
+    const mats = [...new Set(DATA.libros.map(l => l.materia))].sort();
     const sel = document.createElement('div');
     sel.id = wrapperId;
     sel.className = 'mb-3';
-    sel.innerHTML = `
-      <select id="libros-filtro" class="form-select form-select-sm" style="max-width:340px">
-        <option value="">Todas las materias</option>
-        ${materiasLibros.map(m => `<option value="${m}">${m}</option>`).join('')}
-      </select>`;
+    sel.innerHTML = '<select id="libros-filtro" class="form-select form-select-sm" style="max-width:340px">'
+      + '<option value="">Todas las materias</option>'
+      + mats.map(m => '<option value="' + m + '">' + m + '</option>').join('')
+      + '</select>';
     c.parentElement.insertBefore(sel, c);
     document.getElementById('libros-filtro').addEventListener('change', e => renderLibros(e.target.value));
   }
-
-  const selEl = document.getElementById('libros-filtro');
+  const selEl  = document.getElementById('libros-filtro');
   const activo = filtro !== undefined ? filtro : (selEl ? selEl.value : '');
   const lista  = activo ? DATA.libros.filter(l => l.materia === activo) : DATA.libros;
-
   if (!lista.length) { c.innerHTML = '<p class="text-muted">Sin libros para esta materia.</p>'; return; }
-
-  c.innerHTML = lista.map(l => `
-    <div class="col-6 col-md-4 col-lg-3">
-      <div class="libro-card">
-        <div class="libro-cover">
-          ${l.imagen ? `<img src="${l.imagen}" alt="${l.titulo}" />` : '<i class="bi bi-book"></i>'}
-          <div class="libro-overlay">${l.pdf ? `<a href="${l.pdf}" target="_blank" class="btn btn-light btn-sm"><i class="bi bi-eye me-1"></i>Leer</a>` : ''}</div>
-        </div>
-        <div class="libro-body">
-          <div class="libro-materia" style="color:var(--una-azul-claro)">${l.materia || ''}</div>
-          <div class="libro-titulo">${l.titulo}</div>
-          <div class="libro-autor">${l.autor || ''}</div>
-          <div class="mt-2">
-            ${l.pdf ? `<a href="${l.pdf}" target="_blank" class="btn btn-sm btn-primary w-100"><i class="bi bi-eye me-1"></i>Leer</a>` : `<button class="btn btn-sm btn-outline-secondary w-100" disabled>Solo referencia</button>`}
-          </div>
-        </div>
-      </div>
-    </div>`).join('');
+  c.innerHTML = lista.map(l =>
+    '<div class="col-6 col-md-4 col-lg-3">'
+    + '<div class="libro-card">'
+    + '<div class="libro-cover">'
+    + (l.imagen ? '<img src="' + l.imagen + '" alt="' + l.titulo + '" />' : '<i class="bi bi-book"></i>')
+    + '<div class="libro-overlay">' + (l.pdf ? '<a href="' + l.pdf + '" target="_blank" class="btn btn-light btn-sm"><i class="bi bi-eye me-1"></i>Leer</a>' : '') + '</div>'
+    + '</div>'
+    + '<div class="libro-body">'
+    + '<div class="libro-materia" style="color:var(--una-azul-claro)">' + (l.materia || '') + '</div>'
+    + '<div class="libro-titulo">' + l.titulo + '</div>'
+    + '<div class="libro-autor">' + (l.autor || '') + '</div>'
+    + '<div class="mt-2">'
+    + (l.pdf ? '<a href="' + l.pdf + '" target="_blank" class="btn btn-sm btn-primary w-100"><i class="bi bi-eye me-1"></i>Leer</a>' : '<button class="btn btn-sm btn-outline-secondary w-100" disabled>Solo referencia</button>')
+    + '</div></div></div></div>'
+  ).join('');
 }
 
-// ── DRIVE ── con filtro por materia
+// -- DRIVE -- con filtro por materia
 function renderDrive(filtro) {
   const c = document.getElementById('driveContainer');
   if (!c) return;
   if (!DATA.drive?.length) { c.innerHTML = '<p class="text-muted">Sin carpetas configuradas.</p>'; return; }
-
-  // Selector de materia (solo se inserta la primera vez)
   const wrapperId = 'drive-filtro-wrap';
   if (!document.getElementById(wrapperId)) {
-    const materiasDrive = [...new Set(DATA.drive.map(d => d.materia))].sort();
+    const mats = [...new Set(DATA.drive.map(d => d.materia))].sort();
     const sel = document.createElement('div');
     sel.id = wrapperId;
     sel.className = 'mb-3';
-    sel.innerHTML = `
-      <select id="drive-filtro" class="form-select form-select-sm" style="max-width:340px">
-        <option value="">Todas las materias</option>
-        ${materiasDrive.map(m => `<option value="${m}">${m}</option>`).join('')}
-      </select>`;
+    sel.innerHTML = '<select id="drive-filtro" class="form-select form-select-sm" style="max-width:340px">'
+      + '<option value="">Todas las materias</option>'
+      + mats.map(m => '<option value="' + m + '">' + m + '</option>').join('')
+      + '</select>';
     c.parentElement.insertBefore(sel, c);
     document.getElementById('drive-filtro').addEventListener('change', e => renderDrive(e.target.value));
   }
-
   const selEl  = document.getElementById('drive-filtro');
   const activo = filtro !== undefined ? filtro : (selEl ? selEl.value : '');
   const lista  = activo ? DATA.drive.filter(d => d.materia === activo) : DATA.drive;
-
   if (!lista.length) { c.innerHTML = '<p class="text-muted">Sin carpetas para esta materia.</p>'; return; }
-
   c.innerHTML = lista.map(d => {
     const tieneDrive = d.url, tieneClassroom = d.urlClassroom;
-    return `
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="drive-card">
-        <div class="d-flex align-items-center gap-3 flex-grow-1">
-          <div class="drive-icon-wrap">
-            ${tieneDrive ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
-            ${tieneClassroom ? '<i class="bi bi-mortarboard-fill drive-icon classroom"></i>' : ''}
-            ${!tieneDrive && !tieneClassroom ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : ''}
-          </div>
-          <div><div class="fw-bold">${d.materia}</div><div class="small text-muted">${d.descripcion || 'Material del docente'}</div></div>
-        </div>
-        <div class="d-flex flex-column gap-2">
-          ${tieneDrive ? `<a href="${d.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>` : ''}
-          ${tieneClassroom ? `<a href="${d.urlClassroom}" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>` : ''}
-          ${!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Próximamente</span>' : ''}
-        </div>
-      </div>
-    </div>`;
+    return '<div class="col-12 col-md-6 col-lg-4">'
+      + '<div class="drive-card">'
+      + '<div class="d-flex align-items-center gap-3 flex-grow-1">'
+      + '<div class="drive-icon-wrap">'
+      + (tieneDrive ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : '')
+      + (tieneClassroom ? '<i class="bi bi-mortarboard-fill drive-icon classroom"></i>' : '')
+      + (!tieneDrive && !tieneClassroom ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : '')
+      + '</div>'
+      + '<div><div class="fw-bold">' + d.materia + '</div><div class="small text-muted">' + (d.descripcion || 'Material del docente') + '</div></div>'
+      + '</div>'
+      + '<div class="d-flex flex-column gap-2">'
+      + (tieneDrive ? '<a href="' + d.url + '" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>' : '')
+      + (tieneClassroom ? '<a href="' + d.urlClassroom + '" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>' : '')
+      + (!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Pr\u00f3ximamente</span>' : '')
+      + '</div></div></div>';
   }).join('');
 }
 
@@ -357,22 +341,22 @@ function consultarCI() {
   const input  = document.getElementById('ciInput');
   const inline = document.getElementById('ciResultadoInline');
   const ci = input ? input.value.trim() : '';
-  if (!ci) { if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingresá tu número de C.I.</div>'; return; }
+  if (!ci) { if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingres\u00e1 tu n\u00famero de C.I.</div>'; return; }
   const lista    = DATA?.infoci || [];
   const registro = lista.find(r => String(r.ci).trim() === ci);
   if (registro) {
     const modalBody = document.getElementById('ciModalBody');
     if (modalBody) {
-      modalBody.innerHTML = `
-        <div class="text-center mb-3"><div style="width:56px;height:56px;border-radius:50%;background:#e8eaf6;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;color:#1a237e"><i class="bi bi-person-check"></i></div></div>
-        <p class="text-center text-muted small mb-3">C.I.: <strong>${ci}</strong></p>
-        <div class="p-3" style="background:#f0f2f8;border-radius:10px;font-size:.97rem;line-height:1.6;">${registro.mensaje.replace(/\n/g, '<br>')}</div>`;
+      modalBody.innerHTML =
+        '<div class="text-center mb-3"><div style="width:56px;height:56px;border-radius:50%;background:#e8eaf6;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;color:#1a237e"><i class="bi bi-person-check"></i></div></div>'
+        + '<p class="text-center text-muted small mb-3">C.I.: <strong>' + ci + '</strong></p>'
+        + '<div class="p-3" style="background:#f0f2f8;border-radius:10px;font-size:.97rem;line-height:1.6;">' + registro.mensaje.replace(/\n/g, '<br>') + '</div>';
     }
     const modal = new bootstrap.Modal(document.getElementById('ciModal'));
     modal.show();
     if (inline) inline.innerHTML = '';
   } else {
-    if (inline) inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontró información para ese número de C.I.</div>';
+    if (inline) inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontr\u00f3 informaci\u00f3n para ese n\u00famero de C.I.</div>';
   }
 }
 
@@ -396,49 +380,49 @@ function datosDemo() {
   return {
     noticias: [{ titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }],
     horario: [
-      { dia:'Lunes', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Lunes', hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Lunes', hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
-      { dia:'Martes', hora:'18:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes', hora:'19:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes', hora:'20:00', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
-      { dia:'Martes', hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Miércoles', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Miércoles', hora:'19:00', materia:'Economía Política', profesor:'Prof. García' },
-      { dia:'Miércoles', hora:'20:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Jueves', hora:'18:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Jueves', hora:'19:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Jueves', hora:'21:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
-      { dia:'Viernes', hora:'18:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
-      { dia:'Viernes', hora:'19:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' },
-      { dia:'Viernes', hora:'20:00', materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', profesor:'Prof. López' }
+      { dia:'Lunes', hora:'18:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
+      { dia:'Lunes', hora:'19:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
+      { dia:'Lunes', hora:'20:00', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
+      { dia:'Martes', hora:'18:00', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes', hora:'19:00', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes', hora:'20:00', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
+      { dia:'Martes', hora:'21:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
+      { dia:'Mi\u00e9rcoles', hora:'18:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
+      { dia:'Mi\u00e9rcoles', hora:'19:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
+      { dia:'Mi\u00e9rcoles', hora:'20:00', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Jueves', hora:'18:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
+      { dia:'Jueves', hora:'19:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
+      { dia:'Jueves', hora:'21:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
+      { dia:'Viernes', hora:'18:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', profesor:'Prof. L\u00f3pez' },
+      { dia:'Viernes', hora:'19:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', profesor:'Prof. L\u00f3pez' },
+      { dia:'Viernes', hora:'20:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', profesor:'Prof. L\u00f3pez' }
     ],
-    examenes: [{ materia:'Economía Política', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. García' }],
+    examenes: [{ materia:'Econom\u00eda Pol\u00edtica', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. Garc\u00eda' }],
     calendario: [
       { mes:'Agosto', nombre:'Inicio de Clases', tipo:'normal' },
-      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'15–24 Sep' },
+      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'15\u201324 Sep' },
       { mes:'Octubre', nombre:'Cursada', tipo:'normal' },
-      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'10–21 Nov' },
-      { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1–15 Dic' }
+      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'10\u201321 Nov' },
+      { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1\u201315 Dic' }
     ],
     programas: [
-      { materia:'Economía Política', descripcion:'Programa oficial · 2026', pdf:'' },
-      { materia:'Historia Política Paraguaya', descripcion:'Programa oficial · 2026', pdf:'' },
-      { materia:'Introducción a las Ciencias Políticas', descripcion:'Programa oficial · 2026', pdf:'' },
-      { materia:'Idioma Guaraní II', descripcion:'Programa oficial · 2026', pdf:'' },
-      { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Programa oficial · 2026', pdf:'' }
+      { materia:'Econom\u00eda Pol\u00edtica', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
+      { materia:'Historia Pol\u00edtica Paraguaya', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
+      { materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
+      { materia:'Idioma Guaran\u00ed II', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
+      { materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', descripcion:'Programa oficial \u00b7 2026', pdf:'' }
     ],
     libros: [
-      { materia:'Economía Política', titulo:'Principios de Economía', autor:'N. Gregory Mankiw', pdf:'', imagen:'' },
-      { materia:'Historia Política Paraguaya', titulo:'Historia del Paraguay', autor:'Carlos Pastore', pdf:'', imagen:'' },
-      { materia:'Introducción a las Ciencias Políticas', titulo:'Ciencia Política', autor:'Giovanni Sartori', pdf:'', imagen:'' }
+      { materia:'Econom\u00eda Pol\u00edtica', titulo:'Principios de Econom\u00eda', autor:'N. Gregory Mankiw', pdf:'', imagen:'' },
+      { materia:'Historia Pol\u00edtica Paraguaya', titulo:'Historia del Paraguay', autor:'Carlos Pastore', pdf:'', imagen:'' },
+      { materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', titulo:'Ciencia Pol\u00edtica', autor:'Giovanni Sartori', pdf:'', imagen:'' }
     ],
     drive: [
-      { materia:'Economía Política', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Historia Política Paraguaya', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Introducción a las Ciencias Políticas', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Idioma Guaraní II', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'', urlClassroom:'' }
+      { materia:'Econom\u00eda Pol\u00edtica', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Historia Pol\u00edtica Paraguaya', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Idioma Guaran\u00ed II', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
+      { materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'', urlClassroom:'' }
     ],
     infoci: []
   };
