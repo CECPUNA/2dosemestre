@@ -13,6 +13,12 @@ const COLORES_MATERIAS = {
   'Seminario II': 'color-seminario'
 };
 
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str ?? '';
+  return d.innerHTML;
+}
+
 function colorMateria(nombre) {
   if (!nombre) return 'color-econopolitica';
   for (const [key, cls] of Object.entries(COLORES_MATERIAS)) {
@@ -59,11 +65,11 @@ function renderNoticias() {
       + '<div class="card-franja" style="background:' + (n.urgente ? '#c62828' : '#3949ab') + '"></div>'
       + '<div class="card-body">'
       + '<div class="d-flex justify-content-between align-items-start mb-2">'
-      + '<span class="badge badge-tipo" style="background:' + (n.urgente ? '#c62828' : '#3949ab') + '">' + (n.tipo || 'Aviso') + '</span>'
-      + '<small class="text-muted">' + (n.fecha || '') + '</small>'
+      + '<span class="badge badge-tipo" style="background:' + (n.urgente ? '#c62828' : '#3949ab') + '">' + esc(n.tipo || 'Aviso') + '</span>'
+      + '<small class="text-muted">' + esc(n.fecha || '') + '</small>'
       + '</div>'
-      + '<h6 class="fw-bold mb-1">' + n.titulo + '</h6>'
-      + '<p class="mb-0 small text-muted">' + (n.descripcion || '') + '</p>'
+      + '<h6 class="fw-bold mb-1">' + esc(n.titulo) + '</h6>'
+      + '<p class="mb-0 small text-muted">' + esc(n.descripcion || '') + '</p>'
       + waBtn
       + '</div></div></div>';
   }).join('');
@@ -128,16 +134,16 @@ function renderHorario() {
   const claseActual = getClaseActual();
   if (tabla && horas.length) {
     let html = '<thead><tr><th>Hora</th>';
-    DIAS.forEach(d => html += '<th>' + d + '</th>');
+    DIAS.forEach(d => html += '<th>' + esc(d) + '</th>');
     html += '</tr></thead><tbody>';
     horas.forEach(h => {
-      html += '<tr><td class="td-hora">' + h + '</td>';
+      html += '<tr><td class="td-hora">' + esc(h) + '</td>';
       DIAS.forEach(d => {
         const cls = grid[h][d];
         const esActiva = claseActual && cls?.materia === claseActual.materia && cls?.hora === claseActual.hora && cls?.dia === claseActual.dia;
         if (cls) {
           const cc = colorMateria(cls.materia);
-          html += '<td class="' + (esActiva ? 'td-activa' : '') + '"><span class="pill-materia ' + cc + '">' + cls.materia + '<small>' + (cls.profesor || '') + '</small></span></td>';
+          html += '<td class="' + (esActiva ? 'td-activa' : '') + '"><span class="pill-materia ' + cc + '">' + esc(cls.materia) + '<small>' + esc(cls.profesor || '') + '</small></span></td>';
         } else {
           html += '<td class="td-libre">&mdash;</td>';
         }
@@ -152,13 +158,13 @@ function renderHorario() {
     DIAS.forEach(dia => {
       const clasesDia = DATA.horario.filter(c => c.dia === dia).sort((a,b) => a.hora.localeCompare(b.hora));
       if (!clasesDia.length) return;
-      html += '<div class="horario-dia-card"><div class="horario-dia-header"><i class="bi bi-calendar-week me-2"></i>' + dia + '</div>';
+      html += '<div class="horario-dia-card"><div class="horario-dia-header"><i class="bi bi-calendar-week me-2"></i>' + esc(dia) + '</div>';
       clasesDia.forEach(c => {
         const cc = colorMateria(c.materia);
         const esActiva = claseActual && c.materia === claseActual.materia && c.hora === claseActual.hora && c.dia === claseActual.dia;
         html += '<div class="horario-dia-item ' + (esActiva ? 'activa-mobile' : '') + '">'
-          + '<span class="hora-badge">' + c.hora + '</span>'
-          + '<span class="pill-materia ' + cc + ' flex-grow-1" style="display:block">' + c.materia + '<small>' + (c.profesor || '') + '</small></span>'
+          + '<span class="hora-badge">' + esc(c.hora) + '</span>'
+          + '<span class="pill-materia ' + cc + ' flex-grow-1" style="display:block">' + esc(c.materia) + '<small>' + esc(c.profesor || '') + '</small></span>'
           + (esActiva ? '<span class="badge bg-success ms-1" style="font-size:.65rem;flex-shrink:0">Ahora</span>' : '')
           + '</div>';
       });
@@ -219,16 +225,16 @@ function renderExamenes() {
       + '<div class="examen-card">'
       + '<div class="examen-top">'
       + '<div class="d-flex justify-content-between align-items-center mb-3">'
-      + '<span class="examen-tipo" style="background:' + col + ';color:white">' + e.tipo + '</span>'
-      + (e.aula ? '<span class="badge bg-secondary">Aula ' + e.aula + '</span>' : '')
+      + '<span class="examen-tipo" style="background:' + col + ';color:white">' + esc(e.tipo) + '</span>'
+      + (e.aula ? '<span class="badge bg-secondary">Aula ' + esc(e.aula) + '</span>' : '')
       + '</div>'
-      + '<h6 class="fw-bold mb-1">' + e.materia + '</h6>'
+      + '<h6 class="fw-bold mb-1">' + esc(e.materia) + '</h6>'
       + '<div class="d-flex align-items-center gap-2 mt-2">'
-      + '<i class="bi bi-calendar3" style="color:' + col + '"></i><span class="fw-semibold">' + e.fecha + '</span>'
-      + '<i class="bi bi-clock ms-2" style="color:' + col + '"></i><span>' + e.hora + '</span>'
+      + '<i class="bi bi-calendar3" style="color:' + col + '"></i><span class="fw-semibold">' + esc(e.fecha) + '</span>'
+      + '<i class="bi bi-clock ms-2" style="color:' + col + '"></i><span>' + esc(e.hora) + '</span>'
       + '</div></div>'
       + '<div class="examen-bottom d-flex justify-content-between align-items-center">'
-      + '<span><i class="bi bi-person-fill me-1"></i>' + (e.profesor || 'Docente') + '</span>'
+      + '<span><i class="bi bi-person-fill me-1"></i>' + esc(e.profesor || 'Docente') + '</span>'
       + '<a href="https://wa.me/?text=' + waText + '" target="_blank" class="btn btn-sm btn-success"><i class="bi bi-whatsapp me-1"></i>Compartir</a>'
       + '</div></div></div>';
   }).join('');
@@ -240,9 +246,9 @@ function renderParciales() {
   if (!DATA.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin per\u00edodos cargados.</p>'; return; }
   c.innerHTML = DATA.calendario.map(p =>
     '<div class="periodo-item ' + (p.tipo === 'parcial' ? 'parcial' : p.tipo === 'final' ? 'final' : '') + '">'
-    + '<div class="periodo-mes">' + p.mes + '</div>'
-    + '<div class="periodo-nombre">' + p.nombre + '</div>'
-    + (p.fecha ? '<div class="periodo-fecha">' + p.fecha + '</div>' : '')
+    + '<div class="periodo-mes">' + esc(p.mes) + '</div>'
+    + '<div class="periodo-nombre">' + esc(p.nombre) + '</div>'
+    + (p.fecha ? '<div class="periodo-fecha">' + esc(p.fecha) + '</div>' : '')
     + '</div>'
   ).join('');
 }
@@ -256,9 +262,9 @@ function renderProgramas() {
     + '<div class="programa-card">'
     + '<div class="programa-icon"><i class="bi bi-file-earmark-pdf-fill"></i></div>'
     + '<div class="flex-grow-1">'
-    + '<div class="fw-bold">' + p.materia + '</div>'
-    + '<div class="small text-muted mb-2">' + (p.descripcion || 'Programa oficial de la materia') + '</div>'
-    + (p.pdf ? '<a href="' + p.pdf + '" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Descargar PDF</a>' : '<span class="text-muted small">PDF no disponible a\u00fan</span>')
+    + '<div class="fw-bold">' + esc(p.materia) + '</div>'
+    + '<div class="small text-muted mb-2">' + esc(p.descripcion || 'Programa oficial de la materia') + '</div>'
+    + (p.pdf ? '<a href="' + esc(p.pdf) + '" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Descargar PDF</a>' : '<span class="text-muted small">PDF no disponible a\u00fan</span>')
     + '</div></div></div>'
   ).join('');
 }
@@ -276,7 +282,7 @@ function renderLibros(filtro) {
     sel.className = 'mb-3';
     sel.innerHTML = '<select id="libros-filtro" class="form-select form-select-sm" style="max-width:340px">'
       + '<option value="">Todas las materias</option>'
-      + mats.map(m => '<option value="' + m + '">' + m + '</option>').join('')
+      + mats.map(m => '<option value="' + esc(m) + '">' + esc(m) + '</option>').join('')
       + '</select>';
     c.parentElement.insertBefore(sel, c);
     document.getElementById('libros-filtro').addEventListener('change', e => renderLibros(e.target.value));
@@ -289,15 +295,15 @@ function renderLibros(filtro) {
     '<div class="col-6 col-md-4 col-lg-3">'
     + '<div class="libro-card">'
     + '<div class="libro-cover">'
-    + (l.imagen ? '<img src="' + l.imagen + '" alt="' + l.titulo + '" />' : '<i class="bi bi-book"></i>')
-    + '<div class="libro-overlay">' + (l.pdf ? '<a href="' + l.pdf + '" target="_blank" class="btn btn-light btn-sm"><i class="bi bi-eye me-1"></i>Leer</a>' : '') + '</div>'
+    + (l.imagen ? '<img src="' + esc(l.imagen) + '" alt="' + esc(l.titulo) + '" />' : '<i class="bi bi-book"></i>')
+    + '<div class="libro-overlay">' + (l.pdf ? '<a href="' + esc(l.pdf) + '" target="_blank" class="btn btn-light btn-sm"><i class="bi bi-eye me-1"></i>Leer</a>' : '') + '</div>'
     + '</div>'
     + '<div class="libro-body">'
-    + '<div class="libro-materia" style="color:var(--una-azul-claro)">' + (l.materia || '') + '</div>'
-    + '<div class="libro-titulo">' + l.titulo + '</div>'
-    + '<div class="libro-autor">' + (l.autor || '') + '</div>'
+    + '<div class="libro-materia" style="color:var(--una-azul-claro)">' + esc(l.materia || '') + '</div>'
+    + '<div class="libro-titulo">' + esc(l.titulo) + '</div>'
+    + '<div class="libro-autor">' + esc(l.autor || '') + '</div>'
     + '<div class="mt-2">'
-    + (l.pdf ? '<a href="' + l.pdf + '" target="_blank" class="btn btn-sm btn-primary w-100"><i class="bi bi-eye me-1"></i>Leer</a>' : '<button class="btn btn-sm btn-outline-secondary w-100" disabled>Solo referencia</button>')
+    + (l.pdf ? '<a href="' + esc(l.pdf) + '" target="_blank" class="btn btn-sm btn-primary w-100"><i class="bi bi-eye me-1"></i>Leer</a>' : '<button class="btn btn-sm btn-outline-secondary w-100" disabled>Solo referencia</button>')
     + '</div></div></div></div>'
   ).join('');
 }
@@ -315,7 +321,7 @@ function renderDrive(filtro) {
     sel.className = 'mb-3';
     sel.innerHTML = '<select id="drive-filtro" class="form-select form-select-sm" style="max-width:340px">'
       + '<option value="">Todas las materias</option>'
-      + mats.map(m => '<option value="' + m + '">' + m + '</option>').join('')
+      + mats.map(m => '<option value="' + esc(m) + '">' + esc(m) + '</option>').join('')
       + '</select>';
     c.parentElement.insertBefore(sel, c);
     document.getElementById('drive-filtro').addEventListener('change', e => renderDrive(e.target.value));
@@ -334,11 +340,11 @@ function renderDrive(filtro) {
       + (tieneClassroom ? '<i class="bi bi-mortarboard-fill drive-icon classroom"></i>' : '')
       + (!tieneDrive && !tieneClassroom ? '<i class="bi bi-folder-fill drive-icon drive"></i>' : '')
       + '</div>'
-      + '<div><div class="fw-bold">' + d.materia + '</div><div class="small text-muted">' + (d.descripcion || 'Material del docente') + '</div></div>'
+      + '<div><div class="fw-bold">' + esc(d.materia) + '</div><div class="small text-muted">' + esc(d.descripcion || 'Material del docente') + '</div></div>'
       + '</div>'
       + '<div class="d-flex flex-column gap-2">'
-      + (tieneDrive ? '<a href="' + d.url + '" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>' : '')
-      + (tieneClassroom ? '<a href="' + d.urlClassroom + '" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>' : '')
+      + (tieneDrive ? '<a href="' + esc(d.url) + '" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>' : '')
+      + (tieneClassroom ? '<a href="' + esc(d.urlClassroom) + '" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>' : '')
       + (!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Pr\u00f3ximamente</span>' : '')
       + '</div></div></div>';
   }).join('');
@@ -348,16 +354,36 @@ function consultarCI() {
   const input  = document.getElementById('ciInput');
   const inline = document.getElementById('ciResultadoInline');
   const ci = input ? input.value.trim() : '';
-  if (!ci) { if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingres\u00e1 tu n\u00famero de C.I.</div>'; return; }
+  if (!ci) {
+    if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingres\u00e1 tu n\u00famero de C.I.</div>';
+    return;
+  }
   const lista    = DATA?.infoci || [];
   const registro = lista.find(r => String(r.ci).trim() === ci);
   if (registro) {
     const modalBody = document.getElementById('ciModalBody');
     if (modalBody) {
-      modalBody.innerHTML =
-        '<div class="text-center mb-3"><div style="width:56px;height:56px;border-radius:50%;background:#e8eaf6;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;color:#1a237e"><i class="bi bi-person-check"></i></div></div>'
-        + '<p class="text-center text-muted small mb-3">C.I.: <strong>' + ci + '</strong></p>'
-        + '<div class="p-3" style="background:#f0f2f8;border-radius:10px;font-size:.97rem;line-height:1.6;">' + registro.mensaje.replace(/\n/g, '<br>') + '</div>';
+      modalBody.innerHTML = '';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'text-center mb-3';
+      avatar.innerHTML = '<div style="width:56px;height:56px;border-radius:50%;background:#e8eaf6;display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;color:#1a237e"><i class="bi bi-person-check"></i></div>';
+      modalBody.appendChild(avatar);
+
+      const ciPara = document.createElement('p');
+      ciPara.className = 'text-center text-muted small mb-3';
+      ciPara.innerHTML = 'C.I.: <strong>' + esc(ci) + '</strong>';
+      modalBody.appendChild(ciPara);
+
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'p-3';
+      msgDiv.style.cssText = 'background:#f0f2f8;border-radius:10px;font-size:.97rem;line-height:1.6;';
+      const lineas = registro.mensaje.split('\n');
+      lineas.forEach((linea, i) => {
+        msgDiv.appendChild(document.createTextNode(linea));
+        if (i < lineas.length - 1) msgDiv.appendChild(document.createElement('br'));
+      });
+      modalBody.appendChild(msgDiv);
     }
     const modal = new bootstrap.Modal(document.getElementById('ciModal'));
     modal.show();
