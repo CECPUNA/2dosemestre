@@ -80,17 +80,23 @@ function buildHorarioGrid() {
   return { grid, horas };
 }
 
+// Convierte "HH:MM" a minutos totales desde medianoche
+function horaAMin(horaStr) {
+  const [h, m] = horaStr.split(':').map(Number);
+  return h * 60 + m;
+}
+
 function getClaseActual() {
   if (!DATA.horario?.length) return null;
   const ahora = new Date();
   const diasSemana = ['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
   const diaHoy = diasSemana[ahora.getDay()];
-  const horaActual = ahora.getHours() * 100 + ahora.getMinutes();
+  const minActual = ahora.getHours() * 60 + ahora.getMinutes();
   return DATA.horario.find(c => {
     if (c.dia !== diaHoy) return false;
-    const [h, m] = c.hora.split(':').map(Number);
-    const inicio = h * 100 + m;
-    return horaActual >= inicio && horaActual < inicio + 100;
+    const inicio = horaAMin(c.hora);
+    const fin    = inicio + 60; // cada bloque dura 1 hora
+    return minActual >= inicio && minActual < fin;
   }) || null;
 }
 
@@ -99,17 +105,17 @@ function getProximaClaseHoy() {
   const ahora = new Date();
   const diasSemana = ['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
   const diaHoy = diasSemana[ahora.getDay()];
-  const horaActual = ahora.getHours() * 100 + ahora.getMinutes();
+  const minActual = ahora.getHours() * 60 + ahora.getMinutes();
   const clasesHoy = DATA.horario
     .filter(c => c.dia === diaHoy)
-    .map(c => { const [h, m] = c.hora.split(':').map(Number); return { ...c, min: h * 100 + m }; })
+    .map(c => ({ ...c, min: horaAMin(c.hora) }))
     .sort((a, b) => a.min - b.min);
   const seen = new Set();
   for (const c of clasesHoy) {
     const key = c.hora + '_' + c.materia;
     if (seen.has(key)) continue;
     seen.add(key);
-    if (c.min > horaActual) return c;
+    if (c.min > minActual) return c;
   }
   return null;
 }
@@ -432,4 +438,9 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarDatos();
   const input = document.getElementById('ciInput');
   if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') consultarCI(); });
+
+  // Actualiza el banner de clase activa/proxima cada 60 segundos automaticamente
+  setInterval(() => {
+    if (DATA) verificarClaseActiva();
+  }, 60000);
 });
