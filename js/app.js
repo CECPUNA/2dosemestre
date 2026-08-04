@@ -70,6 +70,7 @@ function renderNoticias() {
 }
 
 const DIAS = ['Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes'];
+const DURACION_BLOQUE = 45; // minutos por bloque horario
 
 function buildHorarioGrid() {
   if (!DATA.horario?.length) return { grid: {}, horas: [] };
@@ -95,7 +96,7 @@ function getClaseActual() {
   return DATA.horario.find(c => {
     if (c.dia !== diaHoy) return false;
     const inicio = horaAMin(c.hora);
-    const fin    = inicio + 60; // cada bloque dura 1 hora
+    const fin    = inicio + DURACION_BLOQUE;
     return minActual >= inicio && minActual < fin;
   }) || null;
 }
@@ -387,28 +388,28 @@ function datosDemo() {
     noticias: [{ titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }],
     horario: [
       { dia:'Lunes', hora:'18:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Lunes', hora:'19:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Lunes', hora:'20:00', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
+      { dia:'Lunes', hora:'18:45', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
+      { dia:'Lunes', hora:'19:45', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
       { dia:'Martes', hora:'18:00', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes', hora:'19:00', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes', hora:'20:00', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
-      { dia:'Martes', hora:'21:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
+      { dia:'Martes', hora:'18:45', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes', hora:'19:45', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
+      { dia:'Martes', hora:'20:30', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
       { dia:'Mi\u00e9rcoles', hora:'18:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Mi\u00e9rcoles', hora:'19:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Mi\u00e9rcoles', hora:'20:00', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Mi\u00e9rcoles', hora:'18:45', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
+      { dia:'Mi\u00e9rcoles', hora:'19:45', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
       { dia:'Jueves', hora:'18:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
-      { dia:'Jueves', hora:'19:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
-      { dia:'Jueves', hora:'21:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
-      { dia:'Viernes', hora:'18:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', profesor:'Prof. L\u00f3pez' },
-      { dia:'Viernes', hora:'19:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', profesor:'Prof. L\u00f3pez' },
-      { dia:'Viernes', hora:'20:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', profesor:'Prof. L\u00f3pez' }
+      { dia:'Jueves', hora:'18:45', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
+      { dia:'Jueves', hora:'20:30', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
+      { dia:'Viernes', hora:'18:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', profesor:'Prof. L\u00f3pez' },
+      { dia:'Viernes', hora:'18:45', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', profesor:'Prof. L\u00f3pez' },
+      { dia:'Viernes', hora:'19:45', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', profesor:'Prof. L\u00f3pez' }
     ],
-    examenes: [{ materia:'Econom\u00eda Pol\u00edtica', tipo:'Primer Parcial', fecha:'15 Septiembre', hora:'18:00', aula:'4', profesor:'Prof. Garc\u00eda' }],
+    examenes: [{ materia:'Econom\u00eda Pol\u00edtica', tipo:'Primer Parcial', fecha:'12 de Octubre', hora:'19:00', aula:'', profesor:'Urquiza' }],
     calendario: [
       { mes:'Agosto', nombre:'Inicio de Clases', tipo:'normal' },
-      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'15\u201324 Sep' },
+      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'14\u201325 Sep' },
       { mes:'Octubre', nombre:'Cursada', tipo:'normal' },
-      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'10\u201321 Nov' },
+      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'20\u201330 Nov' },
       { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1\u201315 Dic' }
     ],
     programas: [
@@ -416,20 +417,10 @@ function datosDemo() {
       { materia:'Historia Pol\u00edtica Paraguaya', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
       { materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
       { materia:'Idioma Guaran\u00ed II', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
-      { materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', descripcion:'Programa oficial \u00b7 2026', pdf:'' }
+      { materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', descripcion:'Programa oficial \u00b7 2026', pdf:'' }
     ],
-    libros: [
-      { materia:'Econom\u00eda Pol\u00edtica', titulo:'Principios de Econom\u00eda', autor:'N. Gregory Mankiw', pdf:'', imagen:'' },
-      { materia:'Historia Pol\u00edtica Paraguaya', titulo:'Historia del Paraguay', autor:'Carlos Pastore', pdf:'', imagen:'' },
-      { materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', titulo:'Ciencia Pol\u00edtica', autor:'Giovanni Sartori', pdf:'', imagen:'' }
-    ],
-    drive: [
-      { materia:'Econom\u00eda Pol\u00edtica', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Historia Pol\u00edtica Paraguaya', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Idioma Guaran\u00ed II', descripcion:'Carpeta del docente', url:'', urlClassroom:'' },
-      { materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Am\u00e9rica Latina (Siglos XX y XXI)', descripcion:'Carpeta del docente', url:'', urlClassroom:'' }
-    ],
+    libros: [],
+    drive: [],
     infoci: []
   };
 }
