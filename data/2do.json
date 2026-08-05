@@ -157,45 +157,36 @@
       "profesor": "Cecilia Garcete"
     }
   ],
-  "examenes": [
-    {
-      "materia": "Economía Política",
-      "tipo": "Primer Parcial",
-      "fecha": "12 de Octubre",
-      "hora": "19:00",
-      "aula": "",
-      "profesor": "Urquiza"
-    }
-  ],
+  "examenes": [],
   "calendario": [
     {
       "mes": "Agosto",
-      "nombre": "Inicio de Clases",
-      "fecha": "4 al 30",
-      "tipo": "normal"
+      "nombre": "1er parcial",
+      "fecha": "Final del mes",
+      "tipo": "parcial"
     },
     {
       "mes": "Septiembre",
-      "nombre": "1era Parcial",
-      "fecha": "14 Sept - 25 sept",
-      "tipo": "parcial"
-    },
-    {
-      "mes": "Octubre",
-      "nombre": "Clases",
-      "fecha": "1 al 30 octubre",
+      "nombre": "Clases normales",
+      "fecha": "Todo el mes",
       "tipo": "normal"
     },
     {
-      "mes": "Noviembre",
-      "nombre": "2da Parcial",
-      "fecha": "20 - 30 Noviembre",
+      "mes": "Octubre",
+      "nombre": "2do Parcial",
+      "fecha": "Comienzo del mes",
       "tipo": "parcial"
     },
     {
+      "mes": "Noviembre",
+      "nombre": "Examenes Finales",
+      "fecha": "16 Nov a Dic",
+      "tipo": "final"
+    },
+    {
       "mes": "Diciembre",
-      "nombre": "Finales",
-      "fecha": "1 al 15 Dic",
+      "nombre": "Examenes Finales",
+      "fecha": "Hasta el 15 de Dic",
       "tipo": "final"
     }
   ],
