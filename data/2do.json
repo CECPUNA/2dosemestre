@@ -164,7 +164,24 @@
       "profesor": "Cecilia Garcete"
     }
   ],
-  "examenes": [],
+  "examenes": [
+    {
+      "materia": "Introducción a las Ciencias Políticas",
+      "tipo": "Primer Parcial",
+      "fecha": "7 de Septiembre",
+      "hora": "18:00 hs",
+      "aula": "2do Semestre",
+      "profesor": "Mercedes Ibarra"
+    },
+    {
+      "materia": "Introducción a las Ciencias Políticas",
+      "tipo": "Segundo Parcial",
+      "fecha": "21 de Octubre",
+      "hora": "18:00",
+      "aula": "2do Semestre",
+      "profesor": "Mercedes Ibarra"
+    }
+  ],
   "calendario": [
     {
       "mes": "Agosto",
