@@ -3,13 +3,6 @@
   "anio": 2026,
   "noticias": [
     {
-      "titulo": "se posterga el inicio de clases",
-      "descripcion": "se posterga el inicio de clases de los semestres pares de todas las carreras y filiales Derecho, Notariado y Ciencias Políticas, para el lunes 17 de agosto de 2026",
-      "tipo": "Aviso",
-      "fecha": "10 Agosto",
-      "urgente": false
-    },
-    {
       "titulo": "Aranceles · Matriculación 2do Semestre",
       "descripcion": "Al contado: 240.000 gs. Financiado en hasta 3 cuotas: 1ª cuota 100.000 gs · 2ª cuota 70.000 gs · 3ª cuota 70.000 gs.// Arancel 0: pago único de 30.000 gs.\\ Matriculación tardía: se suma un adicional de 70.000 gs al costo normal.",
       "tipo": "Arancel",
