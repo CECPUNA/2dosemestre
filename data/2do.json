@@ -3,6 +3,13 @@
   "anio": 2026,
   "noticias": [
     {
+      "titulo": "TRABAJO PRACTICO DE HISTORIA DEL PARAGUAY",
+      "descripcion": "TEMA: A elección del programa. Presentar a mano: Carátula , Introducción (el porque de la elección del tema) - 5 paginas de contenido - Conclusión",
+      "tipo": "Trabajo Practico",
+      "fecha": "Antes del 2do llamado",
+      "urgente": false
+    },
+    {
       "titulo": "Aranceles · Matriculación 2do Semestre",
       "descripcion": "Al contado: 240.000 gs. Financiado en hasta 3 cuotas: 1ª cuota 100.000 gs · 2ª cuota 70.000 gs · 3ª cuota 70.000 gs.// Arancel 0: pago único de 30.000 gs.\\ Matriculación tardía: se suma un adicional de 70.000 gs al costo normal.",
       "tipo": "Arancel",
