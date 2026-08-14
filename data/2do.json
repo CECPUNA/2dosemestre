@@ -3,11 +3,11 @@
   "anio": 2026,
   "noticias": [
     {
-      "titulo": "TRABAJO PRACTICO DE HISTORIA DEL PARAGUAY",
+      "titulo": "TP: HISTORIA DEL PARAGUAY",
       "descripcion": "TEMA: A elección del programa. Presentar a mano: Carátula , Introducción (el porque de la elección del tema) - 5 paginas de contenido - Conclusión",
-      "tipo": "Trabajo Practico",
+      "tipo": "TP",
       "fecha": "Antes del 2do llamado",
-      "urgente": false
+      "urgente": true
     },
     {
       "titulo": "Aranceles · Matriculación 2do Semestre",
