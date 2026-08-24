@@ -2,14 +2,16 @@
    Campus Informativo · 2do Semestre · app.js
    =================================================== */
 
+// Cache-busting: agrega ?_v=timestamp para que el navegador
+// y el Service Worker nunca sirvan el JSON desactualizado
 const DATA_URL = `data/2do.json?_v=${Date.now()}`;
 let DATA = null;
 
 const COLORES_MATERIAS = {
-  'Econom\u00eda Pol\u00edtica': 'color-econopolitica',
-  'Introducci\u00f3n a las Ciencias Pol\u00edticas': 'color-introccp',
-  'Historia Pol\u00edtica Paraguaya': 'color-historiapolit',
-  'Idioma Guaran\u00ed II': 'color-guarani',
+  'Economía Política': 'color-econopolitica',
+  'Introducción a las Ciencias Políticas': 'color-introccp',
+  'Historia Política Paraguaya': 'color-historiapolit',
+  'Idioma Guaraní II': 'color-guarani',
   'Seminario II': 'color-seminario'
 };
 
@@ -27,6 +29,29 @@ function colorMateria(nombre) {
   return 'color-econopolitica';
 }
 
+// Convierte fechas de examen en texto libre ("15 Septiembre", "8 de septiembre")
+// a un objeto Date real, para poder ordenar cronológicamente.
+const MESES_ES = {
+  enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+  julio: 6, agosto: 7, septiembre: 8, setiembre: 8, octubre: 9,
+  noviembre: 10, diciembre: 11
+};
+
+function parseFechaExamen(fecha) {
+  if (!fecha) return null;
+  const limpio = fecha.toLowerCase().replace(/\bde\b/g, ' ').replace(/\s+/g, ' ').trim();
+  const match = limpio.match(/(\d{1,2})\s+([a-záéíóú]+)/i);
+  if (!match) return null;
+  const dia = parseInt(match[1], 10);
+  const mesNombre = match[2]
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // quita acentos
+  const mes = MESES_ES[mesNombre];
+  if (mes === undefined || isNaN(dia)) return null;
+  const anio = (DATA && DATA.anio) ? DATA.anio : new Date().getFullYear();
+  return new Date(anio, mes, dia);
+}
+
+// ===== FETCH DATA =====
 async function cargarDatos() {
   try {
     const resp = await fetch(DATA_URL, { cache: 'no-store' });
@@ -34,6 +59,20 @@ async function cargarDatos() {
   } catch (e) {
     DATA = datosDemo();
   }
+
+  // Ordenar exámenes cronológicamente apenas se cargan los datos, para que
+  // cualquier función que los use (render, WhatsApp, etc.) ya los reciba en orden.
+  if (DATA?.examenes?.length) {
+    DATA.examenes.sort((a, b) => {
+      const fa = parseFechaExamen(a.fecha);
+      const fb = parseFechaExamen(b.fecha);
+      if (!fa && !fb) return 0;
+      if (!fa) return 1;
+      if (!fb) return -1;
+      return fa - fb;
+    });
+  }
+
   renderAll();
 }
 
@@ -47,15 +86,16 @@ function renderAll() {
   renderLibros();
   renderDrive();
   initTema();
+  // El módulo InfoCI no necesita render inicial — es bajo demanda
 }
 
-// -- NOTICIAS -- con boton WhatsApp en urgentes
+// ===== NOTICIAS =====
 function renderNoticias() {
   const c = document.getElementById('noticiasContainer');
   if (!c) return;
   if (!DATA.noticias?.length) { c.innerHTML = '<p class="text-muted">Sin avisos por el momento.</p>'; return; }
   c.innerHTML = DATA.noticias.map(n => {
-    const msg = '*' + n.titulo + '*\n' + (n.descripcion || '') + '\n\n_Campus 2do Semestre \u00b7 Cs. Pol\u00edticas UNA_';
+    const msg = '*' + n.titulo + '*\n' + (n.descripcion || '') + '\n\n_Campus 2do Semestre · Cs. Políticas UNA_';
     const waText = encodeURIComponent(msg);
     const waBtn = n.urgente
       ? '<a href="https://wa.me/?text=' + waText + '" target="_blank" class="btn btn-sm btn-success mt-2 w-100"><i class="bi bi-whatsapp me-1"></i>Compartir por WhatsApp</a>'
@@ -75,14 +115,18 @@ function renderNoticias() {
   }).join('');
 }
 
-const DIAS = ['Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes'];
+// ===== HORARIO =====
+const DIAS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
 const DURACION_BLOQUE = 45; // minutos por bloque horario
 
 function buildHorarioGrid() {
   if (!DATA.horario?.length) return { grid: {}, horas: [] };
   const horas = [...new Set(DATA.horario.map(c => c.hora))].sort();
   const grid = {};
-  horas.forEach(h => { grid[h] = {}; DIAS.forEach(d => { grid[h][d] = null; }); });
+  horas.forEach(h => {
+    grid[h] = {};
+    DIAS.forEach(d => { grid[h][d] = null; });
+  });
   DATA.horario.forEach(c => { grid[c.hora][c.dia] = c; });
   return { grid, horas };
 }
@@ -96,7 +140,7 @@ function horaAMin(horaStr) {
 function getClaseActual() {
   if (!DATA.horario?.length) return null;
   const ahora = new Date();
-  const diasSemana = ['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
+  const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
   const diaHoy = diasSemana[ahora.getDay()];
   const minActual = ahora.getHours() * 60 + ahora.getMinutes();
   return DATA.horario.find(c => {
@@ -110,7 +154,7 @@ function getClaseActual() {
 function getProximaClaseHoy() {
   if (!DATA.horario?.length) return null;
   const ahora = new Date();
-  const diasSemana = ['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
+  const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
   const diaHoy = diasSemana[ahora.getDay()];
   const minActual = ahora.getHours() * 60 + ahora.getMinutes();
   const clasesHoy = DATA.horario
@@ -153,6 +197,7 @@ function renderHorario() {
     html += '</tbody>';
     tabla.innerHTML = html;
   }
+
   if (cards) {
     let html = '';
     DIAS.forEach(dia => {
@@ -174,6 +219,7 @@ function renderHorario() {
   }
 }
 
+// ===== CLASE ACTIVA BANNER =====
 function verificarClaseActiva() {
   const clase   = getClaseActual();
   const proxima = getProximaClaseHoy();
@@ -188,14 +234,14 @@ function verificarClaseActiva() {
     if (elLabel) elLabel.textContent = 'Clase activa';
     if (elPunto) elPunto.style.background = '#22c55e';
     elMat.textContent  = clase.materia;
-    elHora.textContent = clase.dia + ' \u00b7 ' + clase.hora + ' hs';
+    elHora.textContent = clase.dia + ' · ' + clase.hora + ' hs';
     elProf.textContent = clase.profesor || 'Docente';
     banner.classList.remove('d-none');
   } else if (proxima) {
-    if (elLabel) elLabel.textContent = 'Pr\u00f3xima clase hoy';
+    if (elLabel) elLabel.textContent = 'Próxima clase hoy';
     if (elPunto) elPunto.style.background = '#f59e0b';
     elMat.textContent  = proxima.materia;
-    elHora.textContent = proxima.dia + ' \u00b7 ' + proxima.hora + ' hs';
+    elHora.textContent = proxima.dia + ' · ' + proxima.hora + ' hs';
     elProf.textContent = proxima.profesor || 'Docente';
     banner.classList.remove('d-none');
   } else {
@@ -203,22 +249,22 @@ function verificarClaseActiva() {
   }
 }
 
-// -- EXAMENES -- con boton WhatsApp
+// ===== EXÁMENES ===== (ya llegan ordenados por fecha desde cargarDatos())
 function renderExamenes() {
   const c = document.getElementById('examenesContainer');
   if (!c) return;
-  if (!DATA.examenes?.length) { c.innerHTML = '<p class="text-muted">Sin ex\u00e1menes programados.</p>'; return; }
+  if (!DATA.examenes?.length) { c.innerHTML = '<p class="text-muted">Sin exámenes programados.</p>'; return; }
   const colores = { 'Primer Parcial':'#1a237e', 'Segundo Parcial':'#c62828', 'Final':'#e65100' };
   c.innerHTML = DATA.examenes.map(e => {
     const col = colores[e.tipo] || '#3949ab';
     const lineas = [
-      '*' + e.tipo + ' \u2014 ' + e.materia + '*',
+      '*' + e.tipo + ' — ' + e.materia + '*',
       'Fecha: ' + e.fecha,
       'Hora: ' + e.hora,
       e.aula     ? 'Aula: ' + e.aula     : null,
       e.profesor ? 'Prof: ' + e.profesor : null,
       '',
-      '_Campus 2do Semestre \u00b7 Cs. Pol\u00edticas UNA_'
+      '_Campus 2do Semestre · Cs. Políticas UNA_'
     ].filter(l => l !== null).join('\n');
     const waText = encodeURIComponent(lineas);
     return '<div class="col-12 col-sm-6 col-lg-4">'
@@ -240,10 +286,11 @@ function renderExamenes() {
   }).join('');
 }
 
+// ===== PARCIALES / TIMELINE =====
 function renderParciales() {
   const c = document.getElementById('parcialesTimeline');
   if (!c) return;
-  if (!DATA.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin per\u00edodos cargados.</p>'; return; }
+  if (!DATA.calendario?.length) { c.innerHTML = '<p class="text-muted">Sin períodos cargados.</p>'; return; }
   c.innerHTML = DATA.calendario.map(p =>
     '<div class="periodo-item ' + (p.tipo === 'parcial' ? 'parcial' : p.tipo === 'final' ? 'final' : '') + '">'
     + '<div class="periodo-mes">' + esc(p.mes) + '</div>'
@@ -253,6 +300,7 @@ function renderParciales() {
   ).join('');
 }
 
+// ===== PROGRAMAS =====
 function renderProgramas() {
   const c = document.getElementById('programasContainer');
   if (!c) return;
@@ -264,12 +312,12 @@ function renderProgramas() {
     + '<div class="flex-grow-1">'
     + '<div class="fw-bold">' + esc(p.materia) + '</div>'
     + '<div class="small text-muted mb-2">' + esc(p.descripcion || 'Programa oficial de la materia') + '</div>'
-    + (p.pdf ? '<a href="' + esc(p.pdf) + '" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Descargar PDF</a>' : '<span class="text-muted small">PDF no disponible a\u00fan</span>')
+    + (p.pdf ? '<a href="' + esc(p.pdf) + '" target="_blank" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Descargar PDF</a>' : '<span class="text-muted small">PDF no disponible aún</span>')
     + '</div></div></div>'
   ).join('');
 }
 
-// -- LIBROS -- con filtro por materia
+// ===== LIBROS =====
 function renderLibros(filtro) {
   const c = document.getElementById('librosContainer');
   if (!c) return;
@@ -308,7 +356,7 @@ function renderLibros(filtro) {
   ).join('');
 }
 
-// -- DRIVE -- con filtro por materia
+// ===== DRIVE / CLASSROOM =====
 function renderDrive(filtro) {
   const c = document.getElementById('driveContainer');
   if (!c) return;
@@ -345,17 +393,18 @@ function renderDrive(filtro) {
       + '<div class="d-flex flex-column gap-2">'
       + (tieneDrive ? '<a href="' + esc(d.url) + '" target="_blank" class="btn btn-outline-primary btn-sm"><i class="bi bi-folder2-open me-1"></i>Drive</a>' : '')
       + (tieneClassroom ? '<a href="' + esc(d.urlClassroom) + '" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-mortarboard me-1"></i>Classroom</a>' : '')
-      + (!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Pr\u00f3ximamente</span>' : '')
+      + (!tieneDrive && !tieneClassroom ? '<span class="text-muted small">Próximamente</span>' : '')
       + '</div></div></div>';
   }).join('');
 }
 
+// ===== INFO RÁPIDA POR CI =====
 function consultarCI() {
   const input  = document.getElementById('ciInput');
   const inline = document.getElementById('ciResultadoInline');
   const ci = input ? input.value.trim() : '';
   if (!ci) {
-    if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingres\u00e1 tu n\u00famero de C.I.</div>';
+    if (inline) inline.innerHTML = '<div class="alert alert-warning py-2 mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Ingresá tu número de C.I.</div>';
     return;
   }
   const lista    = DATA?.infoci || [];
@@ -389,10 +438,11 @@ function consultarCI() {
     modal.show();
     if (inline) inline.innerHTML = '';
   } else {
-    if (inline) inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontr\u00f3 informaci\u00f3n para ese n\u00famero de C.I.</div>';
+    if (inline) inline.innerHTML = '<div class="alert alert-secondary py-2 mb-0"><i class="bi bi-search me-2"></i>No se encontró información para ese número de C.I.</div>';
   }
 }
 
+// ===== MODO OSCURO =====
 function initTema() {
   const btn      = document.getElementById('themeToggle');
   const guardado = localStorage.getItem('tema') || 'light';
@@ -409,41 +459,42 @@ function initTema() {
   }
 }
 
+// ===== DATOS DEMO =====
 function datosDemo() {
   return {
     noticias: [{ titulo:'Inicio de clases', descripcion:'Las clases del segundo semestre comienzan el 4 de agosto.', tipo:'Aviso', fecha:'1 Ago', urgente:false }],
     horario: [
-      { dia:'Lunes', hora:'18:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Lunes', hora:'18:45', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Lunes', hora:'19:45', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
-      { dia:'Martes', hora:'18:00', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes', hora:'18:45', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Martes', hora:'19:45', materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', profesor:'Prof. Mart\u00ednez' },
-      { dia:'Martes', hora:'20:30', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
-      { dia:'Mi\u00e9rcoles', hora:'18:00', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Mi\u00e9rcoles', hora:'18:45', materia:'Econom\u00eda Pol\u00edtica', profesor:'Prof. Garc\u00eda' },
-      { dia:'Mi\u00e9rcoles', hora:'19:45', materia:'Historia Pol\u00edtica Paraguaya', profesor:'Prof. Romero' },
-      { dia:'Jueves', hora:'18:00', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
-      { dia:'Jueves', hora:'18:45', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
-      { dia:'Jueves', hora:'20:30', materia:'Idioma Guaran\u00ed II', profesor:'Prof. Ayala' },
-      { dia:'Viernes', hora:'18:00', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', profesor:'Prof. L\u00f3pez' },
-      { dia:'Viernes', hora:'18:45', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', profesor:'Prof. L\u00f3pez' },
-      { dia:'Viernes', hora:'19:45', materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', profesor:'Prof. L\u00f3pez' }
+      { dia:'Lunes', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Lunes', hora:'18:45', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Lunes', hora:'19:45', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
+      { dia:'Martes', hora:'18:00', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes', hora:'18:45', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Martes', hora:'19:45', materia:'Introducción a las Ciencias Políticas', profesor:'Prof. Martínez' },
+      { dia:'Martes', hora:'20:30', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Miércoles', hora:'18:00', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Miércoles', hora:'18:45', materia:'Economía Política', profesor:'Prof. García' },
+      { dia:'Miércoles', hora:'19:45', materia:'Historia Política Paraguaya', profesor:'Prof. Romero' },
+      { dia:'Jueves', hora:'18:00', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Jueves', hora:'18:45', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Jueves', hora:'20:30', materia:'Idioma Guaraní II', profesor:'Prof. Ayala' },
+      { dia:'Viernes', hora:'18:00', materia:'Seminario II: Movimientos Sociales y Políticos en Latam', profesor:'Prof. López' },
+      { dia:'Viernes', hora:'18:45', materia:'Seminario II: Movimientos Sociales y Políticos en Latam', profesor:'Prof. López' },
+      { dia:'Viernes', hora:'19:45', materia:'Seminario II: Movimientos Sociales y Políticos en Latam', profesor:'Prof. López' }
     ],
-    examenes: [{ materia:'Econom\u00eda Pol\u00edtica', tipo:'Primer Parcial', fecha:'12 de Octubre', hora:'19:00', aula:'', profesor:'Urquiza' }],
+    examenes: [{ materia:'Economía Política', tipo:'Primer Parcial', fecha:'12 de Octubre', hora:'19:00', aula:'', profesor:'Urquiza' }],
     calendario: [
       { mes:'Agosto', nombre:'Inicio de Clases', tipo:'normal' },
-      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'14\u201325 Sep' },
+      { mes:'Septiembre', nombre:'1er Parcial', tipo:'parcial', fecha:'14–25 Sep' },
       { mes:'Octubre', nombre:'Cursada', tipo:'normal' },
-      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'20\u201330 Nov' },
-      { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1\u201315 Dic' }
+      { mes:'Noviembre', nombre:'2do Parcial', tipo:'parcial', fecha:'20–30 Nov' },
+      { mes:'Diciembre', nombre:'Finales', tipo:'final', fecha:'1–15 Dic' }
     ],
     programas: [
-      { materia:'Econom\u00eda Pol\u00edtica', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
-      { materia:'Historia Pol\u00edtica Paraguaya', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
-      { materia:'Introducci\u00f3n a las Ciencias Pol\u00edticas', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
-      { materia:'Idioma Guaran\u00ed II', descripcion:'Programa oficial \u00b7 2026', pdf:'' },
-      { materia:'Seminario II: Movimientos Sociales y Pol\u00edticos en Latam', descripcion:'Programa oficial \u00b7 2026', pdf:'' }
+      { materia:'Economía Política', descripcion:'Programa oficial · 2026', pdf:'' },
+      { materia:'Historia Política Paraguaya', descripcion:'Programa oficial · 2026', pdf:'' },
+      { materia:'Introducción a las Ciencias Políticas', descripcion:'Programa oficial · 2026', pdf:'' },
+      { materia:'Idioma Guaraní II', descripcion:'Programa oficial · 2026', pdf:'' },
+      { materia:'Seminario II: Movimientos Sociales y Políticos en Latam', descripcion:'Programa oficial · 2026', pdf:'' }
     ],
     libros: [],
     drive: [],
@@ -451,6 +502,7 @@ function datosDemo() {
   };
 }
 
+// ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   cargarDatos();
   const input = document.getElementById('ciInput');
