@@ -180,6 +180,14 @@
       "hora": "18:00",
       "aula": "2do Semestre",
       "profesor": "Mercedes Ibarra"
+    },
+    {
+      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
+      "tipo": "Primer Parcial",
+      "fecha": "8 de septiembre",
+      "hora": "18:00",
+      "aula": "Aula  1",
+      "profesor": "Sonia Guerreño"
     }
   ],
   "calendario": [
