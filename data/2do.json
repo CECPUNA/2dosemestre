@@ -182,14 +182,6 @@
       "profesor": "Mercedes Ibarra"
     },
     {
-      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
-      "tipo": "Primer Parcial",
-      "fecha": "8 de septiembre",
-      "hora": "18:00",
-      "aula": "Aula  1",
-      "profesor": "Sonia Guerreño"
-    },
-    {
       "materia": "Historia Política Paraguaya",
       "tipo": "Primer Parcial",
       "fecha": "14 Septiembre",
@@ -236,6 +228,14 @@
       "hora": "18:00",
       "aula": "2do Semestre",
       "profesor": "Prof Felipe Huerta"
+    },
+    {
+      "materia": "Seminario II: Movimientos Sociales y Políticos en América Latina (Siglos XX y XXI)",
+      "tipo": "Primer Parcial",
+      "fecha": "22 septiembre",
+      "hora": "19:45",
+      "aula": "2do semestre",
+      "profesor": "Sonia Guerreño"
     }
   ],
   "calendario": [
