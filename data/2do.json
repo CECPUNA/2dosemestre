@@ -188,6 +188,22 @@
       "hora": "18:00",
       "aula": "Aula  1",
       "profesor": "Sonia Guerreño"
+    },
+    {
+      "materia": "Historia Política Paraguaya",
+      "tipo": "Primer Parcial",
+      "fecha": "14 Septiembre",
+      "hora": "19:45",
+      "aula": "2do semestre",
+      "profesor": "Prof Francisco Llamas"
+    },
+    {
+      "materia": "Historia Política Paraguaya",
+      "tipo": "Segundo Parcial",
+      "fecha": "9 Noviembre",
+      "hora": "19:45",
+      "aula": "2do semestre",
+      "profesor": "Prof Francisco Llamas"
     }
   ],
   "calendario": [
