@@ -204,6 +204,22 @@
       "hora": "19:45",
       "aula": "2do semestre",
       "profesor": "Prof Francisco Llamas"
+    },
+    {
+      "materia": "Economía Política",
+      "tipo": "Primer Parcial",
+      "fecha": "25 Septiembre",
+      "hora": "18:00",
+      "aula": "2do Semestre",
+      "profesor": "Prof Felipe Huerta"
+    },
+    {
+      "materia": "Economía Política",
+      "tipo": "Segundo Parcial",
+      "fecha": "16 Octubre",
+      "hora": "18:00",
+      "aula": "2do semestre",
+      "profesor": "Prof Felipe Huerta"
     }
   ],
   "calendario": [
