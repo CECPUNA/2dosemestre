@@ -220,6 +220,22 @@
       "hora": "18:00",
       "aula": "2do semestre",
       "profesor": "Prof Felipe Huerta"
+    },
+    {
+      "materia": "Idioma Guaraní II",
+      "tipo": "Primer Parcial",
+      "fecha": "25 Septiembre",
+      "hora": "20:00",
+      "aula": "2do Semestre",
+      "profesor": "Prof Cecilia Garcete"
+    },
+    {
+      "materia": "Idioma Guaraní II",
+      "tipo": "Segundo Parcial",
+      "fecha": "16 Octubre",
+      "hora": "20:00",
+      "aula": "2do Semestre",
+      "profesor": "Prof Cecilia Garcete"
     }
   ],
   "calendario": [
