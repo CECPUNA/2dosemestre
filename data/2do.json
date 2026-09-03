@@ -32,44 +32,8 @@
       "profesor": "Maria Mercedes Ibarra"
     },
     {
-      "dia": "Lunes",
-      "hora": "18:45",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Maria Mercedes Ibarra"
-    },
-    {
-      "dia": "Lunes",
-      "hora": "19:45",
-      "materia": "Historia Política Paraguaya",
-      "profesor": "Francisco Llamas"
-    },
-    {
-      "dia": "Lunes",
-      "hora": "20:30",
-      "materia": "Historia Política Paraguaya",
-      "profesor": "Francisco Llamas"
-    },
-    {
-      "dia": "Lunes",
-      "hora": "21:15",
-      "materia": "Historia Política Paraguaya",
-      "profesor": "Francisco Llamas"
-    },
-    {
       "dia": "Martes",
       "hora": "18:00",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
-      "profesor": "Sonia Guerreño"
-    },
-    {
-      "dia": "Martes",
-      "hora": "18:45",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
-      "profesor": "Sonia Guerreño"
-    },
-    {
-      "dia": "Martes",
-      "hora": "19:45",
       "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
       "profesor": "Sonia Guerreño"
     },
@@ -78,36 +42,36 @@
       "hora": "18:00",
       "materia": "Introducción a las Ciencias Políticas",
       "profesor": "Maria Mercedes Ibarra"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "18:45",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Maria Mercedes Ibarra"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "19:45",
-      "materia": "Introducción a las Ciencias Políticas",
-      "profesor": "Maria Mercedes Ibarra"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "20:30",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
-      "profesor": "Sonia Guerreño"
-    },
-    {
-      "dia": "Miércoles",
-      "hora": "21:15",
-      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
-      "profesor": "Sonia Guerreño"
     },
     {
       "dia": "Jueves",
       "hora": "18:00",
       "materia": "Historia Política Paraguaya",
       "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Viernes",
+      "hora": "18:00",
+      "materia": "Economía Política",
+      "profesor": "Felipe Huerta"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "18:45",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
+    },
+    {
+      "dia": "Martes",
+      "hora": "18:45",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "18:45",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
     },
     {
       "dia": "Jueves",
@@ -117,21 +81,45 @@
     },
     {
       "dia": "Viernes",
-      "hora": "18:00",
+      "hora": "18:45",
       "materia": "Economía Política",
       "profesor": "Felipe Huerta"
     },
     {
-      "dia": "Viernes",
-      "hora": "18:45",
-      "materia": "Economía Política",
-      "profesor": "Felipe Huerta"
+      "dia": "Lunes",
+      "hora": "19:45",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Martes",
+      "hora": "19:45",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "19:45",
+      "materia": "Introducción a las Ciencias Políticas",
+      "profesor": "Maria Mercedes Ibarra"
     },
     {
       "dia": "Viernes",
       "hora": "19:45",
       "materia": "Economía Política",
       "profesor": "Felipe Huerta"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "20:30",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "20:30",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
     },
     {
       "dia": "Viernes",
@@ -140,7 +128,31 @@
       "profesor": "Cecilia Garcete"
     },
     {
+      "dia": "Martes",
+      "hora": "20:30",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Cecilia Garcete"
+    },
+    {
+      "dia": "Lunes",
+      "hora": "21:15",
+      "materia": "Historia Política Paraguaya",
+      "profesor": "Francisco Llamas"
+    },
+    {
+      "dia": "Miércoles",
+      "hora": "21:15",
+      "materia": "Seminario II: Movimientos Sociales y Políticos en Latam",
+      "profesor": "Sonia Guerreño"
+    },
+    {
       "dia": "Viernes",
+      "hora": "21:15",
+      "materia": "Idioma Guaraní II",
+      "profesor": "Cecilia Garcete"
+    },
+    {
+      "dia": "Martes",
       "hora": "21:15",
       "materia": "Idioma Guaraní II",
       "profesor": "Cecilia Garcete"
